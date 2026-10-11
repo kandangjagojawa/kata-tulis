@@ -677,6 +677,7 @@
                     <option value="hanacaraka">Hanacaraka</option>
                     <option value="kaganga">Kaganga</option>
                     <option value="warga">Warga Aksara</option>
+                    <option value="unicode">Codepoint Unicode</option>
                 </select>
             </div>
         </div>
@@ -704,7 +705,7 @@
 <script src="pujl.js"></script>
 
 <script>
-    // DATASET UNICODE & TATATULIS AKSARA JAWA (Sudah Diperbaiki Sintaksnya)
+    // DATASET UNICODE & TATATULIS AKSARA JAWA
     const GUIDE_DATASET = [
         // --- WYANJANA ---
         { latin: "ha / h / a", jenis: "Wyanjana", baru: "ꦲ", lama: "ꦲ", code: "U+A9B2", note_baru: "", note_lama: "", petunjuk: "Ketik 'h' atau 'a' di awal kata", hana: 1, kaga: 18, warga: 1, alpha: "ha" },
@@ -825,6 +826,9 @@
             sorted.sort((a, b) => (a.kaga || 0) - (b.kaga || 0));
         } else if (sortMode === 'warga') {
             sorted.sort((a, b) => (a.warga || 0) - (b.warga || 0));
+        } else if (sortMode === 'unicode') {
+            // Pengurutan berdasarkan String Codepoint Unicode
+            sorted.sort((a, b) => a.code.localeCompare(b.code));
         }
 
         let html = '';
