@@ -1,9 +1,11 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Pembaruan Fonem Vokal Suku Kata Pertama (S1):
- * - Kata 2 Suku Kata: S1 tanpa sandhangan ('a') dimatikan nasal -> jejeg ([ɔ]) akibat asimilasi (kanca -> [kɔɲtʃɔ]).
- * - Kata 3 Suku Kata: S1 tanpa sandhangan ('a') dimatikan nasal -> miring ([a]) (kandhana -> [kanɖʱɔnɔ], pancaka -> [paɲtʃɔkɔ]).
+ * Pembaruan Fonem Vokal:
+ * - Kata 2 Suku Kata Terbuka berakhiran 'a' (termasuk -ana): [ɔ] (mana -> [mɔnɔ], kana -> [kɔnɔ]).
+ * - Kata 2 Suku Kata S1 Tertutup Nasal: Terasimilasi ke [ɔ] (kanca -> [kɔɲtʃɔ]).
+ * - Kata 3+ Suku Kata dengan Sufiks -ana: Batasi perubahan [ɔ] hanya pada sufiks (panganana -> [paŋanɔnɔ]).
+ * - Kata 3 Suku Kata S1 Tertutup Nasal: S1 miring [a], S2 & S3 jejeg [ɔ] (kandhana -> [kanɖʱɔnɔ], pancaka -> [paɲtʃɔkɔ]).
  */
 
 function extractIPAVowels(ipaStr) {
@@ -234,12 +236,16 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                 // C. Penyelarasan Vokal a (Penyelarasan Rantai Berurutan)
                 let lastIdx = numVowels - 1;
                 let lastVowelChar = vowelMatches[lastIdx].vowel;
-                if (lastVowelChar === 'a' && !isClosed[lastIdx] && !/ana$/i.test(str)) {
+                let isSuffixAna = (numVowels > 2 && /ana$/i.test(str));
+
+                if (lastVowelChar === 'a' && !isClosed[lastIdx]) {
                     for (let j = lastIdx; j >= 0; j--) {
                         if (vowelMatches[j].vowel === 'a') {
+                            // Pembatas khusus sufiks -ana pada kata 3+ suku kata
+                            if (isSuffixAna && j < numVowels - 2) {
+                                break;
+                            }
                             if (j === 0 && isClosed[0]) {
-                                // S1 dimatikan nasal HANYA terasimilasi ke [ɔ] jika kata 2 suku kata (numVowels === 2).
-                                // Untuk kata 3 suku kata (numVowels === 3), S1 tertutup nasal tanpa sandhangan tetap miring [a].
                                 let s1IsJejegA = (numVowels === 2 && firstSyllableCodaIsNasal);
                                 if (!s1IsJejegA) {
                                     break;
