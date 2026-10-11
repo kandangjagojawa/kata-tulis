@@ -368,7 +368,7 @@ function prosesTransliterasi() {
 function transliterasiKalimat(teks) {
     let teksDiolah = teks.replace(/e'/g, 'é').replace(/E'/g, 'É');
 
-    teksDiolah = teksDiolah.replace(/\b(mb|ndh|nd|nth|ngg|nj)/gim, function(match) {
+    teksDiolah = teksDiolah.replace(/(?<![a-zA-Za-zÀ-ÿ])(mb|ndh|nd|nth|ngg|nj)/gim, function(match) {
         let isUpper = match[0] === match[0].toUpperCase();
         return (isUpper ? 'Ha' : 'ha') + match.toLowerCase();
     });
