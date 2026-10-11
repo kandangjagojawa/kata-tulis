@@ -477,7 +477,12 @@ function transliterasiSingleKata(rawLatin) {
         });
     }
 
-    // 3. Pemrosesan tanda hubung (sufiks/penggabungan) berulang sampai seluruh tanda hubung habis terproses
+    // 3. Konversi vokal pemisah diftong ber-tanda hubung
+    latinProcessed = latinProcessed.replace(/([aAEÊaeê])-([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
+    latinProcessed = latinProcessed.replace(/([iIÉÈiéè])-([aiueoéèêAIUEOÉÈÊ])/g, '$1y$2');
+    latinProcessed = latinProcessed.replace(/([uoUO])-([aiueoéèêAIUEOÉÈÊ])/g, '$1w$2');
+
+    // 4. Pemrosesan tanda hubung (sufiks/penggabungan) berulang sampai seluruh tanda hubung habis terproses
     while (/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/.test(latinProcessed)) {
         latinProcessed = latinProcessed.replace(/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/g, function(match, root, suffix) {
             if (root.toLowerCase() === suffix.toLowerCase()) return root + suffix;
