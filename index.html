@@ -372,7 +372,7 @@
         return res;
     }
 
-    // Fungsi pemproses JGST, IPA & PUJL dengan penanganan sandhi shift (ḷ, lě, ŕě)
+    // Fungsi pemproses JGST, IPA & PUJL dengan penanganan sandhi shift (sastra lampah)
     function generateJGSTAndIPAShifted(rawInput, fnKey, isSastraLampah = false) {
         if (!rawInput.trim() || !Modules[fnKey]) {
             return { jgst: '-', ipa: '-', pujl: '-' };
@@ -381,6 +381,7 @@
         const MARKER = '\uE000';
         const tokens = rawInput.split(/(\s+)/);
         let markedInput = "";
+        let wordTokens = [];
 
         for (let i = 0; i < tokens.length; i++) {
             let t = tokens[i];
@@ -388,6 +389,7 @@
                 markedInput += t;
             } else if (t !== '') {
                 markedInput += t + MARKER;
+                wordTokens.push(t);
             }
         }
 
@@ -412,25 +414,33 @@
 
         let cleanedJgstSegments = [];
         let carryOver = "";
+        const jgstVowelRegex = /(lě|ŕě|ṝ|ḹ|[āaīiūuěéèeoꜽꜷṛḷ])$/;
 
+        let wordIdx = 0;
         for (let i = 0; i < rawJgstSegments.length; i++) {
-            let seg = carryOver + rawJgstSegments[i];
+            let rawSeg = rawJgstSegments[i];
+            if (rawSeg === '' && i === rawJgstSegments.length - 1) continue;
+
+            let seg = carryOver + rawSeg.replace(/^\s+/, '');
             carryOver = "";
 
-            if (i < rawJgstSegments.length - 1) {
-                if (seg.endsWith('ḷ')) {
-                    seg = seg.slice(0, -1);
-                    carryOver = "ḷ";
-                } else if (seg.endsWith('lě')) {
-                    seg = seg.slice(0, -2);
-                    carryOver = "lě";
-                } else if (seg.endsWith('ŕě')) {
-                    seg = seg.slice(0, -2);
-                    carryOver = "ŕě";
+            if (wordIdx < wordTokens.length - 1) {
+                let origWord = wordTokens[wordIdx] || "";
+                let cleanOrigWord = origWord.replace(/[^a-zA-Za-zA-Zāāīīūūěéèeoꜽꜷṛḷ]/g, '');
+                let origEndedWithConsonant = !/[aāiīuūěéèeoꜽꜷṛḷ]$/i.test(cleanOrigWord);
+
+                if (origEndedWithConsonant) {
+                    let vMatch = seg.match(jgstVowelRegex);
+                    if (vMatch) {
+                        let vLen = vMatch[0].length;
+                        carryOver = vMatch[0];
+                        seg = seg.slice(0, -vLen);
+                    }
                 }
             }
 
             cleanedJgstSegments.push(seg);
+            wordIdx++;
         }
 
         if (carryOver && cleanedJgstSegments.length > 0) {
@@ -457,7 +467,6 @@
                 let ipaKata = '-';
                 if (typeof convertJGSTtoIPA === 'function') {
                     ipaKata = convertJGSTtoIPA(jgstForIPAAndPUJL, token, fnKey);
-                    // Penyesuaian khusus fonetis IPA untuk kata "tanpa"
                     if (ipaKata && ipaKata !== '-') {
                         ipaKata = ipaKata.replace(/tɔnpɔ/g, 'tanpɔ');
                     }
@@ -468,7 +477,6 @@
                     pujlKata = convertJGSTtoPUJL(jgstForIPAAndPUJL, token);
                 }
 
-                // Hilangkan alternatif penulisan di dalam kurung dan pastikan nc/nj bersih khusus untuk PUJL
                 if (pujlKata && pujlKata !== '-') {
                     pujlKata = pujlKata.replace(/\s*\([^)]*\)/g, '').replace(/nyc/gi, 'nc').replace(/nyj/gi, 'nj').trim();
                 }
