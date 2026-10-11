@@ -28,7 +28,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         'y': 'j', 'w': 'w',
         'ś': 'ʃ', 'ṣ': 'ʂ', 'ḥ': 'ħ', 'ṡ': 'θ', 'ẓ': 'ðˤ', '‘': 'ʕ',
         'q': 'q', 'x': 'x', 'f': 'f', 'v': 'v', 'z': 'z',
-        'c̣': 'tʃʰ', 'p̣': 'pʰ', 'g̣': 'ɡʱ', 'ḅ': 'bʱ', 'j̣': 'ɲ', 'ṟ': 'r',
+        'c̣': 'tʃʰ', 'p̣': 'pʰ', 'g̣': 'ɡʱ', 'ḅ': 'bʱ', 'j̣': 'dʒ', 'ṟ': 'r',
         'ṃ': 'm', 'ṙ': 'r', 'ṛ': 'rə', 'ḷ': 'lə',
         'ŕ': 'r'
     };
@@ -302,7 +302,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                  .replace(/c̣/g, 'tʃʰ')
                  .replace(/p̣/g, 'pʰ')
                  .replace(/ḅ/g, 'bʱ')
-                 .replace(/j̣/g, 'ɲ')
+                 .replace(/j̣/g, 'dʒ')
                  .replace(/ṛě/g, 'rəː')
                  .replace(/ḷö/g, 'ləː');
 
