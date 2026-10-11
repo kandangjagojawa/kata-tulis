@@ -391,11 +391,6 @@ function prosesParamasastra() {
         }
     }
 
-    let fullLatinDisplay = resultLatinMain;
-    if (resultLatinAlt !== "") {
-        fullLatinDisplay = `${resultLatinMain} (${resultLatinAlt})`;
-    }
-
     if (outLat) outLat.value = fullLatinDisplay;
     if (outJaw) outJaw.innerText = transliterasiKalimat(fullLatinDisplay);
 }
@@ -413,7 +408,7 @@ function transliterasiKalimat(teks) {
     if (!teks) return "";
     let teksDiolah = teks.replace(/e'/g, 'é').replace(/E'/g, 'É');
 
-    teksDiolah = teksDiolah.replace(/\b(mb|ndh|nd|nth|ngg|nj)/gim, function(match) {
+    teksDiolah = teksDiolah.replace(/(?<![a-zA-Za-zÀ-ÿ])(mb|ndh|nd|nth|ngg|nj)/gim, function(match) {
         let isUpper = match[0] === match[0].toUpperCase();
         return (isUpper ? 'Ha' : 'ha') + match.toLowerCase();
     });
@@ -448,6 +443,8 @@ function transliterasiKata(rawLatin) {
 function transliterasiSingleKata(rawLatin) {
     if (!rawLatin) return "";
 
+    let isKataNingrat = rawLatin.toLowerCase().includes('ningrat');
+
     if (/^([a-zA-Z]\.)+$/.test(rawLatin)) {
         let abbr = "";
         for (let j = 0; j < rawLatin.length; j += 2) {
@@ -458,38 +455,65 @@ function transliterasiSingleKata(rawLatin) {
         return abbr;
     }
 
-    let prefixMatch = rawLatin.match(/^(dak|tak|kok)([ry])(.*)/i);
-    if (prefixMatch) {
-        let ater = prefixMatch[1].toLowerCase();
-        let cons = prefixMatch[2].toLowerCase();
-        let rest = prefixMatch[3];
+    if (/^dak[ry]/i.test(rawLatin)) {
+        let isY = /^daky/i.test(rawLatin);
+        let rest = rawLatin.substring(4); 
+        let prefixAksara = KAMUS_AKSARA['d'] + 'ꦏ꧀'; 
         
-        let aterJawa = '';
-        if (ater === 'dak') aterJawa = 'ꦢꦏ꧀';
-        else if (ater === 'tak') aterJawa = 'ꦠꦏ꧀';
-        else if (ater === 'kok') aterJawa = 'ꦏꦺꦴꦏ꧀';
-
-        if (cons === 'y') {
-            aterJawa += 'ꦪ';
-        } else if (cons === 'r') {
+        if (isY) {
+            prefixAksara += KAMUS_AKSARA['y'];
+        } else {
             if (/^(e|ê)/i.test(rest)) {
-                aterJawa += 'ꦉ'; 
+                prefixAksara += 'ꦉ'; 
                 rest = rest.substring(1);
             } else {
-                aterJawa += 'ꦫ'; 
+                prefixAksara += KAMUS_AKSARA['r']; 
             }
         }
-        return aterJawa + transliterasiSingleKata(rest);
+        return prefixAksara + transliterasiKata(rest);
     }
 
     let latinProcessed = rawLatin;
+    const cons = "(?:dh|th|ng|ny|kh|dz|gh|kx|rx|hx|ngx|sy|sh|[bcdfghjklmnpqrstvwxyz])";
+    const nas = "(?:m|n|ng|ny)";
 
-    // Pengecualian kata serapan/asing berawalan di- agar tidak dianggap ater-ater
+    let isAnuswaraHanja = /^hanj[aA]|^hany[aA]/i.test(latinProcessed);
+
+    if (!isAnuswaraHanja) {
+        if (/^p[aeêEÊ]ndhawa(-[a-zA-ZéèêÉÈÊ]+)?$/i.test(latinProcessed)) {
+            latinProcessed = latinProcessed.replace(/^(p)[aeêEÊ](ndhawa(?:-[a-zA-ZéèêÉÈÊ]+)?)$/i, function(match, p1, p2) {
+                return p1 + 'a' + p2;
+            });
+        } else {
+            let rule2 = new RegExp(`^(${cons})?[aA](${nas})(${cons})a(${cons})a(-[a-zA-ZéèêÉÈÊ]+)?$`, 'i');
+            latinProcessed = latinProcessed.replace(rule2, (m, c1, n, c2, c3, suf) => {
+                return (c1 || '') + 'e' + n + c2 + 'a' + c3 + 'a' + (suf || '');
+            });
+        }
+
+        let rule1 = new RegExp(`^(${cons})[eêEÊ](${cons})a(${cons})a(-[a-zA-ZéèêÉÈÊ]+)?$`, 'i');
+        latinProcessed = latinProcessed.replace(rule1, (m, c1, c2, c3, suf) => {
+            return c1 + 'a' + c2 + 'a' + c3 + 'a' + (suf || '');
+        });
+    }
+
+    latinProcessed = latinProcessed.replace(/nc/g, 'nyc').replace(/nj/g, 'nyj');
+    latinProcessed = latinProcessed.replace(/Nc/g, 'Nyc').replace(/Nj/g, 'Nyj');
+    latinProcessed = latinProcessed.replace(/NC/g, 'NYC').replace(/NJ/g, 'NYJ');
+
+    const prefixRegexStr = "kuma|kami|kapi|dak|tak|kok|tar|pra|ng|ny|ko|di|ha|ka|ke|sa|pa|pi|m|n|a";
+    const keretRegex = new RegExp(`^(${prefixRegexStr})?([bcdfghjklmnpqrstvwxyz]*)([eê])r([bcdfghjklmnpqrstvwxyz])`, 'i');
+    
+    latinProcessed = latinProcessed.replace(keretRegex, function(match, p1, p2, p3, p4) {
+        let prefix = p1 || '';
+        return prefix + p2 + 'r' + p3 + p4; 
+    });
+
     let wordMatchForExc = latinProcessed.match(/^([a-zA-ZéèêÉÈÊ]+)/);
     let isPrefixException = false;
     
     if (wordMatchForExc) {
-        const excBases = "dian.*|diar.*|diare.*|dialog.*|diana.*|diaper.*|diastol.*|diat.*|diuretik.*|diet.*|dieng.*|diesel.*|dioda.*|diorama.*|dion.*|dioksida.*";
+        const excBases = "taka.*|taki.*|taku.*|take.*|také.*|takè.*|takê.*|tako.*|daka.*|daki.*|daku.*|dake.*|daké.*|dakè.*|dakê.*|dako.*|koka.*|koki.*|koku.*|koke.*|koké.*|kokè.*|kokê.*|koko.*|koas.*|koala.*|koali.*|koin.*|koord.*|koper.*|dian.*|diar.*|diare.*|dialog.*|diana.*|diaper.*|diastol.*|diat.*|diuretik.*|diet.*|dieng.*|diesel.*|dioda.*|diorama.*|dion.*|dioksida.*|kain.*|kaos.*|kaok.*|kaum.*|kail.*|kait.*|kais.*|kaing.*|keong.*|keok.*";
         const excPattern = new RegExp(`^(${excBases})$`, 'i');
         if (excPattern.test(wordMatchForExc[1])) {
             isPrefixException = true;
@@ -497,89 +521,93 @@ function transliterasiSingleKata(rawLatin) {
     }
 
     if (!isPrefixException) {
-        latinProcessed = latinProcessed.replace(/^di-?([aiueoéèêAIUEOÉÈÊ])/i, function(match, vokal) {
-            let prefix = match.slice(0, 2);
-            if (vokal.toLowerCase() === 'i') {
-                return prefix + 'hx' + vokal;
-            } else {
-                return prefix + 'y' + vokal;
-            }
-        });
-
-        latinProcessed = latinProcessed.replace(/^(dak|tak|kok|ko|ka|ke)-([aiueoéèê])/i, function(match, p1, p2) {
+        latinProcessed = latinProcessed.replace(/^(dak|tak|kok|ko|di|ka|ke)([aiueoéèê])/i, function(match, p1, p2) {
             let p1Lower = p1.toLowerCase();
-            if (['dak', 'tak', 'kok'].includes(p1Lower)) {
-                return p1.slice(0, -1) + 'kxhx' + p2; 
+            if (p1Lower === 'di') {
+                if (p2.toLowerCase() === 'i') {
+                    return p1 + 'hx' + p2;
+                } else {
+                    return p1 + 'y' + p2;
+                }
+            } else if (p1Lower === 'ko' || p1Lower === 'ka' || p1Lower === 'ke') {
+                return p1 + 'hx' + p2;
             } else {
-                return p1 + 'hx' + p2; 
+                return p1.slice(0, -1) + 'kxhx' + p2;
             }
         });
     }
 
-    // 1. Konversi vokal dengan tanda hubung ke panglancar paugeran (h/y/w) + Vokal Kedua
+    latinProcessed = latinProcessed.replace(/^(di)-([iI])/i, '$1hx$2');
+
+    // 1. Konversi vokal pemisah diftong ber-tanda hubung (a-u -> ahu, a-i -> ahi, dsb.)
     latinProcessed = latinProcessed.replace(/([aAEÊaeê])-([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
     latinProcessed = latinProcessed.replace(/([iIÉÈiéè])-([aiueoéèêAIUEOÉÈÊ])/g, '$1y$2');
-    latinProcessed = latinProcessed.replace(/([uoUOuo])-([aiueoéèêAIUEOÉÈÊ])/g, '$1w$2');
+    latinProcessed = latinProcessed.replace(/([uoUO])-([aiueoéèêAIUEOÉÈÊ])/g, '$1w$2');
 
-    // 2. Pemrosesan imbuhan/sufiks
-    latinProcessed = latinProcessed.replace(/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/g, function(match, root, suffix) {
-        if (root.toLowerCase() === suffix.toLowerCase()) return root + suffix;
+    // 2. Pemrosesan sufiks/imbuhan ber-tanda hubung secara berulang (iteratif while-loop)
+    while (/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/.test(latinProcessed)) {
+        latinProcessed = latinProcessed.replace(/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/g, function(match, root, suffix) {
+            if (root.toLowerCase() === suffix.toLowerCase()) return root + suffix;
 
-        let suffixLower = suffix.toLowerCase();
-        let isPepetSuffix = (suffixLower === 'aken' || suffixLower === 'kaken' || suffixLower === 'en' || suffixLower === 'nen');
-        let modSuffix = isPepetSuffix ? suffix.replace(/[eéèê]/gi, 'e') : suffix.replace(/[eéèê]/gi, 'é');
+            let suffixLower = suffix.toLowerCase();
+            let isPepetSuffix = (suffixLower === 'aken' || suffixLower === 'kaken' || suffixLower === 'en' || suffixLower === 'nen');
+            let modSuffix = isPepetSuffix ? suffix.replace(/[eéèê]/gi, 'e') : suffix.replace(/[eéèê]/gi, 'é');
 
-        let lastChar = root.slice(-1).toLowerCase();
-        let lastTwoChars = root.slice(-2).toLowerCase();
-        let vowels = ['a','i','u','e','o','é','è','ê'];
+            let lastChar = root.slice(-1).toLowerCase();
+            let lastTwoChars = root.slice(-2).toLowerCase();
+            let vowels = ['a','i','u','e','o','é','è','ê'];
 
-        if ((modSuffix.toLowerCase() === 'kaké' || modSuffix.toLowerCase() === 'kaken') && vowels.includes(lastChar)) {
-            modSuffix = 'kxh' + modSuffix.substring(1); 
-        }
-
-        let firstCharSuffix = modSuffix.charAt(0).toLowerCase();
-        let consonantToDouble = "";
-
-        if (['ni', 'nni', 'i'].includes(suffixLower) && vowels.includes(lastChar)) {
-            modSuffix = 'nni';
-        } else if (vowels.includes(firstCharSuffix)) {
-            if (['ng', 'ny', 'dh', 'th'].includes(lastTwoChars)) {
-                consonantToDouble = lastTwoChars;
-            } else if (!vowels.includes(lastChar) && lastChar !== 'y' && lastChar !== 'w') {
-                consonantToDouble = lastChar; 
+            if ((modSuffix.toLowerCase() === 'kaké' || modSuffix.toLowerCase() === 'kaken') && vowels.includes(lastChar)) {
+                modSuffix = 'kxh' + modSuffix.substring(1); 
             }
-        }
-        return root + consonantToDouble + modSuffix;
-    });
 
-    // 3. Panglancar Vokal Panjang + Vokal Lain & Pengecualian Vokal Panjang Murni (aa, ii, uu, ai, au)
+            let firstCharSuffix = modSuffix.charAt(0).toLowerCase();
+            let consonantToDouble = "";
+
+            if (['ni', 'nni', 'i'].includes(suffixLower) && vowels.includes(lastChar)) {
+                modSuffix = 'nni';
+            } else if (vowels.includes(firstCharSuffix)) {
+                if (['ng', 'ny', 'dh', 'th'].includes(lastTwoChars)) {
+                    consonantToDouble = lastTwoChars;
+                } else if (!vowels.includes(lastChar) && lastChar !== 'y' && lastChar !== 'w') {
+                    consonantToDouble = lastChar; 
+                }
+            }
+            return root + consonantToDouble + modSuffix;
+        });
+    }
+
     let prevLatin = "";
     while (latinProcessed !== prevLatin) {
         prevLatin = latinProcessed;
+        latinProcessed = latinProcessed.replace(/([aeêAEÊ])([aiueoéèê])/g, '$1h$2');
+        latinProcessed = latinProcessed.replace(/([iéèIÉÈ])([aiueoéèê])/g, '$1y$2');
+        latinProcessed = latinProcessed.replace(/([uoUO])([aiueoéèê])/g, '$1w$2');
+    }
+
+    let wordMatch = latinProcessed.match(/^([a-zA-ZéèêÉÈÊ]+)([^a-zA-ZéèêÉÈÊ]*)$/);
+    if (wordMatch) {
+        let wordOnly = wordMatch[1];
+        let punctuations = wordMatch[2];
+
+        let token = wordOnly
+            .replace(/ng/g, '1').replace(/Ng/g, '5').replace(/NG/g, '!')
+            .replace(/ny/g, '2').replace(/Ny/g, '6').replace(/NY/g, '@')
+            .replace(/dh/g, '3').replace(/Dh/g, '7').replace(/DH/g, '#')
+            .replace(/th/g, '4').replace(/Th/g, '8').replace(/\$/g, 'TH');
+
+        let isTanpa = /^tanpa$/i.test(wordOnly);
+        if (!isAnuswaraHanja && !isTanpa) {
+            token = token.replace(/a([mnMN125!6@])([bcdfghjklpqrstvwxzBCDFGHJKLPQRSTVWXZ347#8$]+)a(h?a)?$/i, 'o$1$2a$3');
+        }
+
+        wordOnly = token
+            .replace(/1/g, 'ng').replace(/5/g, 'Ng').replace(/!/g, 'NG')
+            .replace(/2/g, 'ny').replace(/6/g, 'Ny').replace(/@/g, 'NY')
+            .replace(/3/g, 'dh').replace(/7/g, 'Dh').replace(/#/g, 'DH')
+            .replace(/4/g, 'th').replace(/8/g, 'Th').replace(/\$/g, 'TH');
         
-        // A. Vokal berbasis A (aa)
-        latinProcessed = latinProcessed.replace(/(a{2,})([iueoéèêAIUEOÉÈÊ])/gi, '$1h$2');
-        latinProcessed = latinProcessed.replace(/(?<!a|i|u|e|o)([aAEÊ])([aieoéèê])(?!a|i|u|e|o)/gi, function(m, p1, p2) {
-            let combo = (p1 + p2).toLowerCase();
-            if (['aa', 'ai', 'au'].includes(combo)) return p1 + p2;
-            return p1 + 'h' + p2;
-        });
-
-        // B. Vokal berbasis I (ii)
-        latinProcessed = latinProcessed.replace(/(i{2,}|é{2,}|è{2,})([aiueoéèêAIUEOÉÈÊ])/gi, '$1y$2');
-        latinProcessed = latinProcessed.replace(/(?<!a|i|u|e|o)([iIÉÈ])([aiueoéèê])(?!a|i|u|e|o)/gi, function(m, p1, p2) {
-            let combo = (p1 + p2).toLowerCase();
-            if (['ii'].includes(combo)) return p1 + p2;
-            return p1 + 'y' + p2;
-        });
-
-        // C. Vokal berbasis U (uu)
-        latinProcessed = latinProcessed.replace(/(u{2,}|o{2,})([aiueoéèêAIUEOÉÈÊ])/gi, '$1w$2');
-        latinProcessed = latinProcessed.replace(/(?<!a|i|u|e|o)([uUO])([aiueoéèê])(?!a|i|u|e|o)/gi, function(m, p1, p2) {
-            let combo = (p1 + p2).toLowerCase();
-            if (['uu'].includes(combo)) return p1 + p2;
-            return p1 + 'w' + p2;
-        });
+        latinProcessed = wordOnly + punctuations;
     }
 
     let res = "";
@@ -618,7 +646,7 @@ function transliterasiSingleKata(rawLatin) {
         let isSwara = false;
         let isMurda = false;
 
-        let c3_raw = i+2 < latin.length ? latin.substring(i, i+3) : "";
+        let c3_raw = i+2 < latin.length ? latin.substring(i, i+3) : ""; 
         let c2_raw = i+1 < latin.length ? latin.substring(i, i+2) : "";
         let c1_raw = latin[i];
 
@@ -666,11 +694,17 @@ function transliterasiSingleKata(rawLatin) {
         if (!isSwara && i < lowerLatin.length && (lowerLatin[i] === 'y' || lowerLatin[i] === 'r')) {
             if (i+1 < lowerLatin.length && /[aieéèêou]/.test(lowerLatin[i+1])) {
                 let rejectMedial = false;
-                if (c === 'k' && (lowerLatin.substring(i - 3, i) === 'dak' || lowerLatin.substring(i - 3, i) === 'tak' || lowerLatin.substring(i - 3, i) === 'kok')) {
+                
+                if (c === 'k' && (lowerLatin.substring(i - 3, i) === 'dak' || lowerLatin.substring(i - 3, i) === 'tak')) {
                     rejectMedial = true;
                 }
-                if (rejectMedial) { medial = ""; } 
-                else { medial = lowerLatin[i]; i++; }
+
+                if (rejectMedial) { 
+                    medial = ""; 
+                } else { 
+                    medial = lowerLatin[i]; 
+                    i++; 
+                }
             } else if (c === 'h') {
                 c = lowerLatin[i]; i++;
             }
@@ -693,10 +727,17 @@ function transliterasiSingleKata(rawLatin) {
 
         if (medial !== "") {
             let isExplicitX = (c3_raw.toLowerCase() === 'ngx' || c2_raw.toLowerCase() === 'hx' || c2_raw.toLowerCase() === 'rx' || c2_raw.toLowerCase() === 'kx');
+            
             if (!isExplicitX && !isFirstAksara && canTakeSandhangan) {
-                if (c === 'ng') { res += 'ꦁ'; c = medial; medial = ""; }
-                else if (c === 'r') { res += 'ꦂ'; c = medial; medial = ""; }
-                else if (c === 'h') { res += 'ꦃ'; c = medial; medial = ""; }
+                if (c === 'ng') {
+                    if (!(isKataNingrat && medial === 'r')) {
+                        res += 'ꦁ'; c = medial; medial = "";
+                    }
+                } else if (c === 'r') {
+                    res += 'ꦂ'; c = medial; medial = "";
+                } else if (c === 'h') {
+                    res += 'ꦃ'; c = medial; medial = "";
+                }
             }
         }
 
@@ -705,8 +746,7 @@ function transliterasiSingleKata(rawLatin) {
             else if (c === 'r' && !isFirstAksara && canTakeSandhangan) res += 'ꦂ'; 
             else if (c === 'h' && !isFirstAksara && canTakeSandhangan) res += 'ꦃ'; 
             else if (c !== "") {
-                let useMurda = isMurda && false;
-                let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (useMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
+                let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
                 res += base + '꧀'; 
             }
             
@@ -715,7 +755,7 @@ function transliterasiSingleKata(rawLatin) {
             continue;
         }
 
-        let nonPasangan = isSwara; 
+        let nonPasangan = ['kh','dz','gh','z'].includes(c) || isSwara;
         if (nonPasangan && res.endsWith('꧀')) res += '\u200C';
 
         if (c === 'l' && (v === 'e' || v === 'ê') && medial === "") {
@@ -723,10 +763,7 @@ function transliterasiSingleKata(rawLatin) {
         } else if (c === 'r' && (v === 'e' || v === 'ê') && medial === "") {
             res += 'ꦉ'; 
         } else {
-            let isAttachedAsPasangan = res.endsWith('꧀');
-            let useMurda = isMurda && !isAttachedAsPasangan;
-
-            let base = isSwara ? SWARA_MAP[c] : ((c === 'dh' && isAttachedAsPasangan) ? AKSARA_MURDA['dh'] : (useMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]));
+            let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (isSwara ? SWARA_MAP[c] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]));
             res += base;
 
             if (medial === 'y') res += 'ꦾ';
@@ -754,8 +791,4 @@ function transliterasiSingleKata(rawLatin) {
         if (c !== "") isFirstAksara = false;
     }
     return res;
-}
-
-if (typeof window !== 'undefined') {
-    window.transliterasiKalimat = transliterasiKalimat;
 }
