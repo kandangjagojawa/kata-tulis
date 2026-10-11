@@ -1,13 +1,9 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Aturan Fonem Vokal Suku Kata Pertama (S1) Kata 2 Suku Kata:
- * 1. Dimatikan Nasal (m, n, ny, ng) + Cakra/Pengkal/Gembung: Vokal S1 Suara Jejeg ([ɔ], [i], [u], [e], [o]).
- * 2. Dimatikan h/r + Konsonan (baik TANPA maupun DENGAN Cakra/Pengkal/Gembung): Selalu Suara Miring ([a], [ɪ], [ʊ], [ɛ], [ɔ]).
- * 3. Dimatikan Konsonan Lain (b, d, g, k, l, p, s, t, w, dll):
- *    - Tanpa sandhangan ('a') + Cakra/Pengkal/Gembung: Suara Miring ([a]).
- *    - Ber-sandhangan ('i'/'u') + Cakra/Pengkal/Gembung: Suara Jejeg ([i], [u]).
- *    - Tanpa Cakra/Pengkal/Gembung: Suara Miring ([a], [ɪ], [ʊ], [ɛ], [ɔ]).
+ * Pembaruan Fonem Vokal Suku Kata Pertama (S1):
+ * - Kata 2 Suku Kata: S1 tanpa sandhangan ('a') dimatikan nasal -> jejeg ([ɔ]) akibat asimilasi (kanca -> [kɔɲtʃɔ]).
+ * - Kata 3 Suku Kata: S1 tanpa sandhangan ('a') dimatikan nasal -> miring ([a]) (kandhana -> [kanɖʱɔnɔ], pancaka -> [paɲtʃɔkɔ]).
  */
 
 function extractIPAVowels(ipaStr) {
@@ -142,13 +138,15 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
                 let resolvedVowels = new Array(numVowels);
 
-                // Deteksi khusus struktur S1 pada kata 2 suku kata
-                let isFirstOfTwo = (numVowels === 2 && isClosed[0]);
+                // Deteksi khusus struktur S1 pada kata 2 suku kata dan kata 3 suku kata (S3 Terbuka)
+                let isTwoOrThreeWithOpenFinal = (numVowels === 2) || (numVowels === 3 && !isClosed[2]);
+                let isS1ClosedInTargetWord = isTwoOrThreeWithOpenFinal && isClosed[0];
+
                 let firstSyllableCodaIsNasal = false;
                 let firstSyllableCodaIsHandR = false;
                 let hasCakraPengkalGembungNext = false;
 
-                if (isFirstOfTwo) {
+                if (isS1ClosedInTargetWord) {
                     let vCurr = vowelMatches[0];
                     let vNext = vowelMatches[1];
                     let cBlock = str.substring(vCurr.index + vCurr.vowel.length, vNext.index);
@@ -173,36 +171,44 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     } else if (v === 'i') {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ɪ';
-                        } else if (numVowels === 2 && k === 0 && closed) {
+                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
                             let isMiringI = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringI ? 'ɪ' : 'i';
+                        } else if (closed) {
+                            resolvedVowels[k] = 'ɪ';
                         } else {
                             resolvedVowels[k] = 'i';
                         }
                     } else if (v === 'u') {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ʊ';
-                        } else if (numVowels === 2 && k === 0 && closed) {
+                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
                             let isMiringU = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringU ? 'ʊ' : 'u';
+                        } else if (closed) {
+                            resolvedVowels[k] = 'ʊ';
                         } else {
                             resolvedVowels[k] = 'u';
                         }
                     } else if (['é', 'è', 'e'].includes(v)) {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ɛ';
-                        } else if (numVowels === 2 && k === 0 && closed) {
+                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
                             let isMiringE = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringE ? 'ɛ' : 'e';
+                        } else if (closed) {
+                            resolvedVowels[k] = 'ɛ';
                         } else {
                             resolvedVowels[k] = 'e';
                         }
                     } else if (v === 'o') {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ɔ';
-                        } else if (numVowels === 2 && k === 0 && closed) {
+                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
                             let isMiringO = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringO ? 'ɔ' : 'o';
+                        } else if (closed) {
+                            resolvedVowels[k] = 'ɔ';
                         } else {
                             resolvedVowels[k] = 'o';
                         }
@@ -231,11 +237,16 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                 if (lastVowelChar === 'a' && !isClosed[lastIdx] && !/ana$/i.test(str)) {
                     for (let j = lastIdx; j >= 0; j--) {
                         if (vowelMatches[j].vowel === 'a') {
-                            if (numVowels === 2 && j === 0 && isClosed[0]) {
-                                let s1IsJejegA = firstSyllableCodaIsNasal;
+                            if (j === 0 && isClosed[0]) {
+                                // S1 dimatikan nasal HANYA terasimilasi ke [ɔ] jika kata 2 suku kata (numVowels === 2).
+                                // Untuk kata 3 suku kata (numVowels === 3), S1 tertutup nasal tanpa sandhangan tetap miring [a].
+                                let s1IsJejegA = (numVowels === 2 && firstSyllableCodaIsNasal);
                                 if (!s1IsJejegA) {
                                     break;
                                 }
+                            }
+                            if (j > 0 && isClosed[j]) {
+                                break;
                             }
                             resolvedVowels[j] = 'ɔ';
                         } else {
