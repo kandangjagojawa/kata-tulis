@@ -8,7 +8,7 @@ function extractIPAVowels(ipaStr) {
     return ipaStr.match(ipaVowelRegex) || [];
 }
 
-function convertJGSTtoIPA(jgstStr, rawLatinToken) {
+function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
     if (!jgstStr || jgstStr === '-') return '-';
     
     let words = jgstStr.split(/(\s+)/);
@@ -67,6 +67,27 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken) {
 
         // Konversi awal untuk Pengkal (ỿ) dari JGST menjadi 'y'
         str = str.replace(/ỿ/g, 'y');
+
+        // KHUSUS SRIWEDARI: Pembentukan Tembung Dwipurwa (suku kata pertama berubah menjadi pepet 'ě' -> '/ə/')
+        if (fnKey === 'sriwedari') {
+            const consPatternDwipurwa = '(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ṡ|ḳ|g̣|c̣|j̣|p̣|ḅ|[bcdfghjklmnpqrstvwxyz])';
+            const dwipurwaRegex = new RegExp(
+                `^(di|ke|sa|pi|kuma|kapi)?` + 
+                `${consPatternDwipurwa}` + 
+                `([${vowels}])` + 
+                `\\2` + 
+                `([rylwŕ]?)` + 
+                `\\3` + 
+                `([^${vowels}]*[${vowels}].*)$`,
+                'i'
+            );
+
+            str = str.replace(dwipurwaRegex, function(match, prefix, c1, v1, medial, rest) {
+                prefix = prefix || '';
+                medial = medial || '';
+                return prefix + c1 + 'ě' + c1 + medial + v1 + rest;
+            });
+        }
 
         // Degeminasi konsonan ganda hasil morfologi/pasangan (nn -> n, kk -> k, rr -> r, dst.)
         str = str.replace(/([^aāiīuūěéèeoꜽꜷṛḷ\s])\1+/gi, '$1');
