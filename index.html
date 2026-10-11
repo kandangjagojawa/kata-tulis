@@ -352,6 +352,9 @@
         if (!jgstStr || !rawLatin) return jgstStr;
         let rawLower = rawLatin.toLowerCase();
         let res = jgstStr;
+
+        // Bersihkan simbol pangkon visual (/) agar tidak mengganggu pemrosesan IPA dan PUJL
+        res = res.replace(/\//g, '');
         
         // 1. Khusus Sriwedari: Netralkan vokal 'o' taling tarung palsu kembali ke 'a' jika vokal Latin aslinya adalah 'a'
         if (fnKey === 'sriwedari') {
