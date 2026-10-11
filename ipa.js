@@ -1,7 +1,9 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Pembaruan Fonem Vokal & Fonotaktik Nasal:
+ * Pembaruan Fonem Vokal & Fonotaktik Koda:
+ * - Memperbaiki deteksi koda Layar (ṙ) agar suku kata tertutup berakhiran Layar (seperti -kir pada singkir)
+ *   dievaluasi sebagai suku kata tertutup secara tepat di seluruh modul (membentuk [siŋkɪr]).
  * - Suku kata awal tertutup nasal (sing-, mimp-, dsb.): Vokal jejeg [i] / [u] (singkir -> [siŋkɪr]).
  * - Suku kata akhir tertutup non-nasal (-kir, -puk, dsb.): Vokal miring [ɪ] / [ʊ].
  * - Kata 2 Suku Kata Terbuka berakhiran 'a' (termasuk -ana): [ɔ] (mana -> [mɔnɔ]).
@@ -135,7 +137,9 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
                 let lastV = vowelMatches[numVowels - 1];
                 let tailBlock = str.substring(lastV.index + lastV.vowel.length);
-                if (tailBlock.length > 0 && /[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕŋ]/i.test(tailBlock)) {
+                
+                // Menambahkan karakter koda JGST: ṙ (Layar), ṟ, ṛ, ŋ, ṃ ke dalam regex koda akhir
+                if (tailBlock.length > 0 && /[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕṙṟṛŋṃ]/i.test(tailBlock)) {
                     isClosed[numVowels - 1] = true;
                 }
 
@@ -176,7 +180,6 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ɪ';
                         } else if (k === 0 && closed && isTwoOrThreeWord) {
-                            // Suku kata pertama ber-koda nasal selalu vokal jejeg [i]
                             let isMiringI = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringI ? 'ɪ' : 'i';
                         } else if (closed) {
@@ -188,7 +191,6 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ʊ';
                         } else if (k === 0 && closed && isTwoOrThreeWord) {
-                            // Suku kata pertama ber-koda nasal selalu vokal jejeg [u]
                             let isMiringU = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringU ? 'ʊ' : 'u';
                         } else if (closed) {
