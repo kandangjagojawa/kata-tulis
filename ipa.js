@@ -1,8 +1,10 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Diperbarui untuk mendukung seluruh inventaris Aksara Jawa (Nglegena, Murda, Mahaprana, Rekan, Swara)
- * sesuai spesifikasi index.html
+ * Diperbarui sesuai kaidah fonologi vokal Jawa (jejeg & miring):
+ * - Vokal 'i' & 'u': Miring ([ɪ] / [ʊ]) HANYA pada suku kata tertutup AKHIR. Suku kata bukan akhir (terbuka/tertutup) adalah jejeg ([i] / [u]).
+ * - Vokal 'e' (é/è/e-taling) & 'o' (taling-tarung): Miring ([ɛ] / [ɔ]) pada suku kata tertutup akhir dan menyelaraskan suku kata sebelumnya (harmony).
+ * - Vokal 'a': Miring ([a]), kecuali berakhiran suku kata terbuka 'a' ([ɔ]) yang menyelaraskan deretan vokal 'a' sebelumnya secara berurutan.
  */
 
 function extractIPAVowels(ipaStr) {
@@ -76,7 +78,6 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         
         let str = word.toLowerCase().replace(/\/$/, '');
         const vowels = 'aāiīuūěéèeoꜽꜷṛḷ';
-        const consPattern = '[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕŋ]';
 
         // Pisahkan tanda baca di akhir kata (koma, titik, dll) agar tidak terbaca sebagai konsonan penutup
         let punctMatch = str.match(/([,.?!;:꧈꧉]+)$/);
@@ -88,7 +89,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         // Konversi awal untuk Pengkal (ỿ) dari JGST menjadi 'y'
         str = str.replace(/ỿ/g, 'y');
 
-        // KHUSUS SRIWEDARI: Pembentukan Tembung Dwipurwa (suku kata pertama berubah menjadi pepet 'ě' -> '/ə/')
+        // KHUSUS SRIWEDARI: Pembentukan Tembung Dwipurwa
         if (fnKey === 'sriwedari') {
             const consPatternDwipurwa = '(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ṡ|ḳ|g̣|c̣|j̣|p̣|ḅ|[bcdfghjklmnpqrstvwxyz])';
             const dwipurwaRegex = new RegExp(
@@ -109,7 +110,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
             });
         }
 
-        // Degeminasi konsonan ganda hasil morfologi/pasangan (nn -> n, kk -> k, rr -> r, dst.)
+        // Degeminasi konsonan ganda hasil morfologi/pasangan
         str = str.replace(/([^aāiīuūěéèeoꜽꜷṛḷ\s])\1+/gi, '$1');
 
         // 1. Deteksi Ha Tipis vs Ha Tebal berdasarkan input Latin asli user
@@ -125,21 +126,97 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         if (str === 'macapat') {
             str = 'mɔcɔpat';
         } else {
-            // 2. Evaluasi Suku Kata Terakhir & Pembacaan Vokal A
-            let lastChar = str.slice(-1);
-            let isVowelEnd = /[aāiīuūěéèeoꜽꜷ]/.test(lastChar);
+            // 2. Evaluasi Suku Kata & Fonem Vokal Fonetis
+            const jgstVowelRegex = /[aāiīuūěéèeoꜽꜷṛḷ]/gi;
+            let vowelMatches = [];
+            let match;
+            while ((match = jgstVowelRegex.exec(str)) !== null) {
+                vowelMatches.push({ index: match.index, vowel: match[0] });
+            }
 
-            if (isVowelEnd) {
-                if (lastChar === 'a') {
-                    if (!/ana$/i.test(str)) {
-                        str = str.replace(new RegExp(`(${consPattern}*a)(${consPattern}+a)$`, 'i'), function(match, penult, ult) {
-                            return penult.replace(/a/g, 'ɔ') + ult;
-                        });
+            let numVowels = vowelMatches.length;
+
+            if (numVowels > 0) {
+                let isClosed = new Array(numVowels).fill(false);
+                const singleOrOnsetCluster = /^(th|dh|ng|ny|ñ|ṅ|ṇ|ṭ|ḍ|ś|ṣ|ḥ|ch|jh|kh|gh|ph|bh|sy|sh|[bcdfghjklmnpqrstvwxyz])([rylw])?$/i;
+
+                for (let k = 0; k < numVowels - 1; k++) {
+                    let vCurr = vowelMatches[k];
+                    let vNext = vowelMatches[k + 1];
+                    let cBlock = str.substring(vCurr.index + vCurr.vowel.length, vNext.index);
+
+                    if (cBlock.length > 0 && !singleOrOnsetCluster.test(cBlock)) {
+                        isClosed[k] = true;
                     }
-                    str = str.replace(/a$/i, 'ɔ');
                 }
+
+                let lastV = vowelMatches[numVowels - 1];
+                let tailBlock = str.substring(lastV.index + lastV.vowel.length);
+                if (tailBlock.length > 0 && /[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕŋ]/i.test(tailBlock)) {
+                    isClosed[numVowels - 1] = true;
+                }
+
+                let resolvedVowels = new Array(numVowels);
+
+                // A. Penentuan dasar Vokal i, u, e (pepet), dan default
+                for (let k = 0; k < numVowels; k++) {
+                    let v = vowelMatches[k].vowel;
+                    let closed = isClosed[k];
+                    let isFinal = (k === numVowels - 1);
+
+                    if (v === 'ě') {
+                        resolvedVowels[k] = 'ə';
+                    } else if (v === 'i') {
+                        resolvedVowels[k] = (isFinal && closed) ? 'ɪ' : 'i';
+                    } else if (v === 'u') {
+                        resolvedVowels[k] = (isFinal && closed) ? 'ʊ' : 'u';
+                    } else if (['é', 'è', 'e'].includes(v)) {
+                        resolvedVowels[k] = (isFinal && closed) ? 'ɛ' : 'e';
+                    } else if (v === 'o') {
+                        resolvedVowels[k] = (isFinal && closed) ? 'ɔ' : 'o';
+                    } else if (v === 'a') {
+                        resolvedVowels[k] = 'a';
+                    } else {
+                        resolvedVowels[k] = v;
+                    }
+                }
+
+                // B. Penyelarasan Vokal e (é/è) dan o (Penyelarasan Harmony Kanan-ke-Kiri)
+                for (let k = numVowels - 2; k >= 0; k--) {
+                    let v = vowelMatches[k].vowel;
+                    let nextRes = resolvedVowels[k + 1];
+
+                    if (['é', 'è', 'e'].includes(v)) {
+                        resolvedVowels[k] = (nextRes === 'ɛ' || nextRes === 'ɔ') ? 'ɛ' : 'e';
+                    } else if (v === 'o') {
+                        resolvedVowels[k] = (nextRes === 'ɛ' || nextRes === 'ɔ') ? 'ɔ' : 'o';
+                    }
+                }
+
+                // C. Penyelarasan Vokal a (Penyelarasan Rantai Berurutan dari Suku Kata Terbuka Akhir)
+                let lastIdx = numVowels - 1;
+                let lastVowelChar = vowelMatches[lastIdx].vowel;
+                if (lastVowelChar === 'a' && !isClosed[lastIdx] && !/ana$/i.test(str)) {
+                    for (let j = lastIdx; j >= 0; j--) {
+                        if (vowelMatches[j].vowel === 'a') {
+                            resolvedVowels[j] = 'ɔ';
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                // D. Rekonstruksi Kata dengan Vokal Fonetis Baru
+                let newStr = '';
+                let currPos = 0;
+                for (let k = 0; k < numVowels; k++) {
+                    let vObj = vowelMatches[k];
+                    newStr += str.substring(currPos, vObj.index) + resolvedVowels[k];
+                    currPos = vObj.index + vObj.vowel.length;
+                }
+                newStr += str.substring(currPos);
+                str = newStr;
             } else {
-                // Vokal miring pada suku kata tertutup akhir (i->ɪ, u->ʊ, e->ɛ, o->ɔ)
                 str = str.replace(new RegExp(`([${vowels}])([^${vowels}]*)$`), function(match, vowel, cons) {
                     if (vowel === 'i') return 'ɪ' + cons;
                     if (vowel === 'u') return 'ʊ' + cons;
@@ -147,15 +224,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     if (vowel === 'o') return 'ɔ' + cons;
                     return vowel + cons;
                 });
-                
-                // Harmony vokal untuk suku kata tertutup
-                if (/ɔ[^aeiouɔɛɪʊ]*$/.test(str)) str = str.replace(/o/g, 'ɔ');
-                if (/ɛ[^aeiouɔɛɪʊ]*$/.test(str)) str = str.replace(/[éèe]/g, 'ɛ');
             }
-
-            // Aturan Khusus Vokal Taling Tarung (o) Miring (ɔ)
-            str = str.replace(new RegExp(`o(${consPattern}+[iu])$`, 'i'), 'ɔ$1');
-            str = str.replace(new RegExp(`o(${consPattern}+[ěeə]${consPattern}+)$`, 'i'), 'ɔ$1');
         }
 
         // 3. Aturan Khusus Vokal E-Miring (ɛ) Berimbuhan & Miring Ganda
