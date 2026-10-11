@@ -22,13 +22,13 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
     // Kamus Pemetaan Karakter Tunggal JGST ke IPA
     const ipaMap = {
         'ā': 'aː', 'ī': 'iː', 'ū': 'uː',
-        'ꜽ': 'aɪ', 'ꜷ': 'aʊ',
+        'ꜽ': 'aɪ', 'ꜷ': 'aʊ', 'ꜹ': 'aʊ',
         'jñ': 'ɲ', 'ñ': 'ɲ', 'ṅ': 'ŋ', 'ṇ': 'ɳ',
         'ṭ': 'ʈ', 'ḍ': 'ɖ', 'c': 'tʃ', 'j': 'dʒ',
         'y': 'j', 'w': 'w',
         'ś': 'ʃ', 'ṣ': 'ʂ', 'ḥ': 'ħ', 'ṡ': 'θ', 'ẓ': 'ðˤ', '‘': 'ʕ',
         'q': 'q', 'x': 'x', 'f': 'f', 'v': 'v', 'z': 'z',
-        'c̣': 'tʃʰ', 'p̣': 'pʰ', 'g̣': 'gʱ', 'ḅ': 'bʱ', 'j̣': 'ɲ', 'ṟ': 'r',
+        'c̣': 'tʃʰ', 'p̣': 'pʰ', 'g̣': 'ɡʱ', 'ḅ': 'bʱ', 'j̣': 'ɲ', 'ṟ': 'r',
         'ṃ': 'm', 'ṙ': 'r', 'ṛ': 'rə', 'ḷ': 'lə',
         'ŕ': 'r'
     };
@@ -40,7 +40,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         let isAlt = cleanWord.startsWith('(') || /\(.*\)/.test(cleanWord);
 
         if (isAlt && lastMainIPAVowels && lastMainIPAVowels.length > 0) {
-            let jgstVowelRegex = /[aāiīuūěéèeoꜽꜷṛḷ]/gi;
+            let jgstVowelRegex = /[aāiīuūěéèeoꜽꜷꜹṛḷ]/gi;
             let altVowels = word.match(jgstVowelRegex) || [];
             
             if (altVowels.length === lastMainIPAVowels.length) {
@@ -48,7 +48,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                 let resAlt = '';
                 for (let i = 0; i < word.length; i++) {
                     let char = word[i];
-                    if (/[aāiīuūěéèeoꜽꜷṛḷ]/i.test(char)) {
+                    if (/[aāiīuūěéèeoꜽꜷꜹṛḷ]/i.test(char)) {
                         resAlt += lastMainIPAVowels[vIdx] || char;
                         vIdx++;
                     } else {
@@ -67,7 +67,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         }
         
         let str = word.toLowerCase().replace(/\/$/, '');
-        const vowels = 'aāiīuūěéèeoꜽꜷṛḷ';
+        const vowels = 'aāiīuūěéèeoꜽꜷꜹṛḷ';
 
         let punctMatch = str.match(/([,.?!;:꧈꧉]+)$/);
         let trailingPunct = punctMatch ? punctMatch[1] : '';
@@ -97,11 +97,11 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
             });
         }
 
-        str = str.replace(/([^aāiīuūěéèeoꜽꜷṛḷ\s])\1+/gi, '$1');
+        str = str.replace(/([^aāiīuūěéèeoꜽꜷꜹṛḷ\s])\1+/gi, '$1');
 
         const isLatinStartWithH = /^h/i.test(rawLatinToken || '');
         if (!isLatinStartWithH) {
-            str = str.replace(/^h([aāiīuūěéèeoꜽꜷṛḷ])/i, '$1');
+            str = str.replace(/^h([aāiīuūěéèeoꜽꜷꜹṛḷ])/i, '$1');
         } else {
             str = str.replace(/^h/i, 'h');
         }
@@ -109,7 +109,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         if (str === 'macapat') {
             str = 'mɔcɔpat';
         } else {
-            const jgstVowelRegex = /[aāiīuūěéèeoꜽꜷṛḷ]/gi;
+            const jgstVowelRegex = /[aāiīuūěéèeoꜽꜷꜹṛḷ]/gi;
             let vowelMatches = [];
             let match;
             while ((match = jgstVowelRegex.exec(str)) !== null) {
