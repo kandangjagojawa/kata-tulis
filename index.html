@@ -389,22 +389,22 @@
         }
 
         const aksaraMarked = Modules[fnKey](markedInput);
-        const aksaraSegments = aksaraMarked.split(MARKER);
 
-        let rawJgstSegments = [];
-        for (let i = 0; i < aksaraSegments.length; i++) {
-            let segAksara = aksaraSegments[i];
-            let jgstSeg = '';
-            if (segAksara && typeof transliterateToJGST === 'function') {
-                jgstSeg = transliterateToJGST(segAksara);
-            } else {
-                jgstSeg = segAksara;
-            }
+        let fullJgst = '';
+        if (aksaraMarked && typeof transliterateToJGST === 'function') {
+            fullJgst = transliterateToJGST(aksaraMarked);
+        } else {
+            fullJgst = aksaraMarked;
+        }
 
-            if (isSastraLampah && /^h[aāiīuūěéèeoꜽꜷṛḷ]/i.test(jgstSeg)) {
-                jgstSeg = jgstSeg.substring(1);
+        const rawJgstSegments = fullJgst.split(MARKER);
+
+        if (isSastraLampah) {
+            for (let i = 0; i < rawJgstSegments.length; i++) {
+                if (/^h[aāiīuūěéèeoꜽꜷṛḷ]/i.test(rawJgstSegments[i])) {
+                    rawJgstSegments[i] = rawJgstSegments[i].substring(1);
+                }
             }
-            rawJgstSegments.push(jgstSeg);
         }
 
         let cleanedJgstSegments = [];
