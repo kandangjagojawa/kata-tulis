@@ -1,14 +1,11 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Pembaruan Fonem Vokal & Fonotaktik Koda:
- * - Memperbaiki deteksi koda Layar (ṙ) agar suku kata tertutup berakhiran Layar (seperti -kir pada singkir)
- *   dievaluasi sebagai suku kata tertutup secara tepat di seluruh modul (membentuk [siŋkɪr]).
- * - Suku kata awal tertutup nasal (sing-, mimp-, dsb.): Vokal jejeg [i] / [u] (singkir -> [siŋkɪr]).
- * - Suku kata akhir tertutup non-nasal (-kir, -puk, dsb.): Vokal miring [ɪ] / [ʊ].
- * - Kata 2 Suku Kata Terbuka berakhiran 'a' (termasuk -ana): [ɔ] (mana -> [mɔnɔ]).
+ * Pembaruan Fonem Vokal:
+ * - Kata 2 Suku Kata Terbuka berakhiran 'a' (termasuk -ana): [ɔ] (mana -> [mɔnɔ], kana -> [kɔnɔ]).
  * - Kata 2 Suku Kata S1 Tertutup Nasal: Terasimilasi ke [ɔ] (kanca -> [kɔɲtʃɔ]).
  * - Kata 3+ Suku Kata dengan Sufiks -ana: Batasi perubahan [ɔ] hanya pada sufiks (panganana -> [paŋanɔnɔ]).
+ * - Kata 3 Suku Kata S1 Tertutup Nasal: S1 miring [a], S2 & S3 jejeg [ɔ] (kandhana -> [kanɖʱɔnɔ], pancaka -> [paɲtʃɔkɔ]).
  */
 
 function extractIPAVowels(ipaStr) {
@@ -26,7 +23,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
     const ipaMap = {
         'ā': 'aː', 'ī': 'iː', 'ū': 'uː',
         'ꜽ': 'aɪ', 'ꜷ': 'aʊ',
-        'ñ': 'ɲ', 'ṅ': 'ŋ', 'ṇ': 'ɳ',
+        'jñ': 'ɲ', 'ñ': 'ɲ', 'ṅ': 'ŋ', 'ṇ': 'ɳ',
         'ṭ': 'ʈ', 'ḍ': 'ɖ', 'c': 'tʃ', 'j': 'dʒ',
         'y': 'j', 'w': 'w',
         'ś': 'ʃ', 'ṣ': 'ʂ', 'ḥ': 'ħ', 'ṡ': 'θ', 'ẓ': 'ðˤ', '‘': 'ʕ',
@@ -137,18 +134,15 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
                 let lastV = vowelMatches[numVowels - 1];
                 let tailBlock = str.substring(lastV.index + lastV.vowel.length);
-                
-                // Menambahkan karakter koda JGST: ṙ (Layar), ṟ, ṛ, ŋ, ṃ ke dalam regex koda akhir
-                if (tailBlock.length > 0 && /[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕṙṟṛŋṃ]/i.test(tailBlock)) {
+                if (tailBlock.length > 0 && /[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕŋ]/i.test(tailBlock)) {
                     isClosed[numVowels - 1] = true;
                 }
 
                 let resolvedVowels = new Array(numVowels);
 
-                // Deteksi struktur S1 pada kata 2-3 suku kata
-                let isTwoOrThreeWord = (numVowels === 2 || numVowels === 3);
-                let isTwoOrThreeWithOpenFinal = (numVowels === 2 && !isClosed[1]) || (numVowels === 3 && !isClosed[2]);
-                let isS1ClosedInTargetWord = isTwoOrThreeWord && isClosed[0];
+                // Deteksi khusus struktur S1 pada kata 2 suku kata dan kata 3 suku kata (S3 Terbuka)
+                let isTwoOrThreeWithOpenFinal = (numVowels === 2) || (numVowels === 3 && !isClosed[2]);
+                let isS1ClosedInTargetWord = isTwoOrThreeWithOpenFinal && isClosed[0];
 
                 let firstSyllableCodaIsNasal = false;
                 let firstSyllableCodaIsHandR = false;
@@ -159,7 +153,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     let vNext = vowelMatches[1];
                     let cBlock = str.substring(vCurr.index + vCurr.vowel.length, vNext.index);
                     
-                    let codaMatch = cBlock.match(/^(ng|ny|dh|th|ñ|ṅ|ŋ|ṇ|ṃ|[bcdfghjklmnpqrstvwxyzśṣḥ])/i);
+                    let codaMatch = cBlock.match(/^(ng|ny|dh|th|[bcdfghjklmnpqrstvwxyzñṅṇṭḍśṣḥ])/i);
                     let coda = codaMatch ? codaMatch[1].toLowerCase() : '';
                     let onsetS2 = cBlock.substring(coda.length);
 
@@ -168,7 +162,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     hasCakraPengkalGembungNext = /[ryw]/i.test(onsetS2);
                 }
 
-                // A. Penentuan Dasar Vokal Fonetis
+                // A. Penentuan dasar Vokal
                 for (let k = 0; k < numVowels; k++) {
                     let v = vowelMatches[k].vowel;
                     let closed = isClosed[k];
@@ -179,7 +173,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     } else if (v === 'i') {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ɪ';
-                        } else if (k === 0 && closed && isTwoOrThreeWord) {
+                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
                             let isMiringI = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringI ? 'ɪ' : 'i';
                         } else if (closed) {
@@ -190,7 +184,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     } else if (v === 'u') {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ʊ';
-                        } else if (k === 0 && closed && isTwoOrThreeWord) {
+                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
                             let isMiringU = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringU ? 'ʊ' : 'u';
                         } else if (closed) {
@@ -247,6 +241,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                 if (lastVowelChar === 'a' && !isClosed[lastIdx]) {
                     for (let j = lastIdx; j >= 0; j--) {
                         if (vowelMatches[j].vowel === 'a') {
+                            // Pembatas khusus sufiks -ana pada kata 3+ suku kata
                             if (isSuffixAna && j < numVowels - 2) {
                                 break;
                             }
@@ -302,7 +297,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                  .replace(/ṭh/g, 'ʈʰ')
                  .replace(/dh/g, 'dʱ')
                  .replace(/th/g, 'tʰ')
-                 .replace(/jñ/g, 'dʒʱ')
+                 .replace(/jñ/g, 'ɲ')
                  .replace(/ṛě/g, 'rəː')
                  .replace(/ḷö/g, 'ləː');
 
