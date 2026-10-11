@@ -55,6 +55,7 @@ function convertJGSTtoPUJL(jgstStr, rawLatinToken) {
             { pattern: /ḹ|ḷ/g, replace: 'le' },
             { pattern: /ꜽ/g, replace: 'ai' },
             { pattern: /ꜷ/g, replace: 'au' },
+            { pattern: /jñ/g, replace: 'ny' },
             { pattern: /ñc/g, replace: 'nc' },
             { pattern: /ñj/g, replace: 'nj' },
             { pattern: /ñ/g, replace: 'ny' },
