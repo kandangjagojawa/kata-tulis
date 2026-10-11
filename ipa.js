@@ -1,10 +1,13 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Diperbarui sesuai kaidah fonologi vokal Jawa (jejeg & miring):
- * - Vokal 'i' & 'u': Miring ([ɪ] / [ʊ]) HANYA pada suku kata tertutup AKHIR. Suku kata bukan akhir (terbuka/tertutup) adalah jejeg ([i] / [u]).
- * - Vokal 'e' (é/è/e-taling) & 'o' (taling-tarung): Miring ([ɛ] / [ɔ]) pada suku kata tertutup akhir dan menyelaraskan suku kata sebelumnya (harmony).
- * - Vokal 'a': Miring ([a]), kecuali berakhiran suku kata terbuka 'a' ([ɔ]) yang menyelaraskan deretan vokal 'a' sebelumnya secara berurutan.
+ * Aturan Fonem Vokal Suku Kata Pertama (S1) Kata 2 Suku Kata:
+ * 1. Dimatikan Nasal (m, n, ny, ng) + Cakra/Pengkal/Gembung: Vokal S1 Suara Jejeg ([ɔ], [i], [u], [e], [o]).
+ * 2. Dimatikan h/r + Konsonan (baik TANPA maupun DENGAN Cakra/Pengkal/Gembung): Selalu Suara Miring ([a], [ɪ], [ʊ], [ɛ], [ɔ]).
+ * 3. Dimatikan Konsonan Lain (b, d, g, k, l, p, s, t, w, dll):
+ *    - Tanpa sandhangan ('a') + Cakra/Pengkal/Gembung: Suara Miring ([a]).
+ *    - Ber-sandhangan ('i'/'u') + Cakra/Pengkal/Gembung: Suara Jejeg ([i], [u]).
+ *    - Tanpa Cakra/Pengkal/Gembung: Suara Miring ([a], [ɪ], [ʊ], [ɛ], [ɔ]).
  */
 
 function extractIPAVowels(ipaStr) {
@@ -20,26 +23,16 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
     // Kamus Pemetaan Karakter Tunggal JGST ke IPA
     const ipaMap = {
-        // Vokal Panjang & Diftong
         'ā': 'aː', 'ī': 'iː', 'ū': 'uː',
         'ꜽ': 'aɪ', 'ꜷ': 'aʊ',
-        
-        // Konsonan Dasar, Retrofleks, Palatal & Nasal
         'ñ': 'ɲ', 'ṅ': 'ŋ', 'ṇ': 'ɳ',
         'ṭ': 'ʈ', 'ḍ': 'ɖ', 'c': 'tʃ', 'j': 'dʒ',
-        'y': 'j', // Ya bawaan -> IPA /j/
-        'w': 'w', // Wa bawaan -> IPA /w/
-        
-        // Konsonan Frikatif, Serapan Arab & Rekan
+        'y': 'j', 'w': 'w',
         'ś': 'ʃ', 'ṣ': 'ʂ', 'ḥ': 'ħ', 'ṡ': 'θ', 'ẓ': 'ðˤ', '‘': 'ʕ',
         'q': 'q', 'x': 'x', 'f': 'f', 'v': 'v', 'z': 'z',
-        
-        // Aksara Murda & Mahaprana Ber-diakritik
         'c̣': 'tʃʰ', 'p̣': 'pʰ', 'g̣': 'gʱ', 'ḅ': 'bʱ', 'j̣': 'ɲ', 'ṟ': 'r',
-        
-        // Sandhangan & Konsonan Khusus
         'ṃ': 'm', 'ṙ': 'r', 'ṛ': 'rə', 'ḷ': 'lə',
-        'ŕ': 'r' // Cakra -> IPA [r]
+        'ŕ': 'r'
     };
     
     let ipaWords = words.map(word => {
@@ -48,7 +41,6 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         let cleanWord = word.trim();
         let isAlt = cleanWord.startsWith('(') || /\(.*\)/.test(cleanWord);
 
-        // Penanganan khusus kata alternatif di dalam kurung dari KBJ
         if (isAlt && lastMainIPAVowels && lastMainIPAVowels.length > 0) {
             let jgstVowelRegex = /[aāiīuūěéèeoꜽꜷṛḷ]/gi;
             let altVowels = word.match(jgstVowelRegex) || [];
@@ -79,17 +71,14 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         let str = word.toLowerCase().replace(/\/$/, '');
         const vowels = 'aāiīuūěéèeoꜽꜷṛḷ';
 
-        // Pisahkan tanda baca di akhir kata (koma, titik, dll) agar tidak terbaca sebagai konsonan penutup
         let punctMatch = str.match(/([,.?!;:꧈꧉]+)$/);
         let trailingPunct = punctMatch ? punctMatch[1] : '';
         if (trailingPunct) {
             str = str.slice(0, -trailingPunct.length);
         }
 
-        // Konversi awal untuk Pengkal (ỿ) dari JGST menjadi 'y'
         str = str.replace(/ỿ/g, 'y');
 
-        // KHUSUS SRIWEDARI: Pembentukan Tembung Dwipurwa
         if (fnKey === 'sriwedari') {
             const consPatternDwipurwa = '(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ṡ|ḳ|g̣|c̣|j̣|p̣|ḅ|[bcdfghjklmnpqrstvwxyz])';
             const dwipurwaRegex = new RegExp(
@@ -110,23 +99,18 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
             });
         }
 
-        // Degeminasi konsonan ganda hasil morfologi/pasangan
         str = str.replace(/([^aāiīuūěéèeoꜽꜷṛḷ\s])\1+/gi, '$1');
 
-        // 1. Deteksi Ha Tipis vs Ha Tebal berdasarkan input Latin asli user
         const isLatinStartWithH = /^h/i.test(rawLatinToken || '');
-        
         if (!isLatinStartWithH) {
             str = str.replace(/^h([aāiīuūěéèeoꜽꜷṛḷ])/i, '$1');
         } else {
             str = str.replace(/^h/i, 'h');
         }
 
-        // Pengecualian khusus kata turunan/majemuk tertentu
         if (str === 'macapat') {
             str = 'mɔcɔpat';
         } else {
-            // 2. Evaluasi Suku Kata & Fonem Vokal Fonetis
             const jgstVowelRegex = /[aāiīuūěéèeoꜽꜷṛḷ]/gi;
             let vowelMatches = [];
             let match;
@@ -158,7 +142,27 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
                 let resolvedVowels = new Array(numVowels);
 
-                // A. Penentuan dasar Vokal i, u, e (pepet), dan default
+                // Deteksi khusus struktur S1 pada kata 2 suku kata
+                let isFirstOfTwo = (numVowels === 2 && isClosed[0]);
+                let firstSyllableCodaIsNasal = false;
+                let firstSyllableCodaIsHandR = false;
+                let hasCakraPengkalGembungNext = false;
+
+                if (isFirstOfTwo) {
+                    let vCurr = vowelMatches[0];
+                    let vNext = vowelMatches[1];
+                    let cBlock = str.substring(vCurr.index + vCurr.vowel.length, vNext.index);
+                    
+                    let codaMatch = cBlock.match(/^(ng|ny|dh|th|[bcdfghjklmnpqrstvwxyzñṅṇṭḍśṣḥ])/i);
+                    let coda = codaMatch ? codaMatch[1].toLowerCase() : '';
+                    let onsetS2 = cBlock.substring(coda.length);
+
+                    firstSyllableCodaIsNasal = /^(m|n|ñ|ṅ|ŋ|ṇ|ṃ|ny|ng)$/i.test(coda);
+                    firstSyllableCodaIsHandR = /^(h|ḥ|r|ṙ|ṟ)$/i.test(coda);
+                    hasCakraPengkalGembungNext = /[ryw]/i.test(onsetS2);
+                }
+
+                // A. Penentuan dasar Vokal
                 for (let k = 0; k < numVowels; k++) {
                     let v = vowelMatches[k].vowel;
                     let closed = isClosed[k];
@@ -167,13 +171,41 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     if (v === 'ě') {
                         resolvedVowels[k] = 'ə';
                     } else if (v === 'i') {
-                        resolvedVowels[k] = (isFinal && closed) ? 'ɪ' : 'i';
+                        if (isFinal && closed) {
+                            resolvedVowels[k] = 'ɪ';
+                        } else if (numVowels === 2 && k === 0 && closed) {
+                            let isMiringI = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
+                            resolvedVowels[k] = isMiringI ? 'ɪ' : 'i';
+                        } else {
+                            resolvedVowels[k] = 'i';
+                        }
                     } else if (v === 'u') {
-                        resolvedVowels[k] = (isFinal && closed) ? 'ʊ' : 'u';
+                        if (isFinal && closed) {
+                            resolvedVowels[k] = 'ʊ';
+                        } else if (numVowels === 2 && k === 0 && closed) {
+                            let isMiringU = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
+                            resolvedVowels[k] = isMiringU ? 'ʊ' : 'u';
+                        } else {
+                            resolvedVowels[k] = 'u';
+                        }
                     } else if (['é', 'è', 'e'].includes(v)) {
-                        resolvedVowels[k] = (isFinal && closed) ? 'ɛ' : 'e';
+                        if (isFinal && closed) {
+                            resolvedVowels[k] = 'ɛ';
+                        } else if (numVowels === 2 && k === 0 && closed) {
+                            let isMiringE = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
+                            resolvedVowels[k] = isMiringE ? 'ɛ' : 'e';
+                        } else {
+                            resolvedVowels[k] = 'e';
+                        }
                     } else if (v === 'o') {
-                        resolvedVowels[k] = (isFinal && closed) ? 'ɔ' : 'o';
+                        if (isFinal && closed) {
+                            resolvedVowels[k] = 'ɔ';
+                        } else if (numVowels === 2 && k === 0 && closed) {
+                            let isMiringO = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
+                            resolvedVowels[k] = isMiringO ? 'ɔ' : 'o';
+                        } else {
+                            resolvedVowels[k] = 'o';
+                        }
                     } else if (v === 'a') {
                         resolvedVowels[k] = 'a';
                     } else {
@@ -181,7 +213,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     }
                 }
 
-                // B. Penyelarasan Vokal e (é/è) dan o (Penyelarasan Harmony Kanan-ke-Kiri)
+                // B. Penyelarasan Vokal e (é/è) dan o (Harmony Kanan-ke-Kiri)
                 for (let k = numVowels - 2; k >= 0; k--) {
                     let v = vowelMatches[k].vowel;
                     let nextRes = resolvedVowels[k + 1];
@@ -193,12 +225,18 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     }
                 }
 
-                // C. Penyelarasan Vokal a (Penyelarasan Rantai Berurutan dari Suku Kata Terbuka Akhir)
+                // C. Penyelarasan Vokal a (Penyelarasan Rantai Berurutan)
                 let lastIdx = numVowels - 1;
                 let lastVowelChar = vowelMatches[lastIdx].vowel;
                 if (lastVowelChar === 'a' && !isClosed[lastIdx] && !/ana$/i.test(str)) {
                     for (let j = lastIdx; j >= 0; j--) {
                         if (vowelMatches[j].vowel === 'a') {
+                            if (numVowels === 2 && j === 0 && isClosed[0]) {
+                                let s1IsJejegA = firstSyllableCodaIsNasal;
+                                if (!s1IsJejegA) {
+                                    break;
+                                }
+                            }
                             resolvedVowels[j] = 'ɔ';
                         } else {
                             break;
@@ -227,7 +265,6 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
             }
         }
 
-        // 3. Aturan Khusus Vokal E-Miring (ɛ) Berimbuhan & Miring Ganda
         if (/[éèɛ].*?[éèɛ]/i.test(str) && !/[éèe]$/i.test(str)) {
             str = str.replace(/[éè]/g, 'ɛ');
         }
@@ -236,11 +273,9 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
             str = str.replace(/[éè]/g, 'ɛ');
         }
 
-        // Normalisasi sisa vokal é/è (e-jejeg) dan ě (pepet)
         str = str.replace(/[éè]/g, 'e'); 
         str = str.replace(/ě/g, 'ə'); 
 
-        // Substitusi Token Multi-Karakter JGST (Aspirat, Murda, & Sandhangan Panjang)
         str = str.replace(/ḍh/g, 'ɖʱ')
                  .replace(/ṭh/g, 'ʈʰ')
                  .replace(/dh/g, 'dʱ')
@@ -255,16 +290,10 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
             res += (ipaMap[char] !== undefined) ? ipaMap[char] : char;
         }
 
-        // Hapus sisa karakter Unicode Aksara Jawa / simbol khusus non-IPA
         res = res.replace(/[\uA980-\uA9DF]/g, '');
-
-        // Degeminasi simbol IPA ganda berturut-turut
         res = res.replace(/(tʃ|dʒ|.)\1+/g, '$1');
-
-        // Kembalikan tanda baca di akhir hasil fonetis
         res += trailingPunct;
 
-        // Simpan pola vokal IPA kata utama untuk digunakan oleh alternatif di dalam kurung berikutnya
         lastMainIPAVowels = extractIPAVowels(res);
 
         return res;
