@@ -176,7 +176,7 @@
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Simplified" checked> 3. KAJ Simplified</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Tradisional" checked> 4. KAJ Tradisional</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="CaraKawi" checked> 5. Cara Kawi</label>
-                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="PUJL" checked> 6. PUJL</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan" checked> 6. Ringkasan</label>
                 </div>
                 <div class="sub-toggles">
                     <span class="toggle-label">Latin:</span>
@@ -315,28 +315,32 @@
             </div>
         </div>
 
-        <!-- 6. PUJL -->
-        <div class="card" id="cardPUJL">
-            <div class="card-header">6. PUJL</div>
+        <!-- 6. Ringkasan Transliterasi -->
+        <div class="card" id="cardRingkasan">
+            <div class="card-header">6. Ringkasan Transliterasi</div>
             <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outRingkasan_PUJL" class="box-pujl">-</div>
+            </div>
+            <div class="output-group">
                 <div class="output-label">KBJ</div>
-                <div id="outPUJL_KBJ" class="box-pujl">-</div>
+                <div id="outRingkasan_KBJ" class="box-aksara font-ngayogyann">-</div>
             </div>
-            <div class="output-group group-pujl">
+            <div class="output-group">
                 <div class="output-label">Sriwedari</div>
-                <div id="outPUJL_Sriwedari" class="box-pujl">-</div>
+                <div id="outRingkasan_Sriwedari" class="box-aksara font-ngayogyann">-</div>
             </div>
-            <div class="output-group group-pujl">
+            <div class="output-group">
                 <div class="output-label">Simplified</div>
-                <div id="outPUJL_Simplified" class="box-pujl">-</div>
+                <div id="outRingkasan_Simplified" class="box-aksara font-ngayogyann">-</div>
             </div>
-            <div class="output-group group-pujl">
+            <div class="output-group">
                 <div class="output-label">Tradisional</div>
-                <div id="outPUJL_Tradisional" class="box-pujl">-</div>
+                <div id="outRingkasan_Tradisional" class="box-aksara font-ngayogyan">-</div>
             </div>
-            <div class="output-group group-pujl">
+            <div class="output-group">
                 <div class="output-label">Cara Kawi (Mardi Kawi)</div>
-                <div id="outPUJL_CaraKawi" class="box-pujl">-</div>
+                <div id="outRingkasan_CaraKawi" class="box-aksara font-ngayogyan">-</div>
             </div>
         </div>
     </div>
@@ -486,7 +490,6 @@
                 pujlList.push(token);
             } else if (token !== '') {
                 let jgstKata = cleanedJgstSegments[wordCounter] !== undefined ? cleanedJgstSegments[wordCounter] : token;
-                
                 let jgstForIPAAndPUJL = netralkanJGSTForPUJL(jgstKata, token, fnKey);
 
                 let ipaKata = '-';
@@ -525,14 +528,12 @@
         const outJGST = document.getElementById(`out${moduleId}_JGST`);
         const outIPA = document.getElementById(`out${moduleId}_IPA`);
         const outPUJL = document.getElementById(`out${moduleId}_PUJL`);
-        const outPUJL_CardRow = document.getElementById(`outPUJL_${moduleId}`);
 
         if (!rawInput.trim() || !Modules[fnKey]) {
-            if (outAksara) outAksara.textContent = '-'; 
-            if (outJGST) outJGST.textContent = '-'; 
-            if (outIPA) outIPA.textContent = '-';
+            outAksara.textContent = '-'; 
+            outJGST.textContent = '-'; 
+            outIPA.textContent = '-';
             if (outPUJL) outPUJL.textContent = '-';
-            if (outPUJL_CardRow) outPUJL_CardRow.textContent = '-';
             return;
         }
 
@@ -576,13 +577,12 @@
             }
         }
 
-        if (outAksara) outAksara.innerHTML = aksaraUtuh + warningText;
+        outAksara.innerHTML = aksaraUtuh + warningText;
 
         const resultShifted = generateJGSTAndIPAShifted(formattedInput, fnKey, isSastraLampah);
-        if (outJGST) outJGST.textContent = resultShifted.jgst;
-        if (outIPA) outIPA.textContent = resultShifted.ipa;
+        outJGST.textContent = resultShifted.jgst;
+        outIPA.textContent = resultShifted.ipa;
         if (outPUJL) outPUJL.textContent = resultShifted.pujl;
-        if (outPUJL_CardRow) outPUJL_CardRow.textContent = resultShifted.pujl;
     }
 
     function processTransliteration() {
@@ -595,23 +595,81 @@
         processCardOutput('Simplified', 'simplified', input, false, false);
         processCardOutput('Tradisional', 'tradisional', input, true, false);
         processCardOutput('CaraKawi', 'carakawi', input, true, true);
+
+        // Update Kartu Ringkasan
+        const outRingkasanPUJL = document.getElementById('outRingkasan_PUJL');
+        const outRingkasanKBJ = document.getElementById('outRingkasan_KBJ');
+        const outRingkasanSriwedari = document.getElementById('outRingkasan_Sriwedari');
+        const outRingkasanSimplified = document.getElementById('outRingkasan_Simplified');
+        const outRingkasanTradisional = document.getElementById('outRingkasan_Tradisional');
+        const outRingkasanCaraKawi = document.getElementById('outRingkasan_CaraKawi');
+
+        if (!input.trim()) {
+            if (outRingkasanPUJL) outRingkasanPUJL.textContent = '-';
+            if (outRingkasanKBJ) outRingkasanKBJ.textContent = '-';
+            if (outRingkasanSriwedari) outRingkasanSriwedari.textContent = '-';
+            if (outRingkasanSimplified) outRingkasanSimplified.textContent = '-';
+            if (outRingkasanTradisional) outRingkasanTradisional.textContent = '-';
+            if (outRingkasanCaraKawi) outRingkasanCaraKawi.textContent = '-';
+        } else {
+            if (outRingkasanPUJL) outRingkasanPUJL.textContent = document.getElementById('outKBJ_PUJL').textContent;
+            if (outRingkasanKBJ) outRingkasanKBJ.innerHTML = document.getElementById('outKBJ_Aksara').innerHTML;
+            if (outRingkasanSriwedari) outRingkasanSriwedari.innerHTML = document.getElementById('outSriwedari_Aksara').innerHTML;
+            if (outRingkasanSimplified) outRingkasanSimplified.innerHTML = document.getElementById('outSimplified_Aksara').innerHTML;
+            if (outRingkasanTradisional) outRingkasanTradisional.innerHTML = document.getElementById('outTradisional_Aksara').innerHTML;
+            if (outRingkasanCaraKawi) outRingkasanCaraKawi.innerHTML = document.getElementById('outCaraKawi_Aksara').innerHTML;
+        }
+    }
+
+    // Handler Toggle Kelompok Tata Tulis Baru & Lama
+    const toggleBaru = document.getElementById('toggleTataTulisBaru');
+    if (toggleBaru) {
+        toggleBaru.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            ['KBJ', 'Sriwedari', 'Simplified'].forEach(cardType => {
+                const cb = document.querySelector(`.toggle-card[data-card="${cardType}"]`);
+                if (cb) {
+                    cb.checked = isChecked;
+                    const cardEl = document.getElementById('card' + cardType);
+                    if (cardEl) cardEl.style.display = isChecked ? '' : 'none';
+                }
+            });
+        });
+    }
+
+    const toggleLama = document.getElementById('toggleTataTulisLama');
+    if (toggleLama) {
+        toggleLama.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            ['Tradisional', 'CaraKawi'].forEach(cardType => {
+                const cb = document.querySelector(`.toggle-card[data-card="${cardType}"]`);
+                if (cb) {
+                    cb.checked = isChecked;
+                    const cardEl = document.getElementById('card' + cardType);
+                    if (cardEl) cardEl.style.display = isChecked ? '' : 'none';
+                }
+            });
+        });
     }
 
     function updateGroupToggles() {
-        const cbBaru = ['KBJ', 'Sriwedari', 'Simplified'].map(name => document.querySelector(`.toggle-card[data-card="${name}"]`));
-        const cbLama = ['Tradisional', 'CaraKawi'].map(name => document.querySelector(`.toggle-card[data-card="${name}"]`));
+        const baruCards = ['KBJ', 'Sriwedari', 'Simplified'];
+        const lamaCards = ['Tradisional', 'CaraKawi'];
 
-        const cbTataTulisBaru = document.getElementById('toggleTataTulisBaru');
-        const cbTataTulisLama = document.getElementById('toggleTataTulisLama');
+        const allBaruChecked = baruCards.every(cardType => {
+            const cb = document.querySelector(`.toggle-card[data-card="${cardType}"]`);
+            return cb && cb.checked;
+        });
+        if (toggleBaru) toggleBaru.checked = allBaruChecked;
 
-        if (cbTataTulisBaru) {
-            cbTataTulisBaru.checked = cbBaru.every(cb => cb && cb.checked);
-        }
-        if (cbTataTulisLama) {
-            cbTataTulisLama.checked = cbLama.every(cb => cb && cb.checked);
-        }
+        const allLamaChecked = lamaCards.every(cardType => {
+            const cb = document.querySelector(`.toggle-card[data-card="${cardType}"]`);
+            return cb && cb.checked;
+        });
+        if (toggleLama) toggleLama.checked = allLamaChecked;
     }
 
+    // Inisialisasi kontrol tampil/sembunyi kartu hasil centang
     document.querySelectorAll('.toggle-card').forEach(cb => {
         cb.addEventListener('change', (e) => {
             const cardId = 'card' + e.target.dataset.card;
@@ -623,30 +681,7 @@
         });
     });
 
-    document.getElementById('toggleTataTulisBaru').addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        ['KBJ', 'Sriwedari', 'Simplified'].forEach(cardName => {
-            const cb = document.querySelector(`.toggle-card[data-card="${cardName}"]`);
-            if (cb) {
-                cb.checked = isChecked;
-                const cardEl = document.getElementById('card' + cardName);
-                if (cardEl) cardEl.style.display = isChecked ? '' : 'none';
-            }
-        });
-    });
-
-    document.getElementById('toggleTataTulisLama').addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        ['Tradisional', 'CaraKawi'].forEach(cardName => {
-            const cb = document.querySelector(`.toggle-card[data-card="${cardName}"]`);
-            if (cb) {
-                cb.checked = isChecked;
-                const cardEl = document.getElementById('card' + cardName);
-                if (cardEl) cardEl.style.display = isChecked ? '' : 'none';
-            }
-        });
-    });
-
+    // Inisialisasi kontrol tampil/sembunyi sub-notasi (JGST, IPA, PUJL)
     document.querySelectorAll('.toggle-sub').forEach(cb => {
         cb.addEventListener('change', (e) => {
             const subType = e.target.dataset.sub;
