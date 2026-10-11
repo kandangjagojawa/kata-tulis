@@ -49,7 +49,7 @@ const CONS_MAP = {
 
 function getWarga(char) {
     if (['ꦕ','ꦖ','ꦗ','ꦙ','ꦚ','ꦯ','ꦪ'].includes(char)) return 'talawya';
-    if (['ꦛ','ꦜ','ꦝ','ꦞ','ꦟ','ꦰ','ꦬ'].includes(char)) return 'murdhanya';
+    if (['ꦛ','ꦜ','ꦝ','ꦞ','ꦟ','ꦰ','ꦬ','ꦫ'].includes(char)) return 'murdhanya';
     if (['ꦠ','ꦡ','ꦢ','ꦣ','ꦤ','ꦱ','ꦭ'].includes(char)) return 'dantya';
     if (['ꦏ','ꦑ','ꦒ','ꦓ','ꦔ','ꦲ','ꦐ'].includes(char)) return 'kanthya';
     if (['ꦥ','ꦦ','ꦧ','ꦨ','ꦩ','ꦮ'].includes(char)) return 'osthya';
