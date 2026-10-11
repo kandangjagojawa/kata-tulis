@@ -32,39 +32,19 @@ function convertJGSTtoPUJL(jgstStr, rawLatinToken) {
         // 2. Konversi awal Pengkal (ỿ) menjadi 'y'
         str = str.replace(/ỿ/g, 'y');
 
-        // 3. Konversi Tembung Dwipurwa (suku kata pertama berubah menjadi pepet 'e')
-        const vowels = 'aāiīuūěéèeoꜽꜷṛḷ';
-        const consPattern = '(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ṡ|ḳ|g̣|c̣|j̣|p̣|ḅ|[kgctdpm nswlryh])';
-        const dwipurwaRegex = new RegExp(
-            `^(di|ka|ke|sa|pa|pi|kuma|kapi)?` + 
-            `${consPattern}` + 
-            `([${vowels}])` + 
-            `\\2` + 
-            `([ryl]?)` + 
-            `([${vowels}])` + 
-            `([^${vowels}]*[${vowels}].*)$`,
-            'i'
-        );
-
-        str = str.replace(dwipurwaRegex, function(match, prefix, c1, v1, medial, v2, rest) {
-            prefix = prefix || '';
-            medial = medial || '';
-            return prefix + c1 + 'e' + c1 + medial + v2 + rest;
-        });
-
-        // 4. Menghilangkan Aksara Ha ('h') atau Panglancar ('y') setelah ater-ater 'di-' yang bertemu vokal
+        // 3. Menghilangkan Aksara Ha ('h') atau Panglancar ('y') setelah ater-ater 'di-' yang bertemu vokal
         str = str.replace(/^di-?[hy]([aāiīuūěéèeoꜽꜷṛḷ])/i, 'di$1');
 
-        // 5. Degeminasi konsonan ganda hasil morfologi/pasangan (nn -> n, kk -> k, dst.)
+        // 4. Degeminasi konsonan ganda hasil morfologi/pasangan (nn -> n, kk -> k, dst.)
         str = str.replace(/([^aāiīuūěéèeoꜽꜷṛḷ\s])\1+/gi, '$1');
 
-        // 6. Deteksi Ha Tipis vs Ha Tebal berdasarkan input Latin asli
+        // 5. Deteksi Ha Tipis vs Ha Tebal berdasarkan input Latin asli
         const isLatinStartWithH = /^h/i.test(rawLatinToken || '');
         if (!isLatinStartWithH) {
             str = str.replace(/^h([aāiīuūěéèeoꜽꜷṛḷ])/i, '$1');
         }
 
-        // 7. Pemetaan Karakter JGST ke PUJL
+        // 6. Pemetaan Karakter JGST ke PUJL
         const pujlMap = [
             { pattern: /ā/g, replace: 'a' },
             { pattern: /ī/g, replace: 'i' },
@@ -103,7 +83,7 @@ function convertJGSTtoPUJL(jgstStr, rawLatinToken) {
             str = str.replace(item.pattern, item.replace);
         });
 
-        // 8. Penghilangan Panglancar (h, y, w) pada vokal rangkap
+        // 7. Penghilangan Panglancar (h, y, w) pada vokal rangkap
         // Kecuali jika input Latin asli pengguna menyertakan h, y, atau w di antara vokal tersebut
         const vowelPattern = '[aiueoéè]';
         const glideRegex = new RegExp(`(${vowelPattern})([hyw])(${vowelPattern})`, 'gi');
@@ -117,6 +97,27 @@ function convertJGSTtoPUJL(jgstStr, rawLatinToken) {
                 return match; // Pertahankan jika ada eksplisit pada input Latin
             }
             return v1 + v2; // Hapus panglancar jika tidak ada di input Latin
+        });
+
+        // 8. Konversi Tembung Dwipurwa (berdasarkan logika pembentukan sriwedari.js)
+        // Dijalankan SETELAH glide removal agar konsonan utama hasil dwipurwa (misal 'w' pada 'wewaton') tidak terhapus
+        const vowels = 'aāiīuūěéèeoꜽꜷṛḷ';
+        const consPattern = '(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ṡ|ḳ|g̣|c̣|j̣|p̣|ḅ|[bcdfghjklmnpqrstvwxyz])';
+        const dwipurwaRegex = new RegExp(
+            `^(di|ke|sa|pi|kuma|kapi)?` + 
+            `${consPattern}` + 
+            `([${vowels}])` + 
+            `\\2` + 
+            `([rylwŕ]?)` + 
+            `\\3` + 
+            `([^${vowels}]*[${vowels}].*)$`,
+            'i'
+        );
+
+        str = str.replace(dwipurwaRegex, function(match, prefix, c1, v1, medial, rest) {
+            prefix = prefix || '';
+            medial = medial || '';
+            return prefix + c1 + 'e' + c1 + medial + v1 + rest;
         });
 
         // 9. Degeminasi konsonan majemuk ganda setelah penyederhanaan
