@@ -2,7 +2,8 @@
  * jgst.js
  * Transliterasi Aksara Jawa Unicode ke JGST
  * Penyesuaian: Nga Lelet (ꦊ) ditransliterasikan menjadi 'ḷ' (bukan 'lě').
- * Penyesuaian Pangkon (/): Tanda '/' hanya dihasilkan jika pangkon (꧀) muncul secara visual (misal diikuti ZWNJ \u200C, spasi, atau bukan aksara Jawa).
+ * Penyesuaian Pangkon (/): Tanda '/' hanya dihasilkan jika pangkon (꧀) muncul secara visual.
+ * Jika pangkon diikuti aksara lain yang membentuk pasangan, tanda '/' TIDAK dihasilkan.
  */
 
 const jgstMap = {
@@ -88,13 +89,31 @@ function transliterateToJGST(text) {
         }
 
         if (next1 === '\uA9C0') {
-          let charNext = i + 1 < text.length ? text[i + 1] : "";
+          let lookIdx = i + 1;
+          let hasZWNJ = false;
+
+          while (lookIdx < text.length) {
+            let ch = text[lookIdx];
+            if (ch === '\u200C') {
+              hasZWNJ = true;
+              lookIdx++;
+            } else if (ch === '\u200D' || ch === '\uE000' || ch === ' ') {
+              lookIdx++;
+            } else {
+              break;
+            }
+          }
+
+          let charNext = lookIdx < text.length ? text[lookIdx] : "";
           let isVisualPangkon = false;
 
-          if (charNext === '\u200C') {
+          if (hasZWNJ) {
             isVisualPangkon = true;
-            i += 1;
-          } else if (!charNext || !/[\uA980-\uA9DF]/.test(charNext)) {
+          } else if (!charNext) {
+            isVisualPangkon = true;
+          } else if (/[\uA984-\uA9B2]/.test(charNext)) {
+            isVisualPangkon = false;
+          } else {
             isVisualPangkon = true;
           }
 
