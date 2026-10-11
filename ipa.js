@@ -3,13 +3,63 @@
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
  */
 
+function extractIPAVowels(ipaStr) {
+    const ipaVowelRegex = /(aː|iː|uː|aɪ|aʊ|[aiueɛəoɔɪʊ])/g;
+    return ipaStr.match(ipaVowelRegex) || [];
+}
+
 function convertJGSTtoIPA(jgstStr, rawLatinToken) {
     if (!jgstStr || jgstStr === '-') return '-';
     
     let words = jgstStr.split(/(\s+)/);
+    let lastMainIPAVowels = null;
+
+    const ipaMap = {
+        'ā': 'aː', 'ī': 'iː', 'ū': 'uː',
+        'ñ': 'ɲ', 'ṅ': 'ŋ', 'ṇ': 'ɳ',
+        'ṭ': 'ʈ', 'ḍ': 'ɖ', 'c': 'tʃ', 'j': 'dʒ',
+        'y': 'j', // Ya bawaan -> IPA /j/
+        'w': 'w', // Wa bawaan (tebal & tipis) -> IPA /w/
+        'ś': 'ʃ', 'ṣ': 'ʂ', 'ḥ': 'h',
+        'q': 'q', 'x': 'x', 'f': 'f', 'v': 'v', 'z': 'z',
+        'ṃ': 'm', 'ṙ': 'r', 'ṛ': 'rə', 'ḷ': 'lə',
+        'ŕ': 'r', // Cakra -> IPA [r]
+        'ꜽ': 'aɪ', 'ꜷ': 'aʊ'
+    };
     
     let ipaWords = words.map(word => {
         if (/^\s+$/.test(word)) return word;
+
+        let cleanWord = word.trim();
+        let isAlt = cleanWord.startsWith('(') || /\(.*\)/.test(cleanWord);
+
+        // Penanganan khusus kata alternatif di dalam kurung dari KBJ
+        if (isAlt && lastMainIPAVowels && lastMainIPAVowels.length > 0) {
+            let jgstVowelRegex = /[aāiīuūěéèeoꜽꜷṛḷ]/gi;
+            let altVowels = word.match(jgstVowelRegex) || [];
+            
+            if (altVowels.length === lastMainIPAVowels.length) {
+                let vIdx = 0;
+                let resAlt = '';
+                for (let i = 0; i < word.length; i++) {
+                    let char = word[i];
+                    if (/[aāiīuūěéèeoꜽꜷṛḷ]/i.test(char)) {
+                        resAlt += lastMainIPAVowels[vIdx] || char;
+                        vIdx++;
+                    } else {
+                        let lowerChar = char.toLowerCase();
+                        let convertedChar = ipaMap[lowerChar] !== undefined ? ipaMap[lowerChar] : char;
+                        if (char >= 'A' && char <= 'Z' && convertedChar.length === 1) {
+                            convertedChar = convertedChar.toUpperCase();
+                        }
+                        resAlt += convertedChar;
+                    }
+                }
+                resAlt = resAlt.replace(/[\uA980-\uA9DF]/g, '');
+                resAlt = resAlt.replace(/(tʃ|dʒ|.)\1+/g, '$1');
+                return resAlt;
+            }
+        }
         
         let str = word.toLowerCase().replace(/\/$/, '');
         const vowels = 'aāiīuūěéèeoꜽꜷṛḷ';
@@ -40,11 +90,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken) {
 
             if (isVowelEnd) {
                 if (lastChar === 'a') {
-                    // Deteksi apakah input Latin secara eksplisit menggunakan tanda hubung untuk panambang -ana (misal: tulis-ana)
-                    const isExplicitPanambangAna = rawLatinToken && /-[a-zA-Z]*ana$/i.test(rawLatinToken);
-
-                    // Konversi vokal penult a -> ɔ jika BUKAN panambang -ana berpola tanda hubung
-                    if (!/ana$/i.test(str) || !isExplicitPanambangAna) {
+                    if (!/ana$/i.test(str)) {
                         str = str.replace(new RegExp(`(${consPattern}*a)(${consPattern}+a)$`, 'i'), function(match, penult, ult) {
                             return penult.replace(/a/g, 'ɔ') + ult;
                         });
@@ -56,7 +102,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken) {
                 str = str.replace(new RegExp(`([${vowels}])([^${vowels}]*)$`), function(match, vowel, cons) {
                     if (vowel === 'i') return 'ɪ' + cons;
                     if (vowel === 'u') return 'ʊ' + cons;
-                    if (vowel in ['é', 'è', 'e']) return 'ɛ' + cons;
+                    if (['é', 'è', 'e'].includes(vowel)) return 'ɛ' + cons;
                     if (vowel === 'o') return 'ɔ' + cons;
                     return vowel + cons;
                 });
@@ -84,20 +130,6 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken) {
         str = str.replace(/[éè]/g, 'e'); 
         str = str.replace(/ě/g, 'ə'); 
 
-        // 4. Pemetaan Karakter IPA Utuh
-        const ipaMap = {
-            'ā': 'aː', 'ī': 'iː', 'ū': 'uː',
-            'ñ': 'ɲ', 'ṅ': 'ŋ', 'ṇ': 'ɳ',
-            'ṭ': 'ʈ', 'ḍ': 'ɖ', 'c': 'tʃ', 'j': 'dʒ',
-            'y': 'j', // Ya bawaan -> IPA /j/
-            'w': 'w', // Wa bawaan (tebal & tipis) -> IPA /w/
-            'ś': 'ʃ', 'ṣ': 'ʂ', 'ḥ': 'h',
-            'q': 'q', 'x': 'x', 'f': 'f', 'v': 'v', 'z': 'z',
-            'ṃ': 'm', 'ṙ': 'r', 'ṛ': 'rə', 'ḷ': 'lə',
-            'ŕ': 'r', // Cakra -> IPA [r]
-            'ꜽ': 'aɪ', 'ꜷ': 'aʊ'
-        };
-
         let res = '';
         for (let i = 0; i < str.length; i++) {
             let char = str[i];
@@ -109,6 +141,9 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken) {
 
         // Degeminasi simbol IPA ganda berturut-turut
         res = res.replace(/(tʃ|dʒ|.)\1+/g, '$1');
+
+        // Simpan pola vokal IPA kata utama untuk digunakan oleh alternatif di dalam kurung berikutnya
+        lastMainIPAVowels = extractIPAVowels(res);
 
         return res;
     });
