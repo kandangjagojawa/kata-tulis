@@ -2,6 +2,7 @@
  * jgst.js
  * Transliterasi Aksara Jawa Unicode ke JGST
  * Penyesuaian: Nga Lelet (ꦊ) ditransliterasikan menjadi 'ḷ' (bukan 'lě').
+ * Penyesuaian Pangkon (/): Tanda '/' hanya dihasilkan jika pangkon (꧀) muncul secara visual (misal diikuti ZWNJ \u200C, spasi, atau bukan aksara Jawa).
  */
 
 const jgstMap = {
@@ -38,13 +39,18 @@ const sandhanganMap = {
 
 function transliterateToJGST(text) {
   if (!text) return "";
-  text = text.replace(/[\u200C\u200D]/g, '');
+  text = text.replace(/\u200D/g, '');
 
   let result = "";
   let i = 0;
 
   while (i < text.length) {
     let char1 = text[i];
+
+    if (char1 === '\u200C') {
+      i++;
+      continue;
+    }
 
     if (!/[\uA980-\uA9DF]/.test(char1)) {
       result += char1;
@@ -83,7 +89,14 @@ function transliterateToJGST(text) {
 
         if (next1 === '\uA9C0') {
           let charNext = i + 1 < text.length ? text[i + 1] : "";
-          let isVisualPangkon = !charNext || !/[\uA980-\uA9DF]/.test(charNext);
+          let isVisualPangkon = false;
+
+          if (charNext === '\u200C') {
+            isVisualPangkon = true;
+            i += 1;
+          } else if (!charNext || !/[\uA980-\uA9DF]/.test(charNext)) {
+            isVisualPangkon = true;
+          }
 
           if (baseText.endsWith('a')) baseText = baseText.slice(0, -1);
           if (isVisualPangkon) {
