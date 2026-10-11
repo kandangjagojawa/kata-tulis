@@ -391,6 +391,11 @@ function prosesParamasastra() {
         }
     }
 
+    let fullLatinDisplay = resultLatinMain;
+    if (resultLatinAlt !== "") {
+        fullLatinDisplay = `${resultLatinMain} (${resultLatinAlt})`;
+    }
+
     if (outLat) outLat.value = fullLatinDisplay;
     if (outJaw) outJaw.innerText = transliterasiKalimat(fullLatinDisplay);
 }
@@ -580,7 +585,7 @@ function transliterasiSingleKata(rawLatin) {
     let prevLatin = "";
     while (latinProcessed !== prevLatin) {
         prevLatin = latinProcessed;
-        latinProcessed = latinProcessed.replace(/([aeêAEÊ])([aiueoéèê])/g, '$1h$2');
+        latinProcessed = latinProcessed.replace(/([aeêAEÊ])(?![iuIU])([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
         latinProcessed = latinProcessed.replace(/([iéèIÉÈ])([aiueoéèê])/g, '$1y$2');
         latinProcessed = latinProcessed.replace(/([uoUO])([aiueoéèê])/g, '$1w$2');
     }
