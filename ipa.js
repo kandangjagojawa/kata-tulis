@@ -65,6 +65,13 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         const vowels = 'aāiīuūěéèeoꜽꜷṛḷ';
         const consPattern = '[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕŋ]';
 
+        // Pisahkan tanda baca di akhir kata (koma, titik, dll) agar tidak terbaca sebagai konsonan penutup
+        let punctMatch = str.match(/([,.?!;:꧈꧉]+)$/);
+        let trailingPunct = punctMatch ? punctMatch[1] : '';
+        if (trailingPunct) {
+            str = str.slice(0, -trailingPunct.length);
+        }
+
         // Konversi awal untuk Pengkal (ỿ) dari JGST menjadi 'y'
         str = str.replace(/ỿ/g, 'y');
 
@@ -162,6 +169,9 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
         // Degeminasi simbol IPA ganda berturut-turut
         res = res.replace(/(tʃ|dʒ|.)\1+/g, '$1');
+
+        // Kembalikan tanda baca di akhir hasil fonetis
+        res += trailingPunct;
 
         // Simpan pola vokal IPA kata utama untuk digunakan oleh alternatif di dalam kurung berikutnya
         lastMainIPAVowels = extractIPAVowels(res);
