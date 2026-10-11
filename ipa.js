@@ -134,7 +134,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
                 let lastV = vowelMatches[numVowels - 1];
                 let tailBlock = str.substring(lastV.index + lastV.vowel.length);
-                if (tailBlock.length > 0 && /[bcdfghjklmnpqrstvwxyzñṅṇṭḍcjywśṣḥqxfvzŕŋ]/i.test(tailBlock)) {
+                if (tailBlock.length > 0 && /[bcdfghjklmnpqrstvwxyzñṅŋṇṭḍcjywśṣḥqxfvzŕṙṟṃḳg̣c̣p̣ḅj̣ṡẓ]/i.test(tailBlock)) {
                     isClosed[numVowels - 1] = true;
                 }
 
@@ -153,7 +153,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     let vNext = vowelMatches[1];
                     let cBlock = str.substring(vCurr.index + vCurr.vowel.length, vNext.index);
                     
-                    let codaMatch = cBlock.match(/^(ng|ny|dh|th|[bcdfghjklmnpqrstvwxyzñṅṇṭḍśṣḥ])/i);
+                    let codaMatch = cBlock.match(/^(ng|ny|dh|th|[bcdfghjklmnpqrstvwxyzñṅŋṇṭḍśṣḥṙŕṟṃḳg̣c̣p̣ḅj̣ṡẓ])/i);
                     let coda = codaMatch ? codaMatch[1].toLowerCase() : '';
                     let onsetS2 = cBlock.substring(coda.length);
 
