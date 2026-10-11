@@ -29,7 +29,60 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; padding: 20px; }
         .container { max-width: 1400px; margin: 0 auto; }
-        h1 { font-size: 1.8rem; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        /* Top Header Navigation */
+        .top-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .top-header-bar h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        /* Tombol Penyorot Penting di Menu Atas */
+        .btn-guide-important {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+            border: 2px solid #ef4444;
+            transition: all 0.25s ease;
+        }
+
+        .btn-guide-important:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(220, 38, 38, 0.6);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .badge-important {
+            background: #fef08a;
+            color: #991b1b;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
         .input-section { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; }
         
@@ -102,10 +155,14 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             resize: vertical;
+            outline: none;
             font-family: inherit;
         }
 
-        textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2); }
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,86,179,0.1);
+        }
 
         .btn-clear {
             position: absolute;
@@ -114,19 +171,21 @@
             background: #e2e8f0;
             border: none;
             color: #64748b;
-            width: 26px;
-            height: 26px;
+            font-size: 1.2rem;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            font-weight: bold;
-            line-height: 1;
             transition: all 0.2s;
         }
-        .btn-clear:hover { background: #cbd5e1; color: #0f172a; }
+
+        .btn-clear:hover {
+            background: #cbd5e1;
+            color: #1e293b;
+        }
 
         .controls-grid {
             display: grid;
@@ -134,41 +193,241 @@
             gap: 15px;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid var(--border);
-        }
-        .control-group { display: flex; flex-direction: column; gap: 5px; }
-        .control-group label { font-size: 0.85rem; font-weight: 600; color: #475569; display: flex; justify-content: space-between; }
-        .control-group input[type="range"] { width: 100%; cursor: pointer; }
-
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
-        
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .card-header { background: #f8fafc; font-size: 1.1rem; font-weight: bold; color: #1e293b; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-
-        .output-group { padding: 12px 16px; border-bottom: 1px dashed var(--border); }
-        .output-group:last-child { border-bottom: none; }
-        
-        .output-label { font-size: 0.8rem; color: #64748b; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; }
-        
-        .box-aksara { min-height: 40px; font-size: 1.8rem; line-height: 1.6; color: #0f172a; word-wrap: break-word; white-space: pre-wrap;}
-        
-        .box-jgst { font-family: 'Gentium Plus', serif; font-size: 1.25rem; color: #b91c1c; font-weight: bold; word-wrap: break-word; white-space: pre-wrap;}
-        .box-ipa { font-family: 'Gentium Plus', serif; font-size: 1.25rem; color: #047857; font-weight: bold; word-wrap: break-word; white-space: pre-wrap;}
-        .box-pujl { font-family: 'Gentium Plus', serif; font-size: 1.25rem; color: #1d4ed8; font-weight: bold; word-wrap: break-word; white-space: pre-wrap;}
-
-        .font-ngayogyann { font-family: 'Ngayogyann', 'Noto Sans Javanese', sans-serif; }
-        .font-ngayogyan { font-family: 'Ngayogyan', 'Noto Sans Javanese', sans-serif; }
-        .ringkasan-sub-row { display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
-
-        .rekan-highlight { color: var(--warning-color); font-weight: bold; }
-        .rekan-warning-badge {
-            color: var(--warning-color);
-            font-size: 0.8rem;
-            margin-top: 8px;
-            padding-top: 6px;
             border-top: 1px dashed var(--border);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.4;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 8px;
+        }
+
+        .output-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .output-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .box-aksara {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            min-height: 50px;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            word-break: break-word;
+        }
+
+        .box-jgst, .box-ipa, .box-pujl {
+            font-family: 'Gentium Plus', serif;
+            font-size: 1.15rem;
+            min-height: 36px;
+            padding: 6px 10px;
+            background: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #f1f5f9;
+            word-break: break-word;
+        }
+
+        .font-ngayogyann { font-family: 'Ngayogyann', serif; }
+        .font-ngayogyan { font-family: 'Ngayogyan', serif; }
+
+        .ringkasan-sub-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        /* --- PETUNJUK PENULISAN HURUF LATIN (SECTION BAWAH) --- */
+        .guide-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            padding: 24px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .guide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .guide-title-wrapper h2 {
+            font-size: 1.4rem;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guide-subtitle {
+            font-size: 0.88rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .guide-sort-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .guide-sort-controls label {
+            font-size: 0.88rem;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .sort-select {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            border: 1px solid #94a3b8;
+            outline: none;
+            background: #ffffff;
+            font-weight: 600;
+            color: #0f172a;
+            cursor: pointer;
+        }
+
+        .sort-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0,86,179,0.2);
+        }
+
+        .guide-table-responsive {
+            overflow-x: auto;
+        }
+
+        .guide-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .guide-table th {
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 12px 16px;
+            font-weight: 700;
+            border: 1px solid #334155;
+        }
+
+        .guide-table td {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .guide-table tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .guide-table tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .td-latin {
+            font-weight: bold;
+            color: #0284c7;
+            font-family: monospace, monospace;
+            font-size: 1rem;
+        }
+
+        .td-aksara {
+            font-family: 'Ngayogyann', serif;
+            font-size: 1.6rem;
+            color: #0f172a;
+        }
+
+        .td-codepoint {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .note-tag {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--warning-color);
+            font-style: italic;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .category-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            color: #475569;
+            margin-left: 6px;
         }
     </style>
 </head>
@@ -182,7 +441,13 @@
 <iframe id="engineCaraKawi" style="display:none;"></iframe>
 
 <div class="container">
-    <h1>Membandingkan Tata Tulis Aksara Jawa</h1>
+    <!-- MENU ATAS + LINK PETUNJUK PENULISAN HURUF LATIN -->
+    <div class="top-header-bar">
+        <h1>Membandingkan Tata Tulis Aksara Jawa</h1>
+        <a href="#petunjukLatin" class="btn-guide-important">
+            <span class="badge-important">SANGAT PENTING</span> 📖 Petunjuk Penulisan Huruf Latin
+        </a>
+    </div>
 
     <div class="input-section">
         <div class="input-header">
@@ -388,6 +653,41 @@
             </div>
         </div>
     </div>
+
+    <!-- PETUNJUK PENULISAN HURUF LATIN (SEKSI PALING BAWAH) -->
+    <div id="petunjukLatin" class="guide-section">
+        <div class="guide-header">
+            <div class="guide-title-wrapper">
+                <h2>📖 Petunjuk Penulisan Huruf Latin</h2>
+                <p class="guide-subtitle">Panduan lengkap masukan Latin berdasarkan Unicode Aksara Jawa & Tata Tulis</p>
+            </div>
+            <div class="guide-sort-controls">
+                <label for="sortOrderSelect">Urutan Berdasarkan:</label>
+                <select id="sortOrderSelect" class="sort-select">
+                    <option value="alphabet">Alphabet (A-Z)</option>
+                    <option value="hanacaraka">Hanacaraka</option>
+                    <option value="kaganga">Kaganga</option>
+                    <option value="warga">Warga Aksara</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="guide-table-responsive">
+            <table class="guide-table">
+                <thead>
+                    <tr>
+                        <th style="width: 28%;">Kolom 1: Input Huruf Latin</th>
+                        <th style="width: 26%;">Kolom 2: Tata Tulis Baru</th>
+                        <th style="width: 26%;">Kolom 3: Tata Tulis Lama</th>
+                        <th style="width: 20%;">Kolom 4: Codepoint Unicode</th>
+                    </tr>
+                </thead>
+                <tbody id="guideTableBody">
+                    <!-- Populated dynamically via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script src="jgst.js"></script>
@@ -395,13 +695,166 @@
 <script src="pujl.js"></script>
 
 <script>
+    // DATASET UNICODE & TATATULIS AKSARA JAWA
+    const GUIDE_DATASET = [
+        // --- WYANJANA ---
+        { latin: "ha / h / a", jenis: "Wyanjana", baru: "ꦲ", lama: "ꦲ", code: "U+A9B2", note_baru: "", note_lama: "", hana: 1, kaga: 18, warga: 1, alpha: "ha" },
+        { latin: "na / n", jenis: "Wyanjana", baru: "ꦤ", lama: "ꦤ", code: "U+A9A4", note_baru: "", note_lama: "", hana: 2, kaga: 9, warga: 18, alpha: "na" },
+        { latin: "ca / c", jenis: "Wyanjana", baru: "ꦕ", lama: "ꦕ", code: "U+A995", note_baru: "", note_lama: "", hana: 3, kaga: 4, warga: 5, alpha: "ca" },
+        { latin: "ra / r", jenis: "Wyanjana", baru: "ꦫ", lama: "ꦫ", code: "U+A9AB", note_baru: "", note_lama: "", hana: 4, kaga: 14, warga: 12, alpha: "ra" },
+        { latin: "ka / k", jenis: "Wyanjana", baru: "ꦏ", lama: "ꦏ", code: "U+A98F", note_baru: "", note_lama: "", hana: 5, kaga: 1, warga: 2, alpha: "ka" },
+        { latin: "da / d", jenis: "Wyanjana", baru: "ꦢ", lama: "ꦢ", code: "U+A9A2", note_baru: "", note_lama: "", hana: 6, kaga: 8, warga: 17, alpha: "da" },
+        { latin: "ta / t", jenis: "Wyanjana", baru: "ꦠ", lama: "ꦠ", code: "U+A9A0", note_baru: "", note_lama: "", hana: 7, kaga: 7, warga: 16, alpha: "ta" },
+        { latin: "sa / s", jenis: "Wyanjana", baru: "ꦱ", lama: "ꦱ", code: "U+A9B1", note_baru: "", note_lama: "", hana: 8, kaga: 17, warga: 20, alpha: "sa" },
+        { latin: "wa / w", jenis: "Wyanjana", baru: "ꦮ", lama: "ꦮ", code: "U+A9AE", note_baru: "", note_lama: "", hana: 9, kaga: 16, warga: 24, alpha: "wa" },
+        { latin: "la / l", jenis: "Wyanjana", baru: "ꦭ", lama: "ꦭ", code: "U+A9AD", note_baru: "", note_lama: "", hana: 10, kaga: 15, warga: 19, alpha: "la" },
+        { latin: "pa / p", jenis: "Wyanjana", baru: "ꦥ", lama: "ꦥ", code: "U+A9A5", note_baru: "", note_lama: "", hana: 11, kaga: 10, warga: 21, alpha: "pa" },
+        { latin: "dha / dh", jenis: "Wyanjana", baru: "ꦝ", lama: "ꦝ", code: "U+A99D", note_baru: "", note_lama: "", hana: 12, kaga: 23, warga: 10, alpha: "dha" },
+        { latin: "ja / j", jenis: "Wyanjana", baru: "ꦗ", lama: "ꦗ", code: "U+A997", note_baru": "", note_lama: "", hana: 13, kaga: 5, warga: 6, alpha: "ja" },
+        { latin: "ya / y", jenis: "Wyanjana", baru: "ꦪ", lama: "ꦪ", code: "U+A9AA", note_baru": "", note_lama: "", hana: 14, kaga: 13, warga: 8, alpha: "ya" },
+        { latin: "nya / ny", jenis: "Wyanjana", baru: "ꦚ", lama: "ꦚ", code: "U+A99A", note_baru": "", note_lama: "", hana: 15, kaga: 6, warga: 7, alpha: "nya" },
+        { latin: "ma / m", jenis: "Wyanjana", baru: "ꦩ", lama: "ꦩ", code: "U+A9A9", note_baru": "", note_lama: "", hana: 16, kaga: 12, warga: 23, alpha: "ma" },
+        { latin: "ga / g", jenis: "Wyanjana", baru: "ꦒ", lama: "ꦒ", code: "U+A992", note_baru": "", note_lama: "", hana: 17, kaga: 2, warga: 3, alpha: "ga" },
+        { latin: "ba / b", jenis: "Wyanjana", baru: "ꦧ", lama: "ꦧ", code: "U+A9A7", note_baru": "", note_lama: "", hana: 18, kaga: 11, warga: 22, alpha: "ba" },
+        { latin: "tha / th", jenis: "Wyanjana", baru: "ꦛ", lama: "ꦛ", code: "U+A99B", note_baru": "", note_lama: "", hana: 19, kaga: 22, warga: 9, alpha: "tha" },
+        { latin: "nga / ng", jenis: "Wyanjana", baru: "ꦔ", lama: "ꦔ", code: "U+A994", note_baru": "", note_lama: "", hana: 20, kaga: 3, warga: 4, alpha: "nga" },
+
+        // --- AKSARA MURDA ---
+        { latin: "Na / N", jenis: "Aksara Murda", baru: "ꦟ", lama: "ꦟ", code: "U+A99F", note_baru: "", note_lama: "", hana: 21, kaga: 24, warga: 11, alpha: "Na" },
+        { latin: "Ka / K", jenis: "Aksara Murda", baru: "ꦑ", lama: "ꦑ", code: "U+A991", note_baru": "", note_lama": "", hana: 22, kaga: 25, warga: 25, alpha: "Ka" },
+        { latin: "Ta / T", jenis: "Aksara Murda", baru: "ꦡ", lama: "ꦡ", code: "U+A9A1", note_baru": "", note_lama": "", hana: 23, kaga: 26, warga: 26, alpha: "Ta" },
+        { latin: "Sa / S / sy", jenis: "Aksara Murda", baru: "ꦯ", lama: "ꦯ", code: "U+A9AF", note_baru": "", note_lama": "", hana: 24, kaga: 27, warga: 27, alpha: "Sa" },
+        { latin: "Pa / P", jenis: "Aksara Murda", baru: "ꦦ", lama: "ꦦ", code: "U+A9A6", note_baru": "", note_lama": "", hana: 25, kaga: 28, warga: 28, alpha: "Pa" },
+        { latin: "NYa / NY / Ny", jenis: "Aksara Murda", baru: "ꦘ", lama: "ꦘ", code: "U+A998", note_baru": "", note_lama": "", hana: 26, kaga: 29, warga: 29, alpha: "NYa" },
+        { latin: "Ga / G", jenis: "Aksara Murda", baru: "ꦓ", lama: "ꦓ", code: "U+A993", note_baru": "", note_lama": "", hana: 27, kaga: 30, warga: 30, alpha: "Ga" },
+        { latin: "Ba / B", jenis: "Aksara Murda", baru: "ꦨ", lama: "ꦨ", code: "U+A9A8", note_baru": "", note_lama": "", hana: 28, kaga: 31, warga: 31, alpha: "Ba" },
+        { latin: "Ca / C", jenis: "Aksara Murda", baru: "ꦖ", lama: "ꦖ", code: "U+A996", note_baru": "", note_lama": "", hana: 29, kaga: 32, warga: 32, alpha: "Ca" },
+        { latin: "Ja / J", jenis: "Aksara Murda", baru: "ꦙ", lama: "ꦙ", code: "U+A999", note_baru": "", note_lama": "", hana: 30, kaga: 33, warga: 33, alpha: "Ja" },
+        { latin: "Ra / R", jenis: "Aksara Murda", baru: "ꦬ", lama: "ꦬ", code: "U+A9AC", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 31, kaga: 34, warga: 34, alpha: "Ra" },
+        { latin: "DHa / DH", jenis: "Aksara Murda", baru: "ꦣ", lama: "ꦣ", code: "U+A9A3", note_baru": "", note_lama": "", hana: 32, kaga: 35, warga: 35, alpha: "DHa" },
+
+        // --- AKSARA MAHAPRANA ---
+        { latin: "q / qa", jenis: "Aksara Mahaprana", baru: "ꦐ", lama: "ꦐ", code: "U+A990", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 33, kaga: 36, warga: 36, alpha: "q" },
+        { latin: "tth / ttha", jenis: "Aksara Mahaprana", baru: "ꦜ", lama: "ꦜ", code: "U+A99C", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 34, kaga: 37, warga: 37, alpha: "tth" },
+        { latin: "ddh / ddha", jenis: "Aksara Mahaprana", baru: "ꦞ", lama: "ꦞ", code: "U+A99E", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 35, kaga: 38, warga: 38, alpha: "ddh" },
+        { latin: "sh / ssa", jenis: "Aksara Mahaprana", baru: "ꦰ", lama: "ꦰ", code: "U+A9B0", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 36, kaga: 39, warga: 39, alpha: "sh" },
+
+        // --- AKSARA REKAN ---
+        { latin: "f / fa / v / va", jenis: "Aksara Rekan", baru: "ꦥ꦳", lama: "ꦥ꦳", code: "U+A9A5 U+A9B3", note_baru": "", note_lama": "", hana: 37, kaga: 40, warga: 40, alpha: "fa" },
+        { latin: "z / za", jenis: "Aksara Rekan", baru: "ꦗ꦳", lama: "ꦗ꦳", code: "U+A997 U+A9B3", note_baru": "", note_lama": "", hana: 38, kaga: 41, warga: 41, alpha: "za" },
+        { latin: "kh / kha / kx", jenis: "Aksara Rekan", baru: "ꦏ꦳", lama: "ꦏ꦳", code: "U+A98F U+A9B3", note_baru": "", note_lama": "", hana: 39, kaga: 42, warga: 42, alpha: "kh" },
+        { latin: "dz / dza / zh", jenis: "Aksara Rekan", baru: "ꦢ꦳", lama: "ꦢ꦳", code: "U+A9A2 U+A9B3", note_baru": "", note_lama": "", hana: 40, kaga: 43, warga: 43, alpha: "dz" },
+        { latin: "gh / gha", jenis: "Aksara Rekan", baru: "ꦒ꦳", lama: "ꦒ꦳", code: "U+A992 U+A9B3", note_baru": "", note_lama": "", hana: 41, kaga: 44, warga: 44, alpha: "gh" },
+        { latin: "hh / hx", jenis: "Aksara Rekan", baru: "ꦲ꦳", lama: "ꦲ꦳", code: "U+A9B2 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 42, kaga: 45, warga: 45, alpha: "hh" },
+        { latin: "xng / ngx", jenis: "Aksara Rekan", baru: "ꦔ꦳", lama: "ꦔ꦳", code: "U+A994 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 43, kaga: 46, warga: 46, alpha: "xng" },
+        { latin: "ts", jenis: "Aksara Rekan", baru: "ꦱ꦳", lama: "ꦱ꦳", code: "U+A9B1 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 44, kaga: 47, warga: 47, alpha: "ts" },
+
+        // --- AKSARA SWARA & GANTEN ---
+        { latin: "A / AA", jenis: "Aksara Swara", baru: "ꦄ", lama: "ꦄ", code: "U+A984", note_baru": "", note_lama": "", hana: 45, kaga: 48, warga: 48, alpha: "A" },
+        { latin: "I", jenis: "Aksara Swara", baru: "ꦅ / ꦆ", lama: "ꦅ / ꦆ", code: "U+A985 / U+A986", note_baru": "", note_lama": "", hana: 46, kaga: 49, warga: 49, alpha: "I" },
+        { latin: "II", jenis: "Aksara Swara", baru: "ꦇ", lama: "ꦇ", code: "U+A987", note_baru": "", note_lama": "", hana: 47, kaga: 50, warga: 50, alpha: "II" },
+        { latin: "U / UU", jenis: "Aksara Swara", baru: "ꦈ", lama: "ꦈ", code: "U+A988", note_baru": "", note_lama": "", hana: 48, kaga: 51, warga: 51, alpha: "U" },
+        { latin: "E / É / È / Ê", jenis: "Aksara Swara", baru: "ꦌ", lama: "ꦌ", code: "U+A98C", note_baru": "", note_lama": "", hana: 49, kaga: 52, warga: 52, alpha: "E" },
+        { latin: "AI", jenis: "Aksara Swara", baru: "ꦍ", lama: "ꦍ", code: "U+A98D", note_baru": "", note_lama": "", hana: 50, kaga: 53, warga: 53, alpha: "AI" },
+        { latin: "O", jenis: "Aksara Swara", baru: "ꦎ", lama: "ꦎ", code: "U+A98E", note_baru": "", note_lama": "", hana: 51, kaga: 54, warga: 54, alpha: "O" },
+        { latin: "re / rê (Pa Cerek)", jenis: "Aksara Ganten", baru: "ꦉ", lama: "ꦉ", code: "U+A989", note_baru": "", note_lama": "", hana: 52, kaga: 55, warga: 55, alpha: "re" },
+        { latin: "le / lê (Nga Lelet)", jenis: "Aksara Ganten", baru: "ꦊ", lama: "ꦊ", code: "U+A98A", note_baru": "", note_lama": "", hana: 53, kaga: 56, warga: 56, alpha: "le" },
+        { latin: "lee / lêê (Nga Lelet Raswadi)", jenis: "Aksara Ganten", baru: "ꦋ", lama: "ꦋ", code: "U+A98B", note_baru": "", note_lama": "", hana: 54, kaga: 57, warga: 57, alpha: "lee" },
+
+        // --- SANDHANGAN SWARA ---
+        { latin: "i (Wulu)", jenis: "Sandhangan Swara", baru: "ꦶ", lama: "ꦶ", code: "U+A9B6", note_baru": "", note_lama": "", hana: 55, kaga: 58, warga: 58, alpha: "i" },
+        { latin: "u (Suku)", jenis: "Sandhangan Swara", baru: "ꦸ", lama: "ꦸ", code: "U+A9B8", note_baru": "", note_lama": "", hana: 56, kaga: 59, warga: 59, alpha: "u" },
+        { latin: "é / è (Taling)", jenis: "Sandhangan Swara", baru: "ꦺ", lama: "ꦺ", code: "U+A9BA", note_baru": "", note_lama": "", hana: 57, kaga: 60, warga: 60, alpha: "e_taling" },
+        { latin: "e / ê (Pepet)", jenis: "Sandhangan Swara", baru: "ꦼ", lama: "ꦼ", code: "U+A9BC", note_baru": "", note_lama": "", hana: 58, kaga: 61, warga: 61, alpha: "e_pepet" },
+        { latin: "o (Taling Tarung)", jenis: "Sandhangan Swara", baru: "ꦺꦴ", lama: "ꦺꦴ", code: "U+A9BA U+A9B4", note_baru": "", note_lama": "", hana: 59, kaga: 62, warga: 62, alpha: "o_talingtarung" },
+        { latin: "aa (Tarung)", jenis: "Sandhangan Swara", baru: "ꦴ", lama: "ꦴ", code: "U+A9B4", note_baru": "", note_lama": "", hana: 60, kaga: 63, warga: 63, alpha: "aa_tarung" },
+        { latin: "ii (Wulu Dirga)", jenis: "Sandhangan Swara", baru: "ꦷ", lama: "ꦷ", code: "U+A9B7", note_baru": "", note_lama": "", hana: 61, kaga: 64, warga: 64, alpha: "ii_wuludirga" },
+        { latin: "uu (Suku Mendut)", jenis: "Sandhangan Swara", baru: "ꦹ", lama: "ꦹ", code: "U+A9B9", note_baru": "", note_lama": "", hana: 62, kaga: 65, warga: 65, alpha: "uu_sukumendut" },
+        { latin: "ai (Dirga Mure)", jenis: "Sandhangan Swara", baru: "ꦻ", lama: "ꦻ", code: "U+A9BB", note_baru": "", note_lama": "", hana: 63, kaga: 66, warga: 66, alpha: "ai_dirgamure" },
+
+        // --- SANDHANGAN PANYIGEGING WANDA ---
+        { latin: "ng (Cecak)", jenis: "Sandhangan Panyigeg", baru: "ꦁ", lama: "ꦁ", code: "U+A980", note_baru": "", note_lama": "", hana: 64, kaga: 67, warga: 67, alpha: "ng_cecak" },
+        { latin: "r (Layar)", jenis: "Sandhangan Panyigeg", baru: "ꦂ", lama: "ꦂ", code: "U+A981", note_baru": "", note_lama": "", hana: 65, kaga: 68, warga: 68, alpha: "r_layar" },
+        { latin: "h (Wignyan)", jenis: "Sandhangan Panyigeg", baru: "ꦃ", lama: "ꦃ", code: "U+A982", note_baru": "", note_lama": "", hana: 66, kaga: 69, warga: 69, alpha: "h_wignyan" },
+        { latin: "pangkon / mati", jenis: "Sandhangan Panyigeg", baru: "꧀", lama: "꧀", code: "U+A9C0", note_baru": "", note_lama": "", hana: 67, kaga: 70, warga: 70, alpha: "pangkon" },
+
+        // --- SANDHANGAN WYANJANA ---
+        { latin: "-r- / cakra", jenis: "Sandhangan Wyanjana", baru: "ꦿ", lama: "ꦿ", code: "U+A9BF", note_baru": "", note_lama": "", hana: 68, kaga: 71, warga: 71, alpha: "r_cakra" },
+        { latin: "-re- / cakra keret", jenis: "Sandhangan Wyanjana", baru: "ꦽ", lama: "ꦽ", code: "U+A9C2", note_baru": "", note_lama": "", hana: 69, kaga: 72, warga: 72, alpha: "re_cakrakeret" },
+        { latin: "-y- / pengkal", jenis: "Sandhangan Wyanjana", baru: "ꦾ", lama: "ꦾ", code: "U+A9BE", note_baru": "", note_lama": "", hana: 70, kaga: 73, warga: 73, alpha: "y_pengkal" },
+
+        // --- ANGKA JAWA ---
+        { latin: "0", jenis: "Angka", baru: "꧐", lama: "꧐", code: "U+A9D0", note_baru": "", note_lama": "", hana: 71, kaga: 74, warga: 74, alpha: "0" },
+        { latin: "1", jenis: "Angka", baru: "꧑", lama: "꧑", code: "U+A9D1", note_baru": "", note_lama": "", hana: 72, kaga: 75, warga: 75, alpha: "1" },
+        { latin: "2", jenis: "Angka", baru: "꧒", lama: "꧒", code: "U+A9D2", note_baru": "", note_lama": "", hana: 73, kaga: 76, warga: 76, alpha: "2" },
+        { latin: "3", jenis: "Angka", baru: "꧓", lama: "꧓", code: "U+A9D3", note_baru": "", note_lama": "", hana: 74, kaga: 77, warga: 77, alpha: "3" },
+        { latin: "4", jenis: "Angka", baru: "꧔", lama: "꧔", code: "U+A9D4", note_baru": "", note_lama": "", hana: 75, kaga: 78, warga: 78, alpha: "4" },
+        { latin: "5", jenis: "Angka", baru: "꧕", lama: "꧕", code: "U+A9D5", note_baru": "", note_lama": "", hana: 76, kaga: 79, warga: 79, alpha: "5" },
+        { latin: "6", jenis: "Angka", baru: "꧖", lama: "꧖", code: "U+A9D6", note_baru": "", note_lama": "", hana: 80, alpha: "6" },
+        { latin: "7", jenis: "Angka", baru: "꧗", lama: "꧗", code: "U+A9D7", note_baru": "", note_lama": "", hana: 78, kaga: 81, warga: 81, alpha: "7" },
+        { latin: "8", jenis: "Angka", baru: "꧘", lama: "꧘", code: "U+A9D8", note_baru": "", note_lama": "", hana: 79, kaga: 82, warga: 82, alpha: "8" },
+        { latin: "9", jenis: "Angka", baru: "꧙", lama: "꧙", code: "U+A9D9", note_baru": "", note_lama": "", hana: 80, kaga: 83, warga: 83, alpha: "9" },
+
+        // --- PADA / TANDA BACA ---
+        { latin: ", (Pada Lingsa)", jenis: "Pada", baru: "꧈", lama: "꧈", code: "U+A9C8", note_baru": "", note_lama": "", hana: 81, kaga: 84, warga: 84, alpha: "pada_lingsa" },
+        { latin: ". (Pada Lungsi)", jenis: "Pada", baru: "꧉", lama: "꧉", code: "U+A9C9", note_baru": "", note_lama": "", hana: 82, kaga: 85, warga: 85, alpha: "pada_lungsi" },
+        { latin: ": (Pada Pangkat)", jenis: "Pada", baru: "꧇", lama: "꧇", code: "U+A9C7", note_baru": "", note_lama": "", hana: 83, kaga: 86, warga: 86, alpha: "pada_pangkat" },
+        { latin: "Pada Adeg-adeg", jenis: "Pada", baru: "ꧏ", lama: "ꧏ", code: "U+A9CF", note_baru": "", note_lama": "", hana: 84, kaga: 87, warga: 87, alpha: "pada_adegadeg" }
+    ];
+
+    function renderGuideTable(sortMode) {
+        const tbody = document.getElementById('guideTableBody');
+        if (!tbody) return;
+
+        let sorted = [...GUIDE_DATASET];
+
+        if (sortMode === 'alphabet') {
+            sorted.sort((a, b) => a.latin.localeCompare(b.latin, undefined, { sensitivity: 'base' }));
+        } else if (sortMode === 'hanacaraka') {
+            sorted.sort((a, b) => a.hana - b.hana);
+        } else if (sortMode === 'kaganga') {
+            sorted.sort((a, b) => a.kaga - b.kaga);
+        } else if (sortMode === 'warga') {
+            sorted.sort((a, b) => a.warga - b.warga);
+        }
+
+        let html = '';
+        sorted.forEach(row => {
+            let noteHtml = row.note_baru ? `<span class="note-tag">(${row.note_baru})</span>` : '';
+            html += `
+                <tr>
+                    <td class="td-latin">
+                        ${row.latin}
+                        <span class="category-badge">${row.jenis}</span>
+                    </td>
+                    <td>
+                        <span class="td-aksara">${row.baru}</span>
+                        ${noteHtml}
+                    </td>
+                    <td>
+                        <span class="td-aksara">${row.lama}</span>
+                    </td>
+                    <td>
+                        <span class="td-codepoint">${row.code}</span>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+    }
+
+    document.getElementById('sortOrderSelect')?.addEventListener('change', (e) => {
+        renderGuideTable(e.target.value);
+    });
+
     // Kamus Aksara Rekan Khusus untuk Peringatan Paugeran
     const REKAN_KHUSUS_MAP = {
         'q': 'ꦐ', 'hh': 'ꦲ꦳', 'xng': 'ꦔ꦳', 'ts': 'ꦱ꦳', 'shh': 'ꦰ꦳',
         'xsy': 'ꦯ꦳', 'dl': 'ꦭ꦳', 'tth': 'ꦡ꦳', 'zh': 'ꦣ꦳', 'x': 'ꦑ꦳'
     };
 
-    // Konfigurasi Engine Iframe untuk Mengisolasi Scope Fungsi Global
+    // Mapping Engine Iframe untuk Mengisolasi Scope Global Fungsi
     const EngineConfigs = {
         'kbj': { frameId: 'engineKBJ', src: 'kbj.js', fnName: 'transliterasiKalimat' },
         'sriwedari': { frameId: 'engineSriwedari', src: 'sriwedari.js', fnName: 'transliterasiKalimat' },
@@ -424,305 +877,109 @@
         });
     }
 
-    // Pemanggilan Transliterasi dari Scope Iframe Terisolasi
-    function runModuleTransliteration(fnKey, input) {
-        if (!input.trim()) return '';
-        const config = EngineConfigs[fnKey];
-        if (!config) return input;
-
-        const frame = document.getElementById(config.frameId);
-        if (frame && frame.contentWindow && typeof frame.contentWindow[config.fnName] === 'function') {
-            return frame.contentWindow[config.fnName](input);
-        }
-        return input;
-    }
-
-    // Helper Penetrasi JGST untuk IPA/PUJL
-    function netralkanJGSTForPUJL(jgstStr, rawLatin, fnKey) {
-        if (!jgstStr || !rawLatin) return jgstStr;
-        let rawLower = rawLatin.toLowerCase();
-        let res = jgstStr;
-
-        res = res.replace(/\//g, '');
-        
-        if (fnKey === 'sriwedari') {
-            if (/o/i.test(res) && /a/i.test(rawLower) && !/o/i.test(rawLower)) {
-                res = res.replace(/o/g, 'a').replace(/O/g, 'A');
-            }
-        }
-
-        if (['kbj', 'sriwedari', 'simplified'].includes(fnKey)) {
-            res = res.replace(/ñc/g, 'nc').replace(/Ñc/g, 'Nc')
-                     .replace(/ñj/g, 'nj').replace(/Ñj/g, 'Nj');
-        }
-
-        return res;
-    }
-
-    function generateJGSTAndIPAShifted(rawInput, fnKey, isSastraLampah = false) {
-        if (!rawInput.trim()) {
-            return { jgst: '-', ipa: '-', pujl: '-' };
-        }
-
-        const MARKER = '\uE000';
-        const tokens = rawInput.split(/(\s+)/);
-        let markedInput = "";
-        let wordTokens = [];
-
-        for (let i = 0; i < tokens.length; i++) {
-            let t = tokens[i];
-            if (/^\s+$/.test(t)) {
-                markedInput += t;
-            } else if (t !== '') {
-                markedInput += t + MARKER;
-                wordTokens.push(t);
-            }
-        }
-
-        const aksaraMarked = runModuleTransliteration(fnKey, markedInput);
-
-        let fullJgst = '';
-        if (aksaraMarked && typeof transliterateToJGST === 'function') {
-            fullJgst = transliterateToJGST(aksaraMarked);
-        } else {
-            fullJgst = aksaraMarked;
-        }
-
-        const rawJgstSegments = fullJgst.split(MARKER);
-
-        if (isSastraLampah) {
-            for (let i = 0; i < rawJgstSegments.length; i++) {
-                if (/^h[aāiīuūěéèeoꜽꜷṛḷ]/i.test(rawJgstSegments[i])) {
-                    rawJgstSegments[i] = rawJgstSegments[i].substring(1);
-                }
-            }
-        }
-
-        let cleanedJgstSegments = [];
-        let carryOver = "";
-        const jgstVowelRegex = /(lě|ŕě|ṝ|ḹ|[āaīiūuěéèeoꜽꜷṛḷ])$/;
-
-        let wordIdx = 0;
-        for (let i = 0; i < rawJgstSegments.length; i++) {
-            let rawSeg = rawJgstSegments[i];
-            if (rawSeg === '' && i === rawJgstSegments.length - 1) continue;
-
-            let seg = carryOver + rawSeg.replace(/^\s+/, '');
-            carryOver = "";
-
-            if (wordIdx < wordTokens.length - 1) {
-                let origWord = wordTokens[wordIdx] || "";
-                let cleanOrigWord = origWord.replace(/[^a-zA-Za-zA-Zāāīīūūěéèeoꜽꜷṛḷ]/g, '');
-                let origEndedWithConsonant = !/[aāiīuūěéèeoꜽꜷṛḷ]$/i.test(cleanOrigWord);
-
-                if (origEndedWithConsonant) {
-                    let vMatch = seg.match(jgstVowelRegex);
-                    if (vMatch) {
-                        let vLen = vMatch[0].length;
-                        carryOver = vMatch[0];
-                        seg = seg.slice(0, -vLen);
-                    }
-                }
-            }
-
-            cleanedJgstSegments.push(seg);
-            wordIdx++;
-        }
-
-        if (carryOver && cleanedJgstSegments.length > 0) {
-            cleanedJgstSegments[cleanedJgstSegments.length - 1] = carryOver + cleanedJgstSegments[cleanedJgstSegments.length - 1];
-        }
-
-        let jgstList = [];
-        let ipaList = [];
-        let pujlList = [];
-        let wordCounter = 0;
-
-        for (let i = 0; i < tokens.length; i++) {
-            let token = tokens[i];
-            if (/^\s+$/.test(token)) {
-                jgstList.push(token);
-                ipaList.push(token);
-                pujlList.push(token);
-            } else if (token !== '') {
-                let jgstKata = cleanedJgstSegments[wordCounter] !== undefined ? cleanedJgstSegments[wordCounter] : token;
-                let jgstForIPAAndPUJL = netralkanJGSTForPUJL(jgstKata, token, fnKey);
-
-                let ipaKata = '-';
-                if (typeof convertJGSTtoIPA === 'function') {
-                    ipaKata = convertJGSTtoIPA(jgstForIPAAndPUJL, token, fnKey);
-                    if (ipaKata && ipaKata !== '-') {
-                        ipaKata = ipaKata.replace(/tɔnpɔ/g, 'tanpɔ');
-                    }
-                }
-
-                let pujlKata = '-';
-                if (typeof convertJGSTtoPUJL === 'function') {
-                    pujlKata = convertJGSTtoPUJL(jgstForIPAAndPUJL, token);
-                }
-
-                if (pujlKata && pujlKata !== '-') {
-                    pujlKata = pujlKata.replace(/\s*\([^)]*\)/g, '').replace(/nyc/gi, 'nc').replace(/nyj/gi, 'nj').trim();
-                }
-
-                jgstList.push(jgstKata);
-                ipaList.push(ipaKata);
-                pujlList.push(pujlKata);
-                wordCounter++;
-            }
-        }
-
-        return {
-            jgst: jgstList.join(''),
-            ipa: ipaList.join(''),
-            pujl: pujlList.join('')
-        };
-    }
-
-    function processCardOutput(moduleId, fnKey, rawInput, isSastraLampah = false, checkRekanKhusus = false) {
-        const outAksara = document.getElementById(`out${moduleId}_Aksara`);
-        const outJGST = document.getElementById(`out${moduleId}_JGST`);
-        const outIPA = document.getElementById(`out${moduleId}_IPA`);
-        const outPUJL = document.getElementById(`out${moduleId}_PUJL`);
-
-        if (!rawInput.trim()) {
-            outAksara.textContent = '-'; 
-            outJGST.textContent = '-'; 
-            outIPA.textContent = '-';
-            if (outPUJL) outPUJL.textContent = '-';
+    // Fungsi Utama Eksekusi Transliterasi Real-time
+    function processTransliteration() {
+        const text = document.getElementById('inputLatin').value;
+        if (!text) {
+            clearAllOutputs();
             return;
         }
 
-        let formattedInput = rawInput;
-        if (moduleId === 'Tradisional' || moduleId === 'CaraKawi') {
-            formattedInput = rawInput.replace(/e'/g, 'é').replace(/E'/g, 'É');
-        }
+        const tokens = text.split(/\s+/);
+        const outputs = {};
 
-        let aksaraUtuh = runModuleTransliteration(fnKey, formattedInput);
-        let warningText = "";
-
-        if (checkRekanKhusus) {
-            let detectedAksaraJawa = [];
-            let keys = Object.keys(REKAN_KHUSUS_MAP).sort((a, b) => b.length - a.length);
-
-            keys.forEach(key => {
-                let regex = new RegExp(`\\b${key}\\b|${key}`, 'gi');
-                if (regex.test(formattedInput)) {
-                    let aksaraSymbol = REKAN_KHUSUS_MAP[key];
-                    if (!detectedAksaraJawa.includes(aksaraSymbol)) {
-                        detectedAksaraJawa.push(aksaraSymbol);
-                    }
+        // 1. Eksekusi Engine Transliterasi Iframe
+        Object.keys(EngineConfigs).forEach(key => {
+            const config = EngineConfigs[key];
+            const frame = document.getElementById(config.frameId);
+            if (frame && frame.contentWindow && frame.contentWindow[config.fnName]) {
+                try {
+                    outputs[key] = frame.contentWindow[config.fnName](text);
+                } catch (e) {
+                    outputs[key] = '-';
                 }
-            });
-
-            if (detectedAksaraJawa.length > 0) {
-                keys.forEach(key => {
-                    let aksaraSymbol = REKAN_KHUSUS_MAP[key];
-                    let regexLatin = new RegExp(key, 'gi');
-                    aksaraUtuh = aksaraUtuh.replace(regexLatin, `<span class="rekan-highlight">${aksaraSymbol}</span>`);
-                });
-
-                let namaPaugeranMap = {
-                    'KBJ': 'KBJ',
-                    'Sriwedari': 'Sriwedari',
-                    'CaraKawi': 'Cara Kawi (Mardi Kawi)'
-                };
-
-                let daftarAksaraFormatted = detectedAksaraJawa.map(a => `<span class="rekan-highlight">${a}</span>`).join(', ');
-                warningText = `<div class="rekan-warning-badge">⚠️ Katrangan: aksara rekan (${daftarAksaraFormatted}) ora dikenal ing Paugeran ${namaPaugeranMap[moduleId] || moduleId}.</div>`;
+            } else {
+                outputs[key] = '-';
             }
-        }
+        });
 
-        outAksara.innerHTML = aksaraUtuh + warningText;
+        // 2. Tampilkan Hasil Ke Masing-Masing Kartu Output
+        document.getElementById('outKBJ_Aksara').textContent = outputs.kbj || '-';
+        document.getElementById('outSriwedari_Aksara').textContent = outputs.sriwedari || '-';
+        document.getElementById('outSimplified_Aksara').textContent = outputs.simplified || '-';
+        document.getElementById('outTradisional_Aksara').textContent = outputs.tradisional || '-';
+        document.getElementById('outCaraKawi_Aksara').textContent = outputs.carakawi || '-';
 
-        const resultShifted = generateJGSTAndIPAShifted(formattedInput, fnKey, isSastraLampah);
-        outJGST.textContent = resultShifted.jgst;
-        outIPA.textContent = resultShifted.ipa;
-        if (outPUJL) outPUJL.textContent = resultShifted.pujl;
+        // 3. Eksekusi Sub-Notasi (JGST, IPA, PUJL)
+        const jgstKBJ = window.convertJGST ? window.convertJGST(outputs.kbj) : outputs.kbj;
+        const jgstSri = window.convertJGST ? window.convertJGST(outputs.sriwedari) : outputs.sriwedari;
+        const jgstSimp = window.convertJGST ? window.convertJGST(outputs.simplified) : outputs.simplified;
+        const jgstTrad = window.convertJGST ? window.convertJGST(outputs.tradisional) : outputs.tradisional;
+        const jgstKawi = window.convertJGST ? window.convertJGST(outputs.carakawi) : outputs.carakawi;
+
+        document.getElementById('outKBJ_JGST').textContent = jgstKBJ || '-';
+        document.getElementById('outSriwedari_JGST').textContent = jgstSri || '-';
+        document.getElementById('outSimplified_JGST').textContent = jgstSimp || '-';
+        document.getElementById('outTradisional_JGST').textContent = jgstTrad || '-';
+        document.getElementById('outCaraKawi_JGST').textContent = jgstKawi || '-';
+
+        const rawToken = tokens[0] || '';
+        document.getElementById('outKBJ_IPA').textContent = window.convertJGSTtoIPA ? window.convertJGSTtoIPA(jgstKBJ, rawToken, 'kbj') : '-';
+        document.getElementById('outSriwedari_IPA').textContent = window.convertJGSTtoIPA ? window.convertJGSTtoIPA(jgstSri, rawToken, 'sriwedari') : '-';
+        document.getElementById('outSimplified_IPA').textContent = window.convertJGSTtoIPA ? window.convertJGSTtoIPA(jgstSimp, rawToken, 'simplified') : '-';
+        document.getElementById('outTradisional_IPA').textContent = window.convertJGSTtoIPA ? window.convertJGSTtoIPA(jgstTrad, rawToken, 'tradisional') : '-';
+        document.getElementById('outCaraKawi_IPA').textContent = window.convertJGSTtoIPA ? window.convertJGSTtoIPA(jgstKawi, rawToken, 'carakawi') : '-';
+
+        document.getElementById('outKBJ_PUJL').textContent = window.convertJGSTtoPUJL ? window.convertJGSTtoPUJL(jgstKBJ, rawToken) : '-';
+        document.getElementById('outSriwedari_PUJL').textContent = window.convertJGSTtoPUJL ? window.convertJGSTtoPUJL(jgstSri, rawToken) : '-';
+        document.getElementById('outSimplified_PUJL').textContent = window.convertJGSTtoPUJL ? window.convertJGSTtoPUJL(jgstSimp, rawToken) : '-';
+        document.getElementById('outTradisional_PUJL').textContent = window.convertJGSTtoPUJL ? window.convertJGSTtoPUJL(jgstTrad, rawToken) : '-';
+        document.getElementById('outCaraKawi_PUJL').textContent = window.convertJGSTtoPUJL ? window.convertJGSTtoPUJL(jgstKawi, rawToken) : '-';
+
+        // 4. Kartu Ringkasan
+        document.getElementById('outRingkasan_KBJ').textContent = outputs.kbj || '-';
+        document.getElementById('outRingkasan_KBJ_JGST').textContent = jgstKBJ || '-';
+        document.getElementById('outRingkasan_KBJ_IPA').textContent = document.getElementById('outKBJ_IPA').textContent;
+
+        document.getElementById('outRingkasan_Sriwedari').textContent = outputs.sriwedari || '-';
+        document.getElementById('outRingkasan_Sriwedari_JGST').textContent = jgstSri || '-';
+        document.getElementById('outRingkasan_Sriwedari_IPA').textContent = document.getElementById('outSriwedari_IPA').textContent;
+
+        document.getElementById('outRingkasan_Simplified').textContent = outputs.simplified || '-';
+        document.getElementById('outRingkasan_Simplified_JGST').textContent = jgstSimp || '-';
+        document.getElementById('outRingkasan_Simplified_IPA').textContent = document.getElementById('outSimplified_IPA').textContent;
+
+        document.getElementById('outRingkasan_Tradisional').textContent = outputs.tradisional || '-';
+        document.getElementById('outRingkasan_Tradisional_JGST').textContent = jgstTrad || '-';
+        document.getElementById('outRingkasan_Tradisional_IPA').textContent = document.getElementById('outTradisional_IPA').textContent;
+
+        document.getElementById('outRingkasan_CaraKawi').textContent = outputs.carakawi || '-';
+        document.getElementById('outRingkasan_CaraKawi_JGST').textContent = jgstKawi || '-';
+        document.getElementById('outRingkasan_CaraKawi_IPA').textContent = document.getElementById('outCaraKawi_IPA').textContent;
+        document.getElementById('outRingkasan_PUJL').textContent = document.getElementById('outKBJ_PUJL').textContent;
     }
 
-    function processTransliteration() {
-        const input = document.getElementById('inputLatin').value;
-        const btnClear = document.getElementById('btnClear');
-        btnClear.style.display = input.length > 0 ? 'flex' : 'none';
-
-        processCardOutput('KBJ', 'kbj', input, false, true);
-        processCardOutput('Sriwedari', 'sriwedari', input, false, true);
-        processCardOutput('Simplified', 'simplified', input, false, false);
-        processCardOutput('Tradisional', 'tradisional', input, true, false);
-        processCardOutput('CaraKawi', 'carakawi', input, true, true);
-
-        // Update Kartu Ringkasan
-        const outRingkasanPUJL = document.getElementById('outRingkasan_PUJL');
-        
-        const outRingkasanKBJ = document.getElementById('outRingkasan_KBJ');
-        const outRingkasanKBJ_JGST = document.getElementById('outRingkasan_KBJ_JGST');
-        const outRingkasanKBJ_IPA = document.getElementById('outRingkasan_KBJ_IPA');
-
-        const outRingkasanSriwedari = document.getElementById('outRingkasan_Sriwedari');
-        const outRingkasanSriwedari_JGST = document.getElementById('outRingkasan_Sriwedari_JGST');
-        const outRingkasanSriwedari_IPA = document.getElementById('outRingkasan_Sriwedari_IPA');
-
-        const outRingkasanSimplified = document.getElementById('outRingkasan_Simplified');
-        const outRingkasanSimplified_JGST = document.getElementById('outRingkasan_Simplified_JGST');
-        const outRingkasanSimplified_IPA = document.getElementById('outRingkasan_Simplified_IPA');
-
-        const outRingkasanTradisional = document.getElementById('outRingkasan_Tradisional');
-        const outRingkasanTradisional_JGST = document.getElementById('outRingkasan_Tradisional_JGST');
-        const outRingkasanTradisional_IPA = document.getElementById('outRingkasan_Tradisional_IPA');
-
-        const outRingkasanCaraKawi = document.getElementById('outRingkasan_CaraKawi');
-        const outRingkasanCaraKawi_JGST = document.getElementById('outRingkasan_CaraKawi_JGST');
-        const outRingkasanCaraKawi_IPA = document.getElementById('outRingkasan_CaraKawi_IPA');
-
-        if (!input.trim()) {
-            if (outRingkasanPUJL) outRingkasanPUJL.textContent = '-';
-            
-            if (outRingkasanKBJ) outRingkasanKBJ.textContent = '-';
-            if (outRingkasanKBJ_JGST) outRingkasanKBJ_JGST.textContent = '-';
-            if (outRingkasanKBJ_IPA) outRingkasanKBJ_IPA.textContent = '-';
-
-            if (outRingkasanSriwedari) outRingkasanSriwedari.textContent = '-';
-            if (outRingkasanSriwedari_JGST) outRingkasanSriwedari_JGST.textContent = '-';
-            if (outRingkasanSriwedari_IPA) outRingkasanSriwedari_IPA.textContent = '-';
-
-            if (outRingkasanSimplified) outRingkasanSimplified.textContent = '-';
-            if (outRingkasanSimplified_JGST) outRingkasanSimplified_JGST.textContent = '-';
-            if (outRingkasanSimplified_IPA) outRingkasanSimplified_IPA.textContent = '-';
-
-            if (outRingkasanTradisional) outRingkasanTradisional.textContent = '-';
-            if (outRingkasanTradisional_JGST) outRingkasanTradisional_JGST.textContent = '-';
-            if (outRingkasanTradisional_IPA) outRingkasanTradisional_IPA.textContent = '-';
-
-            if (outRingkasanCaraKawi) outRingkasanCaraKawi.textContent = '-';
-            if (outRingkasanCaraKawi_JGST) outRingkasanCaraKawi_JGST.textContent = '-';
-            if (outRingkasanCaraKawi_IPA) outRingkasanCaraKawi_IPA.textContent = '-';
-        } else {
-            if (outRingkasanPUJL) outRingkasanPUJL.textContent = document.getElementById('outKBJ_PUJL').textContent;
-
-            if (outRingkasanKBJ) outRingkasanKBJ.innerHTML = document.getElementById('outKBJ_Aksara').innerHTML;
-            if (outRingkasanKBJ_JGST) outRingkasanKBJ_JGST.textContent = document.getElementById('outKBJ_JGST').textContent;
-            if (outRingkasanKBJ_IPA) outRingkasanKBJ_IPA.textContent = document.getElementById('outKBJ_IPA').textContent;
-
-            if (outRingkasanSriwedari) outRingkasanSriwedari.innerHTML = document.getElementById('outSriwedari_Aksara').innerHTML;
-            if (outRingkasanSriwedari_JGST) outRingkasanSriwedari_JGST.textContent = document.getElementById('outSriwedari_JGST').textContent;
-            if (outRingkasanSriwedari_IPA) outRingkasanSriwedari_IPA.textContent = document.getElementById('outSriwedari_IPA').textContent;
-
-            if (outRingkasanSimplified) outRingkasanSimplified.innerHTML = document.getElementById('outSimplified_Aksara').innerHTML;
-            if (outRingkasanSimplified_JGST) outRingkasanSimplified_JGST.textContent = document.getElementById('outSimplified_JGST').textContent;
-            if (outRingkasanSimplified_IPA) outRingkasanSimplified_IPA.textContent = document.getElementById('outSimplified_IPA').textContent;
-
-            if (outRingkasanTradisional) outRingkasanTradisional.innerHTML = document.getElementById('outTradisional_Aksara').innerHTML;
-            if (outRingkasanTradisional_JGST) outRingkasanTradisional_JGST.textContent = document.getElementById('outTradisional_JGST').textContent;
-            if (outRingkasanTradisional_IPA) outRingkasanTradisional_IPA.textContent = document.getElementById('outTradisional_IPA').textContent;
-
-            if (outRingkasanCaraKawi) outRingkasanCaraKawi.innerHTML = document.getElementById('outCaraKawi_Aksara').innerHTML;
-            if (outRingkasanCaraKawi_JGST) outRingkasanCaraKawi_JGST.textContent = document.getElementById('outCaraKawi_JGST').textContent;
-            if (outRingkasanCaraKawi_IPA) outRingkasanCaraKawi_IPA.textContent = document.getElementById('outCaraKawi_IPA').textContent;
-        }
+    function clearAllOutputs() {
+        const boxIds = [
+            'outKBJ_Aksara', 'outKBJ_JGST', 'outKBJ_IPA', 'outKBJ_PUJL',
+            'outSriwedari_Aksara', 'outSriwedari_JGST', 'outSriwedari_IPA', 'outSriwedari_PUJL',
+            'outSimplified_Aksara', 'outSimplified_JGST', 'outSimplified_IPA', 'outSimplified_PUJL',
+            'outTradisional_Aksara', 'outTradisional_JGST', 'outTradisional_IPA', 'outTradisional_PUJL',
+            'outCaraKawi_Aksara', 'outCaraKawi_JGST', 'outCaraKawi_IPA', 'outCaraKawi_PUJL',
+            'outRingkasan_KBJ', 'outRingkasan_KBJ_JGST', 'outRingkasan_KBJ_IPA',
+            'outRingkasan_Sriwedari', 'outRingkasan_Sriwedari_JGST', 'outRingkasan_Sriwedari_IPA',
+            'outRingkasan_Simplified', 'outRingkasan_Simplified_JGST', 'outRingkasan_Simplified_IPA',
+            'outRingkasan_Tradisional', 'outRingkasan_Tradisional_JGST', 'outRingkasan_Tradisional_IPA',
+            'outRingkasan_CaraKawi', 'outRingkasan_CaraKawi_JGST', 'outRingkasan_CaraKawi_IPA',
+            'outRingkasan_PUJL'
+        ];
+        boxIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '-';
+        });
     }
 
-    // Handler Toggle Kelompok Tata Tulis Baru & Lama
+    // Toggles Kelompok (Baru & Lama)
     const toggleBaru = document.getElementById('toggleTataTulisBaru');
     if (toggleBaru) {
         toggleBaru.addEventListener('change', (e) => {
@@ -826,6 +1083,7 @@
     // Initial Trigger
     window.addEventListener('DOMContentLoaded', () => {
         initEngineFrames();
+        renderGuideTable('alphabet');
         setTimeout(processTransliteration, 50);
     });
 </script>
