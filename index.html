@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="jw">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Membandingkan Tata Tulis Aksara Jawa</title>
-    
     <!-- Google Font Gentium Plus untuk JGST, IPA & PUJL -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
     <style>
-        @font-face { font-family: 'Ngayogyann'; src: url('ngayogyann.ttf') format('truetype'); }
-        @font-face { font-family: 'Ngayogyan'; src: url('ngayogyan.ttf') format('truetype'); }
+        @font-face {
+            font-family: 'Ngayogyann';
+            src: url('ngayogyann.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Ngayogyan';
+            src: url('ngayogyan.ttf') format('truetype');
+        }
 
         :root {
             --primary: #0056b3;
-            --bg: #f4f7f6;
+            --bg: #f4f6f8;
             --card-bg: #ffffff;
             --border: #e2e8f0;
             --warning-color: #dc2626;
@@ -24,7 +28,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1400px; margin: 0 auto; }
         h1 { font-size: 1.8rem; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
 
         .input-section { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; }
@@ -33,81 +37,94 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 12px;
             margin-bottom: 10px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
+
         .input-title {
-            font-weight: bold;
             font-size: 1.1rem;
-            padding-top: 2px;
+            font-weight: bold;
+            color: #1e293b;
+            padding-top: 4px;
         }
+
         .toggles-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            align-items: flex-end;
+            gap: 6px;
         }
+
         .card-toggles, .sub-toggles {
             display: flex;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
             flex-wrap: wrap;
-            gap: 14px;
-            font-size: 0.9rem;
-            align-items: center;
+            justify-content: flex-end;
         }
+
         .toggle-label {
-            font-size: 0.8rem;
             font-weight: bold;
             color: #64748b;
-            text-transform: uppercase;
-            min-width: 90px;
+            margin-right: 4px;
         }
+
         .card-toggle-item {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 5px;
             cursor: pointer;
             user-select: none;
-            font-weight: 500;
             color: #334155;
+            font-weight: 600;
         }
+
         .card-toggle-item input[type="checkbox"] {
             cursor: pointer;
             accent-color: var(--primary);
-            width: 15px;
-            height: 15px;
         }
 
-        .textarea-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
-        textarea { 
-            width: 100%; 
-            height: 90px; 
-            padding: 12px 40px 12px 12px; 
-            font-size: 1.1rem; 
-            border: 1px solid #cbd5e1; 
-            border-radius: 6px; 
-            resize: vertical;
-            text-transform: none;
+        .textarea-wrapper {
+            position: relative;
+            width: 100%;
         }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            padding-right: 40px;
+            font-size: 1.1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
         textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2); }
 
         .btn-clear {
             position: absolute;
+            top: 10px;
             right: 12px;
-            top: 12px;
+            background: #e2e8f0;
+            border: none;
+            color: #64748b;
             width: 26px;
             height: 26px;
             border-radius: 50%;
-            background: #e2e8f0;
-            border: none;
-            color: #475569;
-            font-weight: bold;
-            font-size: 1rem;
             cursor: pointer;
             display: none;
             align-items: center;
             justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
             line-height: 1;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
         .btn-clear:hover { background: #cbd5e1; color: #0f172a; }
 
@@ -115,10 +132,9 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
-            background: #f8fafc;
-            padding: 12px 16px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
         }
         .control-group { display: flex; flex-direction: column; gap: 5px; }
         .control-group label { font-size: 0.85rem; font-weight: 600; color: #475569; display: flex; justify-content: space-between; }
@@ -142,6 +158,7 @@
 
         .font-ngayogyann { font-family: 'Ngayogyann', 'Noto Sans Javanese', sans-serif; }
         .font-ngayogyan { font-family: 'Ngayogyan', 'Noto Sans Javanese', sans-serif; }
+        .ringkasan-sub-row { display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
 
         .rekan-highlight { color: var(--warning-color); font-weight: bold; }
         .rekan-warning-badge {
@@ -325,22 +342,42 @@
             <div class="output-group">
                 <div class="output-label">KBJ</div>
                 <div id="outRingkasan_KBJ" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_KBJ_JGST" class="box-jgst">-</div>
+                    <div id="outRingkasan_KBJ_IPA" class="box-ipa">-</div>
+                </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Sriwedari</div>
                 <div id="outRingkasan_Sriwedari" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Sriwedari_JGST" class="box-jgst">-</div>
+                    <div id="outRingkasan_Sriwedari_IPA" class="box-ipa">-</div>
+                </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Simplified</div>
                 <div id="outRingkasan_Simplified" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Simplified_JGST" class="box-jgst">-</div>
+                    <div id="outRingkasan_Simplified_IPA" class="box-ipa">-</div>
+                </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Tradisional</div>
                 <div id="outRingkasan_Tradisional" class="box-aksara font-ngayogyan">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Tradisional_JGST" class="box-jgst">-</div>
+                    <div id="outRingkasan_Tradisional_IPA" class="box-ipa">-</div>
+                </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Cara Kawi (Mardi Kawi)</div>
                 <div id="outRingkasan_CaraKawi" class="box-aksara font-ngayogyan">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_CaraKawi_JGST" class="box-jgst">-</div>
+                    <div id="outRingkasan_CaraKawi_IPA" class="box-ipa">-</div>
+                </div>
             </div>
         </div>
     </div>
@@ -349,39 +386,29 @@
 <script src="jgst.js"></script>
 <script src="ipa.js"></script>
 <script src="pujl.js"></script>
+<script src="kbj.js"></script>
+<script src="sriwedari.js"></script>
+<script src="simplified.js"></script>
+<script src="tradisional.js"></script>
+<script src="carakawi.js"></script>
 
 <script>
-    const Modules = { kbj: null, sriwedari: null, simplified: null, tradisional: null, carakawi: null };
-
+    // Kamus Aksara Rekan Khusus untuk Peringatan Paugeran
     const REKAN_KHUSUS_MAP = {
         'q': 'ꦐ', 'hh': 'ꦲ꦳', 'xng': 'ꦔ꦳', 'ts': 'ꦱ꦳', 'shh': 'ꦰ꦳',
         'xsy': 'ꦯ꦳', 'dl': 'ꦭ꦳', 'tth': 'ꦡ꦳', 'zh': 'ꦣ꦳', 'x': 'ꦑ꦳'
     };
 
-    async function loadScriptAsModule(url, fnName) {
-        try {
-            const resp = await fetch(url);
-            const code = await resp.text();
-            const sandbox = {
-                document: { getElementById: () => ({ addEventListener: () => {}, style: {}, value: '', textContent: '', innerText: '' }) },
-                window: {}, navigator: { clipboard: { writeText: () => Promise.resolve() } }, alert: () => {}
-            };
-            const factory = new Function('document', 'window', 'navigator', 'alert', code + `\n return typeof ${fnName} !== 'undefined' ? ${fnName} : null;`);
-            return factory(sandbox.document, sandbox.window, sandbox.navigator, sandbox.alert);
-        } catch (e) {
-            console.error(`Gagal memuat ${url}:`, e); return null;
-        }
-    }
+    // Registry Modul Transliterasi Utama
+    const Modules = {
+        'kbj': (input) => (typeof transliterasiKalimat === 'function') ? transliterasiKalimat(input) : input,
+        'sriwedari': (input) => (typeof transliterasiKalimatSriwedari === 'function') ? transliterasiKalimatSriwedari(input) : input,
+        'simplified': (input) => (typeof transliterasiKalimatSimplified === 'function') ? transliterasiKalimatSimplified(input) : input,
+        'tradisional': (input) => (typeof transliterasiKalimatTradisional === 'function') ? transliterasiKalimatTradisional(input) : input,
+        'carakawi': (input) => (typeof transliterasiKalimatCaraKawi === 'function') ? transliterasiKalimatCaraKawi(input) : input
+    };
 
-    async function initModules() {
-        Modules.kbj = await loadScriptAsModule('kbj.js', 'transliterasiKalimat');
-        Modules.sriwedari = await loadScriptAsModule('sriwedari.js', 'transliterasiKalimat');
-        Modules.simplified = await loadScriptAsModule('simplified.js', 'transliterasiKalimat');
-        Modules.tradisional = await loadScriptAsModule('tradisional.js', 'transliterateKawi');
-        Modules.carakawi = await loadScriptAsModule('carakawi.js', 'transliterateKawi');
-        processTransliteration();
-    }
-
+    // Helper Penetrasi JGST untuk IPA/PUJL
     function netralkanJGSTForPUJL(jgstStr, rawLatin, fnKey) {
         if (!jgstStr || !rawLatin) return jgstStr;
         let rawLower = rawLatin.toLowerCase();
@@ -598,26 +625,71 @@
 
         // Update Kartu Ringkasan
         const outRingkasanPUJL = document.getElementById('outRingkasan_PUJL');
+        
         const outRingkasanKBJ = document.getElementById('outRingkasan_KBJ');
+        const outRingkasanKBJ_JGST = document.getElementById('outRingkasan_KBJ_JGST');
+        const outRingkasanKBJ_IPA = document.getElementById('outRingkasan_KBJ_IPA');
+
         const outRingkasanSriwedari = document.getElementById('outRingkasan_Sriwedari');
+        const outRingkasanSriwedari_JGST = document.getElementById('outRingkasan_Sriwedari_JGST');
+        const outRingkasanSriwedari_IPA = document.getElementById('outRingkasan_Sriwedari_IPA');
+
         const outRingkasanSimplified = document.getElementById('outRingkasan_Simplified');
+        const outRingkasanSimplified_JGST = document.getElementById('outRingkasan_Simplified_JGST');
+        const outRingkasanSimplified_IPA = document.getElementById('outRingkasan_Simplified_IPA');
+
         const outRingkasanTradisional = document.getElementById('outRingkasan_Tradisional');
+        const outRingkasanTradisional_JGST = document.getElementById('outRingkasan_Tradisional_JGST');
+        const outRingkasanTradisional_IPA = document.getElementById('outRingkasan_Tradisional_IPA');
+
         const outRingkasanCaraKawi = document.getElementById('outRingkasan_CaraKawi');
+        const outRingkasanCaraKawi_JGST = document.getElementById('outRingkasan_CaraKawi_JGST');
+        const outRingkasanCaraKawi_IPA = document.getElementById('outRingkasan_CaraKawi_IPA');
 
         if (!input.trim()) {
             if (outRingkasanPUJL) outRingkasanPUJL.textContent = '-';
+            
             if (outRingkasanKBJ) outRingkasanKBJ.textContent = '-';
+            if (outRingkasanKBJ_JGST) outRingkasanKBJ_JGST.textContent = '-';
+            if (outRingkasanKBJ_IPA) outRingkasanKBJ_IPA.textContent = '-';
+
             if (outRingkasanSriwedari) outRingkasanSriwedari.textContent = '-';
+            if (outRingkasanSriwedari_JGST) outRingkasanSriwedari_JGST.textContent = '-';
+            if (outRingkasanSriwedari_IPA) outRingkasanSriwedari_IPA.textContent = '-';
+
             if (outRingkasanSimplified) outRingkasanSimplified.textContent = '-';
+            if (outRingkasanSimplified_JGST) outRingkasanSimplified_JGST.textContent = '-';
+            if (outRingkasanSimplified_IPA) outRingkasanSimplified_IPA.textContent = '-';
+
             if (outRingkasanTradisional) outRingkasanTradisional.textContent = '-';
+            if (outRingkasanTradisional_JGST) outRingkasanTradisional_JGST.textContent = '-';
+            if (outRingkasanTradisional_IPA) outRingkasanTradisional_IPA.textContent = '-';
+
             if (outRingkasanCaraKawi) outRingkasanCaraKawi.textContent = '-';
+            if (outRingkasanCaraKawi_JGST) outRingkasanCaraKawi_JGST.textContent = '-';
+            if (outRingkasanCaraKawi_IPA) outRingkasanCaraKawi_IPA.textContent = '-';
         } else {
             if (outRingkasanPUJL) outRingkasanPUJL.textContent = document.getElementById('outKBJ_PUJL').textContent;
+
             if (outRingkasanKBJ) outRingkasanKBJ.innerHTML = document.getElementById('outKBJ_Aksara').innerHTML;
+            if (outRingkasanKBJ_JGST) outRingkasanKBJ_JGST.textContent = document.getElementById('outKBJ_JGST').textContent;
+            if (outRingkasanKBJ_IPA) outRingkasanKBJ_IPA.textContent = document.getElementById('outKBJ_IPA').textContent;
+
             if (outRingkasanSriwedari) outRingkasanSriwedari.innerHTML = document.getElementById('outSriwedari_Aksara').innerHTML;
+            if (outRingkasanSriwedari_JGST) outRingkasanSriwedari_JGST.textContent = document.getElementById('outSriwedari_JGST').textContent;
+            if (outRingkasanSriwedari_IPA) outRingkasanSriwedari_IPA.textContent = document.getElementById('outSriwedari_IPA').textContent;
+
             if (outRingkasanSimplified) outRingkasanSimplified.innerHTML = document.getElementById('outSimplified_Aksara').innerHTML;
+            if (outRingkasanSimplified_JGST) outRingkasanSimplified_JGST.textContent = document.getElementById('outSimplified_JGST').textContent;
+            if (outRingkasanSimplified_IPA) outRingkasanSimplified_IPA.textContent = document.getElementById('outSimplified_IPA').textContent;
+
             if (outRingkasanTradisional) outRingkasanTradisional.innerHTML = document.getElementById('outTradisional_Aksara').innerHTML;
+            if (outRingkasanTradisional_JGST) outRingkasanTradisional_JGST.textContent = document.getElementById('outTradisional_JGST').textContent;
+            if (outRingkasanTradisional_IPA) outRingkasanTradisional_IPA.textContent = document.getElementById('outTradisional_IPA').textContent;
+
             if (outRingkasanCaraKawi) outRingkasanCaraKawi.innerHTML = document.getElementById('outCaraKawi_Aksara').innerHTML;
+            if (outRingkasanCaraKawi_JGST) outRingkasanCaraKawi_JGST.textContent = document.getElementById('outCaraKawi_JGST').textContent;
+            if (outRingkasanCaraKawi_IPA) outRingkasanCaraKawi_IPA.textContent = document.getElementById('outCaraKawi_IPA').textContent;
         }
     }
 
@@ -669,54 +741,61 @@
         if (toggleLama) toggleLama.checked = allLamaChecked;
     }
 
-    // Inisialisasi kontrol tampil/sembunyi kartu hasil centang
+    // Individual Card Checkbox Toggles
     document.querySelectorAll('.toggle-card').forEach(cb => {
         cb.addEventListener('change', (e) => {
-            const cardId = 'card' + e.target.dataset.card;
-            const cardEl = document.getElementById(cardId);
-            if (cardEl) {
-                cardEl.style.display = e.target.checked ? '' : 'none';
-            }
+            const cardType = e.target.dataset.card;
+            const cardEl = document.getElementById('card' + cardType);
+            if (cardEl) cardEl.style.display = e.target.checked ? '' : 'none';
             updateGroupToggles();
         });
     });
 
-    // Inisialisasi kontrol tampil/sembunyi sub-notasi (JGST, IPA, PUJL)
+    // Sub-Notation (JGST, IPA, PUJL) Checkbox Toggles
     document.querySelectorAll('.toggle-sub').forEach(cb => {
         cb.addEventListener('change', (e) => {
             const subType = e.target.dataset.sub;
-            const targetElements = document.querySelectorAll('.group-' + subType);
-            targetElements.forEach(el => {
-                el.style.display = e.target.checked ? '' : 'none';
+            const groups = document.querySelectorAll('.group-' + subType);
+            groups.forEach(group => {
+                group.style.display = e.target.checked ? '' : 'none';
             });
         });
     });
 
-    document.getElementById('btnClear').addEventListener('click', () => {
-        const inputLatin = document.getElementById('inputLatin');
+    // Control Sliders (Ukuran Font & Jarak Spasi)
+    const sliderFontSize = document.getElementById('sliderFontSize');
+    const valFontSize = document.getElementById('valFontSize');
+    sliderFontSize.addEventListener('input', (e) => {
+        const val = e.target.value + 'rem';
+        valFontSize.textContent = val;
+        document.querySelectorAll('.box-aksara').forEach(box => {
+            box.style.fontSize = val;
+        });
+    });
+
+    const sliderLineHeight = document.getElementById('sliderLineHeight');
+    const valLineHeight = document.getElementById('valLineHeight');
+    sliderLineHeight.addEventListener('input', (e) => {
+        const val = e.target.value;
+        valLineHeight.textContent = val;
+        document.querySelectorAll('.box-aksara').forEach(box => {
+            box.style.lineHeight = val;
+        });
+    });
+
+    // Real-time Input Handler
+    const inputLatin = document.getElementById('inputLatin');
+    const btnClear = document.getElementById('btnClear');
+
+    inputLatin.addEventListener('input', processTransliteration);
+    btnClear.addEventListener('click', () => {
         inputLatin.value = '';
-        inputLatin.focus();
         processTransliteration();
+        inputLatin.focus();
     });
 
-    document.getElementById('sliderFontSize').addEventListener('input', (e) => {
-        const val = e.target.value;
-        document.getElementById('valFontSize').textContent = `${val}rem`;
-        document.querySelectorAll('.box-aksara').forEach(el => {
-            el.style.fontSize = `${val}rem`;
-        });
-    });
-
-    document.getElementById('sliderLineHeight').addEventListener('input', (e) => {
-        const val = e.target.value;
-        document.getElementById('valLineHeight').textContent = val;
-        document.querySelectorAll('.box-aksara').forEach(el => {
-            el.style.lineHeight = val;
-        });
-    });
-
-    document.getElementById('inputLatin').addEventListener('input', processTransliteration);
-    window.addEventListener('DOMContentLoaded', initModules);
+    // Initial Trigger
+    processTransliteration();
 </script>
 
 </body>
