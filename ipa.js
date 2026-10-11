@@ -1,11 +1,12 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Pembaruan Fonem Vokal:
- * - Kata 2 Suku Kata Terbuka berakhiran 'a' (termasuk -ana): [ɔ] (mana -> [mɔnɔ], kana -> [kɔnɔ]).
+ * Pembaruan Fonem Vokal & Fonotaktik Nasal:
+ * - Suku kata awal tertutup nasal (sing-, mimp-, dsb.): Vokal jejeg [i] / [u] (singkir -> [siŋkɪr]).
+ * - Suku kata akhir tertutup non-nasal (-kir, -puk, dsb.): Vokal miring [ɪ] / [ʊ].
+ * - Kata 2 Suku Kata Terbuka berakhiran 'a' (termasuk -ana): [ɔ] (mana -> [mɔnɔ]).
  * - Kata 2 Suku Kata S1 Tertutup Nasal: Terasimilasi ke [ɔ] (kanca -> [kɔɲtʃɔ]).
  * - Kata 3+ Suku Kata dengan Sufiks -ana: Batasi perubahan [ɔ] hanya pada sufiks (panganana -> [paŋanɔnɔ]).
- * - Kata 3 Suku Kata S1 Tertutup Nasal: S1 miring [a], S2 & S3 jejeg [ɔ] (kandhana -> [kanɖʱɔnɔ], pancaka -> [paɲtʃɔkɔ]).
  */
 
 function extractIPAVowels(ipaStr) {
@@ -140,9 +141,10 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
 
                 let resolvedVowels = new Array(numVowels);
 
-                // Deteksi khusus struktur S1 pada kata 2 suku kata dan kata 3 suku kata (S3 Terbuka)
-                let isTwoOrThreeWithOpenFinal = (numVowels === 2) || (numVowels === 3 && !isClosed[2]);
-                let isS1ClosedInTargetWord = isTwoOrThreeWithOpenFinal && isClosed[0];
+                // Deteksi struktur S1 pada kata 2-3 suku kata
+                let isTwoOrThreeWord = (numVowels === 2 || numVowels === 3);
+                let isTwoOrThreeWithOpenFinal = (numVowels === 2 && !isClosed[1]) || (numVowels === 3 && !isClosed[2]);
+                let isS1ClosedInTargetWord = isTwoOrThreeWord && isClosed[0];
 
                 let firstSyllableCodaIsNasal = false;
                 let firstSyllableCodaIsHandR = false;
@@ -153,7 +155,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     let vNext = vowelMatches[1];
                     let cBlock = str.substring(vCurr.index + vCurr.vowel.length, vNext.index);
                     
-                    let codaMatch = cBlock.match(/^(ng|ny|dh|th|[bcdfghjklmnpqrstvwxyzñṅṇṭḍśṣḥ])/i);
+                    let codaMatch = cBlock.match(/^(ng|ny|dh|th|ñ|ṅ|ŋ|ṇ|ṃ|[bcdfghjklmnpqrstvwxyzśṣḥ])/i);
                     let coda = codaMatch ? codaMatch[1].toLowerCase() : '';
                     let onsetS2 = cBlock.substring(coda.length);
 
@@ -162,7 +164,7 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     hasCakraPengkalGembungNext = /[ryw]/i.test(onsetS2);
                 }
 
-                // A. Penentuan dasar Vokal
+                // A. Penentuan Dasar Vokal Fonetis
                 for (let k = 0; k < numVowels; k++) {
                     let v = vowelMatches[k].vowel;
                     let closed = isClosed[k];
@@ -173,7 +175,8 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     } else if (v === 'i') {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ɪ';
-                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
+                        } else if (k === 0 && closed && isTwoOrThreeWord) {
+                            // Suku kata pertama ber-koda nasal selalu vokal jejeg [i]
                             let isMiringI = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringI ? 'ɪ' : 'i';
                         } else if (closed) {
@@ -184,7 +187,8 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                     } else if (v === 'u') {
                         if (isFinal && closed) {
                             resolvedVowels[k] = 'ʊ';
-                        } else if (k === 0 && closed && isTwoOrThreeWithOpenFinal) {
+                        } else if (k === 0 && closed && isTwoOrThreeWord) {
+                            // Suku kata pertama ber-koda nasal selalu vokal jejeg [u]
                             let isMiringU = (!firstSyllableCodaIsNasal && !hasCakraPengkalGembungNext) || firstSyllableCodaIsHandR;
                             resolvedVowels[k] = isMiringU ? 'ʊ' : 'u';
                         } else if (closed) {
@@ -241,7 +245,6 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                 if (lastVowelChar === 'a' && !isClosed[lastIdx]) {
                     for (let j = lastIdx; j >= 0; j--) {
                         if (vowelMatches[j].vowel === 'a') {
-                            // Pembatas khusus sufiks -ana pada kata 3+ suku kata
                             if (isSuffixAna && j < numVowels - 2) {
                                 break;
                             }
