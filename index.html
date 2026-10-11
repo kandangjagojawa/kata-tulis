@@ -174,6 +174,13 @@
 </head>
 <body>
 
+<!-- Hidden Iframes for Isolating Transliteration Engines -->
+<iframe id="engineKBJ" style="display:none;"></iframe>
+<iframe id="engineSriwedari" style="display:none;"></iframe>
+<iframe id="engineSimplified" style="display:none;"></iframe>
+<iframe id="engineTradisional" style="display:none;"></iframe>
+<iframe id="engineCaraKawi" style="display:none;"></iframe>
+
 <div class="container">
     <h1>Membandingkan Tata Tulis Aksara Jawa</h1>
 
@@ -386,11 +393,6 @@
 <script src="jgst.js"></script>
 <script src="ipa.js"></script>
 <script src="pujl.js"></script>
-<script src="kbj.js"></script>
-<script src="sriwedari.js"></script>
-<script src="simplified.js"></script>
-<script src="tradisional.js"></script>
-<script src="carakawi.js"></script>
 
 <script>
     // Kamus Aksara Rekan Khusus untuk Peringatan Paugeran
@@ -399,14 +401,41 @@
         'xsy': 'ꦯ꦳', 'dl': 'ꦭ꦳', 'tth': 'ꦡ꦳', 'zh': 'ꦣ꦳', 'x': 'ꦑ꦳'
     };
 
-    // Registry Modul Transliterasi Utama
-    const Modules = {
-        'kbj': (input) => (typeof transliterasiKalimat === 'function') ? transliterasiKalimat(input) : input,
-        'sriwedari': (input) => (typeof transliterasiKalimatSriwedari === 'function') ? transliterasiKalimatSriwedari(input) : input,
-        'simplified': (input) => (typeof transliterasiKalimatSimplified === 'function') ? transliterasiKalimatSimplified(input) : input,
-        'tradisional': (input) => (typeof transliterasiKalimatTradisional === 'function') ? transliterasiKalimatTradisional(input) : input,
-        'carakawi': (input) => (typeof transliterasiKalimatCaraKawi === 'function') ? transliterasiKalimatCaraKawi(input) : input
+    // Konfigurasi Engine Iframe untuk Mengisolasi Scope Fungsi Global
+    const EngineConfigs = {
+        'kbj': { frameId: 'engineKBJ', src: 'kbj.js', fnName: 'transliterasiKalimat' },
+        'sriwedari': { frameId: 'engineSriwedari', src: 'sriwedari.js', fnName: 'transliterasiKalimat' },
+        'simplified': { frameId: 'engineSimplified', src: 'simplified.js', fnName: 'transliterasiKalimat' },
+        'tradisional': { frameId: 'engineTradisional', src: 'tradisional.js', fnName: 'transliterateKawi' },
+        'carakawi': { frameId: 'engineCaraKawi', src: 'carakawi.js', fnName: 'transliterateKawi' }
     };
+
+    // Inisialisasi Frame Terisolasi
+    function initEngineFrames() {
+        Object.keys(EngineConfigs).forEach(key => {
+            const config = EngineConfigs[key];
+            const frame = document.getElementById(config.frameId);
+            if (frame) {
+                const doc = frame.contentWindow.document;
+                doc.open();
+                doc.write('<!DOCTYPE html><html><head><script src="' + config.src + '"><\/script></head><body></body></html>');
+                doc.close();
+            }
+        });
+    }
+
+    // Pemanggilan Transliterasi dari Scope Iframe Terisolasi
+    function runModuleTransliteration(fnKey, input) {
+        if (!input.trim()) return '';
+        const config = EngineConfigs[fnKey];
+        if (!config) return input;
+
+        const frame = document.getElementById(config.frameId);
+        if (frame && frame.contentWindow && typeof frame.contentWindow[config.fnName] === 'function') {
+            return frame.contentWindow[config.fnName](input);
+        }
+        return input;
+    }
 
     // Helper Penetrasi JGST untuk IPA/PUJL
     function netralkanJGSTForPUJL(jgstStr, rawLatin, fnKey) {
@@ -431,7 +460,7 @@
     }
 
     function generateJGSTAndIPAShifted(rawInput, fnKey, isSastraLampah = false) {
-        if (!rawInput.trim() || !Modules[fnKey]) {
+        if (!rawInput.trim()) {
             return { jgst: '-', ipa: '-', pujl: '-' };
         }
 
@@ -450,7 +479,7 @@
             }
         }
 
-        const aksaraMarked = Modules[fnKey](markedInput);
+        const aksaraMarked = runModuleTransliteration(fnKey, markedInput);
 
         let fullJgst = '';
         if (aksaraMarked && typeof transliterateToJGST === 'function') {
@@ -556,7 +585,7 @@
         const outIPA = document.getElementById(`out${moduleId}_IPA`);
         const outPUJL = document.getElementById(`out${moduleId}_PUJL`);
 
-        if (!rawInput.trim() || !Modules[fnKey]) {
+        if (!rawInput.trim()) {
             outAksara.textContent = '-'; 
             outJGST.textContent = '-'; 
             outIPA.textContent = '-';
@@ -569,7 +598,7 @@
             formattedInput = rawInput.replace(/e'/g, 'é').replace(/E'/g, 'É');
         }
 
-        let aksaraUtuh = Modules[fnKey](formattedInput);
+        let aksaraUtuh = runModuleTransliteration(fnKey, formattedInput);
         let warningText = "";
 
         if (checkRekanKhusus) {
@@ -795,7 +824,10 @@
     });
 
     // Initial Trigger
-    processTransliteration();
+    window.addEventListener('DOMContentLoaded', () => {
+        initEngineFrames();
+        setTimeout(processTransliteration, 50);
+    });
 </script>
 
 </body>
