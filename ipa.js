@@ -298,6 +298,11 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
                  .replace(/dh/g, 'dʱ')
                  .replace(/th/g, 'tʰ')
                  .replace(/jñ/g, 'ɲ')
+                 .replace(/g̣/g, 'ɡʱ')
+                 .replace(/c̣/g, 'tʃʰ')
+                 .replace(/p̣/g, 'pʰ')
+                 .replace(/ḅ/g, 'bʱ')
+                 .replace(/j̣/g, 'ɲ')
                  .replace(/ṛě/g, 'rəː')
                  .replace(/ḷö/g, 'ləː');
 
