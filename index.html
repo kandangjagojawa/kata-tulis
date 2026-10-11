@@ -374,9 +374,9 @@
         }
 
         .guide-table td {
-            padding: 12px 16px;
+            padding: 10px 16px;
             border: 1px solid #e2e8f0;
-            vertical-align: top;
+            vertical-align: middle;
         }
 
         .guide-table tbody tr:nth-child(even) {
@@ -387,36 +387,27 @@
             background-color: #f1f5f9;
         }
 
-        .td-latin-code {
+        .td-latin {
             font-weight: bold;
             color: #0284c7;
             font-family: monospace, monospace;
-            font-size: 1.05rem;
-            display: block;
-        }
-
-        .td-instruction {
-            font-size: 0.85rem;
-            color: #475569;
-            margin-top: 4px;
-            line-height: 1.3;
+            font-size: 1rem;
         }
 
         .td-aksara {
             font-family: 'Ngayogyann', serif;
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             color: #0f172a;
         }
 
         .td-codepoint {
             font-family: monospace;
             font-size: 0.85rem;
-            color: #334155;
+            color: #475569;
             background: #f1f5f9;
             padding: 4px 8px;
             border-radius: 4px;
             display: inline-block;
-            font-weight: 600;
         }
 
         .note-tag {
@@ -436,7 +427,7 @@
             border-radius: 4px;
             background: #e2e8f0;
             color: #475569;
-            margin-top: 4px;
+            margin-left: 6px;
         }
     </style>
 </head>
@@ -685,9 +676,9 @@
             <table class="guide-table">
                 <thead>
                     <tr>
-                        <th style="width: 32%;">Kolom 1: Input & Petunjuk Latin</th>
-                        <th style="width: 24%;">Kolom 2: Tata Tulis Baru</th>
-                        <th style="width: 24%;">Kolom 3: Tata Tulis Lama</th>
+                        <th style="width: 28%;">Kolom 1: Input Huruf Latin</th>
+                        <th style="width: 26%;">Kolom 2: Tata Tulis Baru</th>
+                        <th style="width: 26%;">Kolom 3: Tata Tulis Lama</th>
                         <th style="width: 20%;">Kolom 4: Codepoint Unicode</th>
                     </tr>
                 </thead>
@@ -704,111 +695,111 @@
 <script src="pujl.js"></script>
 
 <script>
-    // DATASET UNICODE & TATATULIS AKSARA JAWA (Sudah Diperbaiki Sintaksnya)
+    // DATASET UNICODE & TATATULIS AKSARA JAWA
     const GUIDE_DATASET = [
         // --- WYANJANA ---
-        { latin: "ha / h / a", jenis: "Wyanjana", baru: "ꦲ", lama: "ꦲ", code: "U+A9B2", note_baru: "", note_lama: "", petunjuk: "Ketik 'h' atau 'a' di awal kata", hana: 1, kaga: 18, warga: 1, alpha: "ha" },
-        { latin: "na / n", jenis: "Wyanjana", baru: "ꦤ", lama: "ꦤ", code: "U+A9A4", note_baru: "", note_lama: "", petunjuk: "Ketik 'n' atau 'na'", hana: 2, kaga: 9, warga: 18, alpha: "na" },
-        { latin: "ca / c", jenis: "Wyanjana", baru: "ꦕ", lama: "ꦕ", code: "U+A995", note_baru: "", note_lama: "", petunjuk: "Ketik 'c' atau 'ca'", hana: 3, kaga: 4, warga: 5, alpha: "ca" },
-        { latin: "ra / r", jenis: "Wyanjana", baru: "ꦫ", lama: "ꦫ", code: "U+A9AB", note_baru: "", note_lama: "", petunjuk: "Ketik 'r' atau 'ra'", hana: 4, kaga: 14, warga: 12, alpha: "ra" },
-        { latin: "ka / k", jenis: "Wyanjana", baru: "ꦏ", lama: "ꦏ", code: "U+A98F", note_baru: "", note_lama: "", petunjuk: "Ketik 'k' atau 'ka'", hana: 5, kaga: 1, warga: 2, alpha: "ka" },
-        { latin: "da / d", jenis: "Wyanjana", baru: "ꦢ", lama: "ꦢ", code: "U+A9A2", note_baru: "", note_lama: "", petunjuk: "Ketik 'd' (denti-alveolar)", hana: 6, kaga: 8, warga: 17, alpha: "da" },
-        { latin: "ta / t", jenis: "Wyanjana", baru: "ꦠ", lama: "ꦠ", code: "U+A9A0", note_baru: "", note_lama: "", petunjuk: "Ketik 't' (denti-alveolar)", hana: 7, kaga: 7, warga: 16, alpha: "ta" },
-        { latin: "sa / s", jenis: "Wyanjana", baru: "ꦱ", lama: "ꦱ", code: "U+A9B1", note_baru: "", note_lama: "", petunjuk: "Ketik 's' atau 'sa'", hana: 8, kaga: 17, warga: 20, alpha: "sa" },
-        { latin: "wa / w", jenis: "Wyanjana", baru: "ꦮ", lama: "ꦮ", code: "U+A9AE", note_baru: "", note_lama: "", petunjuk: "Ketik 'w' atau 'wa'", hana: 9, kaga: 16, warga: 24, alpha: "wa" },
-        { latin: "la / l", jenis: "Wyanjana", baru: "ꦭ", lama: "ꦭ", code: "U+A9AD", note_baru: "", note_lama: "", petunjuk: "Ketik 'l' atau 'la'", hana: 10, kaga: 15, warga: 19, alpha: "la" },
-        { latin: "pa / p", jenis: "Wyanjana", baru: "ꦥ", lama: "ꦥ", code: "U+A9A5", note_baru: "", note_lama: "", petunjuk: "Ketik 'p' atau 'pa'", hana: 11, kaga: 10, warga: 21, alpha: "pa" },
-        { latin: "dha / dh", jenis: "Wyanjana", baru: "ꦝ", lama: "ꦝ", code: "U+A99D", note_baru: "", note_lama: "", petunjuk: "Ketik 'dh' (retrofleks)", hana: 12, kaga: 23, warga: 10, alpha: "dha" },
-        { latin: "ja / j", jenis: "Wyanjana", baru: "ꦗ", lama: "ꦗ", code: "U+A997", note_baru: "", note_lama: "", petunjuk: "Ketik 'j' atau 'ja'", hana: 13, kaga: 5, warga: 6, alpha: "ja" },
-        { latin: "ya / y", jenis: "Wyanjana", baru: "ꦪ", lama: "ꦪ", code: "U+A9AA", note_baru: "", note_lama: "", petunjuk: "Ketik 'y' atau 'ya'", hana: 14, kaga: 13, warga: 8, alpha: "ya" },
-        { latin: "nya / ny", jenis: "Wyanjana", baru: "ꦚ", lama: "ꦚ", code: "U+A99A", note_baru: "", note_lama: "", petunjuk: "Ketik 'ny' atau 'nya'", hana: 15, kaga: 6, warga: 7, alpha: "nya" },
-        { latin: "ma / m", jenis: "Wyanjana", baru: "ꦩ", lama: "ꦩ", code: "U+A9A9", note_baru: "", note_lama: "", petunjuk: "Ketik 'm' atau 'ma'", hana: 16, kaga: 12, warga: 23, alpha: "ma" },
-        { latin: "ga / g", jenis: "Wyanjana", baru: "ꦒ", lama: "ꦒ", code: "U+A992", note_baru: "", note_lama: "", petunjuk: "Ketik 'g' atau 'ga'", hana: 17, kaga: 2, warga: 3, alpha: "ga" },
-        { latin: "ba / b", jenis: "Wyanjana", baru: "ꦧ", lama: "ꦧ", code: "U+A9A7", note_baru: "", note_lama: "", petunjuk: "Ketik 'b' atau 'ba'", hana: 18, kaga: 11, warga: 22, alpha: "ba" },
-        { latin: "tha / th", jenis: "Wyanjana", baru: "ꦛ", lama: "ꦛ", code: "U+A99B", note_baru: "", note_lama: "", petunjuk: "Ketik 'th' (retrofleks)", hana: 19, kaga: 22, warga: 9, alpha: "tha" },
-        { latin: "nga / ng", jenis: "Wyanjana", baru: "ꦔ", lama: "ꦔ", code: "U+A994", note_baru: "", note_lama: "", petunjuk: "Ketik 'ng' + vokal", hana: 20, kaga: 3, warga: 4, alpha: "nga" },
+        { latin: "ha / h / a", jenis: "Wyanjana", baru: "ꦲ", lama: "ꦲ", code: "U+A9B2", note_baru: "", note_lama: "", hana: 1, kaga: 18, warga: 1, alpha: "ha" },
+        { latin: "na / n", jenis: "Wyanjana", baru: "ꦤ", lama: "ꦤ", code: "U+A9A4", note_baru: "", note_lama: "", hana: 2, kaga: 9, warga: 18, alpha: "na" },
+        { latin: "ca / c", jenis: "Wyanjana", baru: "ꦕ", lama: "ꦕ", code: "U+A995", note_baru: "", note_lama: "", hana: 3, kaga: 4, warga: 5, alpha: "ca" },
+        { latin: "ra / r", jenis: "Wyanjana", baru: "ꦫ", lama: "ꦫ", code: "U+A9AB", note_baru: "", note_lama: "", hana: 4, kaga: 14, warga: 12, alpha: "ra" },
+        { latin: "ka / k", jenis: "Wyanjana", baru: "ꦏ", lama: "ꦏ", code: "U+A98F", note_baru: "", note_lama: "", hana: 5, kaga: 1, warga: 2, alpha: "ka" },
+        { latin: "da / d", jenis: "Wyanjana", baru: "ꦢ", lama: "ꦢ", code: "U+A9A2", note_baru: "", note_lama: "", hana: 6, kaga: 8, warga: 17, alpha: "da" },
+        { latin: "ta / t", jenis: "Wyanjana", baru: "ꦠ", lama: "ꦠ", code: "U+A9A0", note_baru: "", note_lama: "", hana: 7, kaga: 7, warga: 16, alpha: "ta" },
+        { latin: "sa / s", jenis: "Wyanjana", baru: "ꦱ", lama: "ꦱ", code: "U+A9B1", note_baru: "", note_lama: "", hana: 8, kaga: 17, warga: 20, alpha: "sa" },
+        { latin: "wa / w", jenis: "Wyanjana", baru: "ꦮ", lama: "ꦮ", code: "U+A9AE", note_baru: "", note_lama: "", hana: 9, kaga: 16, warga: 24, alpha: "wa" },
+        { latin: "la / l", jenis: "Wyanjana", baru: "ꦭ", lama: "ꦭ", code: "U+A9AD", note_baru: "", note_lama: "", hana: 10, kaga: 15, warga: 19, alpha: "la" },
+        { latin: "pa / p", jenis: "Wyanjana", baru: "ꦥ", lama: "ꦥ", code: "U+A9A5", note_baru: "", note_lama: "", hana: 11, kaga: 10, warga: 21, alpha: "pa" },
+        { latin: "dha / dh", jenis: "Wyanjana", baru: "ꦝ", lama: "ꦝ", code: "U+A99D", note_baru: "", note_lama: "", hana: 12, kaga: 23, warga: 10, alpha: "dha" },
+        { latin: "ja / j", jenis: "Wyanjana", baru: "ꦗ", lama: "ꦗ", code: "U+A997", note_baru": "", note_lama: "", hana: 13, kaga: 5, warga: 6, alpha: "ja" },
+        { latin: "ya / y", jenis: "Wyanjana", baru: "ꦪ", lama: "ꦪ", code: "U+A9AA", note_baru": "", note_lama: "", hana: 14, kaga: 13, warga: 8, alpha: "ya" },
+        { latin: "nya / ny", jenis: "Wyanjana", baru: "ꦚ", lama: "ꦚ", code: "U+A99A", note_baru": "", note_lama: "", hana: 15, kaga: 6, warga: 7, alpha: "nya" },
+        { latin: "ma / m", jenis: "Wyanjana", baru: "ꦩ", lama: "ꦩ", code: "U+A9A9", note_baru": "", note_lama: "", hana: 16, kaga: 12, warga: 23, alpha: "ma" },
+        { latin: "ga / g", jenis: "Wyanjana", baru: "ꦒ", lama: "ꦒ", code: "U+A992", note_baru": "", note_lama: "", hana: 17, kaga: 2, warga: 3, alpha: "ga" },
+        { latin: "ba / b", jenis: "Wyanjana", baru: "ꦧ", lama: "ꦧ", code: "U+A9A7", note_baru": "", note_lama: "", hana: 18, kaga: 11, warga: 22, alpha: "ba" },
+        { latin: "tha / th", jenis: "Wyanjana", baru: "ꦛ", lama: "ꦛ", code: "U+A99B", note_baru": "", note_lama: "", hana: 19, kaga: 22, warga: 9, alpha: "tha" },
+        { latin: "nga / ng", jenis: "Wyanjana", baru: "ꦔ", lama: "ꦔ", code: "U+A994", note_baru": "", note_lama: "", hana: 20, kaga: 3, warga: 4, alpha: "nga" },
 
         // --- AKSARA MURDA ---
-        { latin: "Na / N", jenis: "Aksara Murda", baru: "ꦟ", lama: "ꦟ", code: "U+A99F", note_baru: "", note_lama: "", petunjuk: "Ketik 'N' (kapital) / 'Na'", hana: 21, kaga: 24, warga: 11, alpha: "Na" },
-        { latin: "Ka / K", jenis: "Aksara Murda", baru: "ꦑ", lama: "ꦑ", code: "U+A991", note_baru: "", note_lama: "", petunjuk: "Ketik 'K' (kapital) / 'Ka'", hana: 22, kaga: 25, warga: 25, alpha: "Ka" },
-        { latin: "Ta / T", jenis: "Aksara Murda", baru: "ꦡ", lama: "ꦡ", code: "U+A9A1", note_baru: "", note_lama: "", petunjuk: "Ketik 'T' (kapital) / 'Ta'", hana: 23, kaga: 26, warga: 26, alpha: "Ta" },
-        { latin: "Sa / S / sy", jenis: "Aksara Murda", baru: "ꦯ", lama: "ꦯ", code: "U+A9AF", note_baru: "", note_lama: "", petunjuk: "Ketik 'S' (kapital) / 'sy'", hana: 24, kaga: 27, warga: 27, alpha: "Sa" },
-        { latin: "Pa / P", jenis: "Aksara Murda", baru: "ꦦ", lama: "ꦦ", code: "U+A9A6", note_baru: "", note_lama: "", petunjuk: "Ketik 'P' (kapital) / 'Pa'", hana: 25, kaga: 28, warga: 28, alpha: "Pa" },
-        { latin: "NYa / NY / Ny", jenis: "Aksara Murda", baru: "ꦘ", lama: "ꦘ", code: "U+A998", note_baru: "", note_lama: "", petunjuk: "Ketik 'NY' / 'Ny' (kapital)", hana: 26, kaga: 29, warga: 29, alpha: "NYa" },
-        { latin: "Ga / G", jenis: "Aksara Murda", baru: "ꦓ", lama: "ꦓ", code: "U+A993", note_baru: "", note_lama: "", petunjuk: "Ketik 'G' (kapital) / 'Ga'", hana: 27, kaga: 30, warga: 30, alpha: "Ga" },
-        { latin: "Ba / B", jenis: "Aksara Murda", baru: "ꦨ", lama: "ꦨ", code: "U+A9A8", note_baru: "", note_lama: "", petunjuk: "Ketik 'B' (kapital) / 'Ba'", hana: 28, kaga: 31, warga: 31, alpha: "Ba" },
-        { latin: "Ca / C", jenis: "Aksara Murda", baru: "ꦖ", lama: "ꦖ", code: "U+A996", note_baru: "", note_lama: "", petunjuk: "Ketik 'C' (kapital) / 'Ca'", hana: 29, kaga: 32, warga: 32, alpha: "Ca" },
-        { latin: "Ja / J", jenis: "Aksara Murda", baru: "ꦙ", lama: "ꦙ", code: "U+A999", note_baru: "", note_lama: "", petunjuk: "Ketik 'J' (kapital) / 'Ja'", hana: 30, kaga: 33, warga: 33, alpha: "Ja" },
-        { latin: "Ra / R", jenis: "Aksara Murda", baru: "ꦬ", lama: "ꦬ", code: "U+A9AC", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'R' (kapital)", hana: 31, kaga: 34, warga: 34, alpha: "Ra" },
-        { latin: "DHa / DH", jenis: "Aksara Murda", baru: "ꦣ", lama: "ꦣ", code: "U+A9A3", note_baru: "", note_lama: "", petunjuk: "Ketik 'DH' / 'Dh' (kapital)", hana: 32, kaga: 35, warga: 35, alpha: "DHa" },
+        { latin: "Na / N", jenis: "Aksara Murda", baru: "ꦟ", lama: "ꦟ", code: "U+A99F", note_baru: "", note_lama: "", hana: 21, kaga: 24, warga: 11, alpha: "Na" },
+        { latin: "Ka / K", jenis: "Aksara Murda", baru: "ꦑ", lama: "ꦑ", code: "U+A991", note_baru": "", note_lama": "", hana: 22, kaga: 25, warga: 25, alpha: "Ka" },
+        { latin: "Ta / T", jenis: "Aksara Murda", baru: "ꦡ", lama: "ꦡ", code: "U+A9A1", note_baru": "", note_lama": "", hana: 23, kaga: 26, warga: 26, alpha: "Ta" },
+        { latin: "Sa / S / sy", jenis: "Aksara Murda", baru: "ꦯ", lama: "ꦯ", code: "U+A9AF", note_baru": "", note_lama": "", hana: 24, kaga: 27, warga: 27, alpha: "Sa" },
+        { latin: "Pa / P", jenis: "Aksara Murda", baru: "ꦦ", lama: "ꦦ", code: "U+A9A6", note_baru": "", note_lama": "", hana: 25, kaga: 28, warga: 28, alpha: "Pa" },
+        { latin: "NYa / NY / Ny", jenis: "Aksara Murda", baru: "ꦘ", lama: "ꦘ", code: "U+A998", note_baru": "", note_lama": "", hana: 26, kaga: 29, warga: 29, alpha: "NYa" },
+        { latin: "Ga / G", jenis: "Aksara Murda", baru: "ꦓ", lama: "ꦓ", code: "U+A993", note_baru": "", note_lama": "", hana: 27, kaga: 30, warga: 30, alpha: "Ga" },
+        { latin: "Ba / B", jenis: "Aksara Murda", baru: "ꦨ", lama: "ꦨ", code: "U+A9A8", note_baru": "", note_lama": "", hana: 28, kaga: 31, warga: 31, alpha: "Ba" },
+        { latin: "Ca / C", jenis: "Aksara Murda", baru: "ꦖ", lama: "ꦖ", code: "U+A996", note_baru": "", note_lama": "", hana: 29, kaga: 32, warga: 32, alpha: "Ca" },
+        { latin: "Ja / J", jenis: "Aksara Murda", baru: "ꦙ", lama: "ꦙ", code: "U+A999", note_baru": "", note_lama": "", hana: 30, kaga: 33, warga: 33, alpha: "Ja" },
+        { latin: "Ra / R", jenis: "Aksara Murda", baru: "ꦬ", lama: "ꦬ", code: "U+A9AC", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 31, kaga: 34, warga: 34, alpha: "Ra" },
+        { latin: "DHa / DH", jenis: "Aksara Murda", baru: "ꦣ", lama: "ꦣ", code: "U+A9A3", note_baru": "", note_lama": "", hana: 32, kaga: 35, warga: 35, alpha: "DHa" },
 
         // --- AKSARA MAHAPRANA ---
-        { latin: "q / qa", jenis: "Aksara Mahaprana", baru: "ꦐ", lama: "ꦐ", code: "U+A990", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'q' / 'qa'", hana: 33, kaga: 36, warga: 36, alpha: "q" },
-        { latin: "tth / ttha", jenis: "Aksara Mahaprana", baru: "ꦜ", lama: "ꦜ", code: "U+A99C", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'tth' / 'ttha'", hana: 34, kaga: 37, warga: 37, alpha: "tth" },
-        { latin: "ddh / ddha", jenis: "Aksara Mahaprana", baru: "ꦞ", lama: "ꦞ", code: "U+A99E", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'ddh' / 'ddha'", hana: 35, kaga: 38, warga: 38, alpha: "ddh" },
-        { latin: "sh / ssa", jenis: "Aksara Mahaprana", baru: "ꦰ", lama: "ꦰ", code: "U+A9B0", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'sh' / 'ssa'", hana: 36, kaga: 39, warga: 39, alpha: "sh" },
+        { latin: "q / qa", jenis: "Aksara Mahaprana", baru: "ꦐ", lama: "ꦐ", code: "U+A990", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 33, kaga: 36, warga: 36, alpha: "q" },
+        { latin: "tth / ttha", jenis: "Aksara Mahaprana", baru: "ꦜ", lama: "ꦜ", code: "U+A99C", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 34, kaga: 37, warga: 37, alpha: "tth" },
+        { latin: "ddh / ddha", jenis: "Aksara Mahaprana", baru: "ꦞ", lama: "ꦞ", code: "U+A99E", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 35, kaga: 38, warga: 38, alpha: "ddh" },
+        { latin: "sh / ssa", jenis: "Aksara Mahaprana", baru: "ꦰ", lama: "ꦰ", code: "U+A9B0", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 36, kaga: 39, warga: 39, alpha: "sh" },
 
         // --- AKSARA REKAN ---
-        { latin: "f / fa / v / va", jenis: "Aksara Rekan", baru: "ꦥ꦳", lama: "ꦥ꦳", code: "U+A9A5 U+A9B3", note_baru: "", note_lama: "", petunjuk: "Ketik 'f', 'fa', 'v', atau 'va'", hana: 37, kaga: 40, warga: 40, alpha: "fa" },
-        { latin: "z / za", jenis: "Aksara Rekan", baru: "ꦗ꦳", lama: "ꦗ꦳", code: "U+A997 U+A9B3", note_baru: "", note_lama: "", petunjuk: "Ketik 'z' atau 'za'", hana: 38, kaga: 41, warga: 41, alpha: "za" },
-        { latin: "kh / kha / kx", jenis: "Aksara Rekan", baru: "ꦏ꦳", lama: "ꦏ꦳", code: "U+A98F U+A9B3", note_baru: "", note_lama: "", petunjuk: "Ketik 'kh' atau 'kx'", hana: 39, kaga: 42, warga: 42, alpha: "kh" },
-        { latin: "dz / dza / zh", jenis: "Aksara Rekan", baru: "ꦢ꦳", lama: "ꦢ꦳", code: "U+A9A2 U+A9B3", note_baru: "", note_lama: "", petunjuk: "Ketik 'dz', 'dza', atau 'zh'", hana: 40, kaga: 43, warga: 43, alpha: "dz" },
-        { latin: "gh / gha", jenis: "Aksara Rekan", baru: "ꦒ꦳", lama: "ꦒ꦳", code: "U+A992 U+A9B3", note_baru: "", note_lama: "", petunjuk: "Ketik 'gh' atau 'gha'", hana: 41, kaga: 44, warga: 44, alpha: "gh" },
-        { latin: "hh / hx", jenis: "Aksara Rekan", baru: "ꦲ꦳", lama: "ꦲ꦳", code: "U+A9B2 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'hh' atau 'hx'", hana: 42, kaga: 45, warga: 45, alpha: "hh" },
-        { latin: "xng / ngx", jenis: "Aksara Rekan", baru: "ꦔ꦳", lama: "ꦔ꦳", code: "U+A994 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'xng' atau 'ngx'", hana: 43, kaga: 46, warga: 46, alpha: "xng" },
-        { latin: "ts", jenis: "Aksara Rekan", baru: "ꦱ꦳", lama: "ꦱ꦳", code: "U+A9B1 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama: "", petunjuk: "Ketik 'ts'", hana: 44, kaga: 47, warga: 47, alpha: "ts" },
+        { latin: "f / fa / v / va", jenis: "Aksara Rekan", baru: "ꦥ꦳", lama: "ꦥ꦳", code: "U+A9A5 U+A9B3", note_baru": "", note_lama": "", hana: 37, kaga: 40, warga: 40, alpha: "fa" },
+        { latin: "z / za", jenis: "Aksara Rekan", baru: "ꦗ꦳", lama: "ꦗ꦳", code: "U+A997 U+A9B3", note_baru": "", note_lama": "", hana: 38, kaga: 41, warga: 41, alpha: "za" },
+        { latin: "kh / kha / kx", jenis: "Aksara Rekan", baru: "ꦏ꦳", lama: "ꦏ꦳", code: "U+A98F U+A9B3", note_baru": "", note_lama": "", hana: 39, kaga: 42, warga: 42, alpha: "kh" },
+        { latin: "dz / dza / zh", jenis: "Aksara Rekan", baru: "ꦢ꦳", lama: "ꦢ꦳", code: "U+A9A2 U+A9B3", note_baru": "", note_lama": "", hana: 40, kaga: 43, warga: 43, alpha: "dz" },
+        { latin: "gh / gha", jenis: "Aksara Rekan", baru: "ꦒ꦳", lama: "ꦒ꦳", code: "U+A992 U+A9B3", note_baru": "", note_lama": "", hana: 41, kaga: 44, warga: 44, alpha: "gh" },
+        { latin: "hh / hx", jenis: "Aksara Rekan", baru: "ꦲ꦳", lama: "ꦲ꦳", code: "U+A9B2 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 42, kaga: 45, warga: 45, alpha: "hh" },
+        { latin: "xng / ngx", jenis: "Aksara Rekan", baru: "ꦔ꦳", lama: "ꦔ꦳", code: "U+A994 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 43, kaga: 46, warga: 46, alpha: "xng" },
+        { latin: "ts", jenis: "Aksara Rekan", baru: "ꦱ꦳", lama: "ꦱ꦳", code: "U+A9B1 U+A9B3", note_baru: "tidak ada di: kbj, sriwedari", note_lama": "", hana: 44, kaga: 47, warga: 47, alpha: "ts" },
 
         // --- AKSARA SWARA & GANTEN ---
-        { latin: "A / AA", jenis: "Aksara Swara", baru: "ꦄ", lama: "ꦄ", code: "U+A984", note_baru: "", note_lama: "", petunjuk: "Ketik 'A' atau 'AA' (kapital di awal)", hana: 45, kaga: 48, warga: 48, alpha: "A" },
-        { latin: "I", jenis: "Aksara Swara", baru: "ꦅ / ꦆ", lama: "ꦅ / ꦆ", code: "U+A985 / U+A986", note_baru: "", note_lama: "", petunjuk: "Ketik 'I' (kapital di awal)", hana: 46, kaga: 49, warga: 49, alpha: "I" },
-        { latin: "II", jenis: "Aksara Swara", baru: "ꦇ", lama: "ꦇ", code: "U+A987", note_baru: "", note_lama: "", petunjuk: "Ketik 'II' (kapital)", hana: 47, kaga: 50, warga: 50, alpha: "II" },
-        { latin: "U / UU", jenis: "Aksara Swara", baru: "ꦈ", lama: "ꦈ", code: "U+A988", note_baru: "", note_lama: "", petunjuk: "Ketik 'U' / 'UU' (kapital)", hana: 48, kaga: 51, warga: 51, alpha: "U" },
-        { latin: "E / É / È / Ê", jenis: "Aksara Swara", baru: "ꦌ", lama: "ꦌ", code: "U+A98C", note_baru: "", note_lama: "", petunjuk: "Ketik 'E' / 'É' (kapital)", hana: 49, kaga: 52, warga: 52, alpha: "E" },
-        { latin: "AI", jenis: "Aksara Swara", baru: "ꦍ", lama: "ꦍ", code: "U+A98D", note_baru: "", note_lama: "", petunjuk: "Ketik 'AI' (kapital)", hana: 50, kaga: 53, warga: 53, alpha: "AI" },
-        { latin: "O", jenis: "Aksara Swara", baru: "ꦎ", lama: "ꦎ", code: "U+A98E", note_baru: "", note_lama: "", petunjuk: "Ketik 'O' (kapital di awal)", hana: 51, kaga: 54, warga: 54, alpha: "O" },
-        { latin: "re / rê (Pa Cerek)", jenis: "Aksara Ganten", baru: "ꦉ", lama: "ꦉ", code: "U+A989", note_baru: "", note_lama: "", petunjuk: "Ketik 're' atau 'rê'", hana: 52, kaga: 55, warga: 55, alpha: "re" },
-        { latin: "le / lê (Nga Lelet)", jenis: "Aksara Ganten", baru: "ꦊ", lama: "ꦊ", code: "U+A98A", note_baru: "", note_lama: "", petunjuk: "Ketik 'le' atau 'lê'", hana: 53, kaga: 56, warga: 56, alpha: "le" },
-        { latin: "lee / lêê (Nga Lelet Raswadi)", jenis: "Aksara Ganten", baru: "ꦋ", lama: "ꦋ", code: "U+A98B", note_baru: "", note_lama: "", petunjuk: "Ketik 'lee' atau 'lêê'", hana: 54, kaga: 57, warga: 57, alpha: "lee" },
+        { latin: "A / AA", jenis: "Aksara Swara", baru: "ꦄ", lama: "ꦄ", code: "U+A984", note_baru": "", note_lama": "", hana: 45, kaga: 48, warga: 48, alpha: "A" },
+        { latin: "I", jenis: "Aksara Swara", baru: "ꦅ / ꦆ", lama: "ꦅ / ꦆ", code: "U+A985 / U+A986", note_baru": "", note_lama": "", hana: 46, kaga: 49, warga: 49, alpha: "I" },
+        { latin: "II", jenis: "Aksara Swara", baru: "ꦇ", lama: "ꦇ", code: "U+A987", note_baru": "", note_lama": "", hana: 47, kaga: 50, warga: 50, alpha: "II" },
+        { latin: "U / UU", jenis: "Aksara Swara", baru: "ꦈ", lama: "ꦈ", code: "U+A988", note_baru": "", note_lama": "", hana: 48, kaga: 51, warga: 51, alpha: "U" },
+        { latin: "E / É / È / Ê", jenis: "Aksara Swara", baru: "ꦌ", lama: "ꦌ", code: "U+A98C", note_baru": "", note_lama": "", hana: 49, kaga: 52, warga: 52, alpha: "E" },
+        { latin: "AI", jenis: "Aksara Swara", baru: "ꦍ", lama: "ꦍ", code: "U+A98D", note_baru": "", note_lama": "", hana: 50, kaga: 53, warga: 53, alpha: "AI" },
+        { latin: "O", jenis: "Aksara Swara", baru: "ꦎ", lama: "ꦎ", code: "U+A98E", note_baru": "", note_lama": "", hana: 51, kaga: 54, warga: 54, alpha: "O" },
+        { latin: "re / rê (Pa Cerek)", jenis: "Aksara Ganten", baru: "ꦉ", lama: "ꦉ", code: "U+A989", note_baru": "", note_lama": "", hana: 52, kaga: 55, warga: 55, alpha: "re" },
+        { latin: "le / lê (Nga Lelet)", jenis: "Aksara Ganten", baru: "ꦊ", lama: "ꦊ", code: "U+A98A", note_baru": "", note_lama": "", hana: 53, kaga: 56, warga: 56, alpha: "le" },
+        { latin: "lee / lêê (Nga Lelet Raswadi)", jenis: "Aksara Ganten", baru: "ꦋ", lama: "ꦋ", code: "U+A98B", note_baru": "", note_lama": "", hana: 54, kaga: 57, warga: 57, alpha: "lee" },
 
         // --- SANDHANGAN SWARA ---
-        { latin: "i (Wulu)", jenis: "Sandhangan Swara", baru: "ꦶ", lama: "ꦶ", code: "U+A9B6", note_baru: "", note_lama: "", petunjuk: "Ketik 'i' setelah konsonan", hana: 55, kaga: 58, warga: 58, alpha: "i" },
-        { latin: "u (Suku)", jenis: "Sandhangan Swara", baru: "ꦸ", lama: "ꦸ", code: "U+A9B8", note_baru: "", note_lama: "", petunjuk: "Ketik 'u' setelah konsonan", hana: 56, kaga: 59, warga: 59, alpha: "u" },
-        { latin: "é / è (Taling)", jenis: "Sandhangan Swara", baru: "ꦺ", lama: "ꦺ", code: "U+A9BA", note_baru: "", note_lama: "", petunjuk: "Ketik 'é' / 'è' / 'e''", hana: 57, kaga: 60, warga: 60, alpha: "e_taling" },
-        { latin: "e / ê (Pepet)", jenis: "Sandhangan Swara", baru: "ꦼ", lama: "ꦼ", code: "U+A9BC", note_baru: "", note_lama: "", petunjuk: "Ketik 'e' / 'ê'", hana: 58, kaga: 61, warga: 61, alpha: "e_pepet" },
-        { latin: "o (Taling Tarung)", jenis: "Sandhangan Swara", baru: "ꦺꦴ", lama: "ꦺꦴ", code: "U+A9BA U+A9B4", note_baru: "", note_lama: "", petunjuk: "Ketik 'o' setelah konsonan", hana: 59, kaga: 62, warga: 62, alpha: "o_talingtarung" },
-        { latin: "aa (Tarung)", jenis: "Sandhangan Swara", baru: "ꦴ", lama: "ꦴ", code: "U+A9B4", note_baru: "", note_lama: "", petunjuk: "Ketik 'aa' (vokal panjang)", hana: 60, kaga: 63, warga: 63, alpha: "aa_tarung" },
-        { latin: "ii (Wulu Dirga)", jenis: "Sandhangan Swara", baru: "ꦷ", lama: "ꦷ", code: "U+A9B7", note_baru: "", note_lama: "", petunjuk: "Ketik 'ii' (vokal panjang)", hana: 61, kaga: 64, warga: 64, alpha: "ii_wuludirga" },
-        { latin: "uu (Suku Mendut)", jenis: "Sandhangan Swara", baru: "ꦹ", lama: "ꦹ", code: "U+A9B9", note_baru: "", note_lama: "", petunjuk: "Ketik 'uu' (vokal panjang)", hana: 62, kaga: 65, warga: 65, alpha: "uu_sukumendut" },
-        { latin: "ai (Dirga Mure)", jenis: "Sandhangan Swara", baru: "ꦻ", lama: "ꦻ", code: "U+A9BB", note_baru: "", note_lama: "", petunjuk: "Ketik 'ai' (diftong)", hana: 63, kaga: 66, warga: 66, alpha: "ai_dirgamure" },
+        { latin: "i (Wulu)", jenis: "Sandhangan Swara", baru: "ꦶ", lama: "ꦶ", code: "U+A9B6", note_baru": "", note_lama": "", hana: 55, kaga: 58, warga: 58, alpha: "i" },
+        { latin: "u (Suku)", jenis: "Sandhangan Swara", baru: "ꦸ", lama: "ꦸ", code: "U+A9B8", note_baru": "", note_lama": "", hana: 56, kaga: 59, warga: 59, alpha: "u" },
+        { latin: "é / è (Taling)", jenis: "Sandhangan Swara", baru: "ꦺ", lama: "ꦺ", code: "U+A9BA", note_baru": "", note_lama": "", hana: 57, kaga: 60, warga: 60, alpha: "e_taling" },
+        { latin: "e / ê (Pepet)", jenis: "Sandhangan Swara", baru: "ꦼ", lama: "ꦼ", code: "U+A9BC", note_baru": "", note_lama": "", hana: 58, kaga: 61, warga: 61, alpha: "e_pepet" },
+        { latin: "o (Taling Tarung)", jenis: "Sandhangan Swara", baru: "ꦺꦴ", lama: "ꦺꦴ", code: "U+A9BA U+A9B4", note_baru": "", note_lama": "", hana: 59, kaga: 62, warga: 62, alpha: "o_talingtarung" },
+        { latin: "aa (Tarung)", jenis: "Sandhangan Swara", baru: "ꦴ", lama: "ꦴ", code: "U+A9B4", note_baru": "", note_lama": "", hana: 60, kaga: 63, warga: 63, alpha: "aa_tarung" },
+        { latin: "ii (Wulu Dirga)", jenis: "Sandhangan Swara", baru: "ꦷ", lama: "ꦷ", code: "U+A9B7", note_baru": "", note_lama": "", hana: 61, kaga: 64, warga: 64, alpha: "ii_wuludirga" },
+        { latin: "uu (Suku Mendut)", jenis: "Sandhangan Swara", baru: "ꦹ", lama: "ꦹ", code: "U+A9B9", note_baru": "", note_lama": "", hana: 62, kaga: 65, warga: 65, alpha: "uu_sukumendut" },
+        { latin: "ai (Dirga Mure)", jenis: "Sandhangan Swara", baru: "ꦻ", lama: "ꦻ", code: "U+A9BB", note_baru": "", note_lama": "", hana: 63, kaga: 66, warga: 66, alpha: "ai_dirgamure" },
 
         // --- SANDHANGAN PANYIGEGING WANDA ---
-        { latin: "ng (Cecak)", jenis: "Sandhangan Panyigeg", baru: "ꦁ", lama: "ꦁ", code: "U+A980", note_baru: "", note_lama: "", petunjuk: "Ketik 'ng' di akhir suku kata", hana: 64, kaga: 67, warga: 67, alpha: "ng_cecak" },
-        { latin: "r (Layar)", jenis: "Sandhangan Panyigeg", baru: "ꦂ", lama: "ꦂ", code: "U+A981", note_baru: "", note_lama: "", petunjuk: "Ketik 'r' di akhir suku kata", hana: 65, kaga: 68, warga: 68, alpha: "r_layar" },
-        { latin: "h (Wignyan)", jenis: "Sandhangan Panyigeg", baru: "ꦃ", lama: "ꦃ", code: "U+A982", note_baru: "", note_lama: "", petunjuk: "Ketik 'h' di akhir suku kata", hana: 66, kaga: 69, warga: 69, alpha: "h_wignyan" },
-        { latin: "pangkon / mati", jenis: "Sandhangan Panyigeg", baru: "꧀", lama: "꧀", code: "U+A9C0", note_baru: "", note_lama: "", petunjuk: "Otomatis muncul di konsonan mati akhir", hana: 67, kaga: 70, warga: 70, alpha: "pangkon" },
+        { latin: "ng (Cecak)", jenis: "Sandhangan Panyigeg", baru: "ꦁ", lama: "ꦁ", code: "U+A980", note_baru": "", note_lama": "", hana: 64, kaga: 67, warga: 67, alpha: "ng_cecak" },
+        { latin: "r (Layar)", jenis: "Sandhangan Panyigeg", baru: "ꦂ", lama: "ꦂ", code: "U+A981", note_baru": "", note_lama": "", hana: 65, kaga: 68, warga: 68, alpha: "r_layar" },
+        { latin: "h (Wignyan)", jenis: "Sandhangan Panyigeg", baru: "ꦃ", lama: "ꦃ", code: "U+A982", note_baru": "", note_lama": "", hana: 66, kaga: 69, warga: 69, alpha: "h_wignyan" },
+        { latin: "pangkon / mati", jenis: "Sandhangan Panyigeg", baru: "꧀", lama: "꧀", code: "U+A9C0", note_baru": "", note_lama": "", hana: 67, kaga: 70, warga: 70, alpha: "pangkon" },
 
         // --- SANDHANGAN WYANJANA ---
-        { latin: "-r- / cakra", jenis: "Sandhangan Wyanjana", baru: "ꦿ", lama: "ꦿ", code: "U+A9BF", note_baru: "", note_lama: "", petunjuk: "Ketik konsonan + 'r' + vokal (mis: 'kra')", hana: 68, kaga: 71, warga: 71, alpha: "r_cakra" },
-        { latin: "-re- / cakra keret", jenis: "Sandhangan Wyanjana", baru: "ꦽ", lama: "ꦽ", code: "U+A9C2", note_baru: "", note_lama: "", petunjuk: "Ketik konsonan + 're' (mis: 'kre')", hana: 69, kaga: 72, warga: 72, alpha: "re_cakrakeret" },
-        { latin: "-y- / pengkal", jenis: "Sandhangan Wyanjana", baru: "ꦾ", lama: "ꦾ", code: "U+A9BE", note_baru: "", note_lama: "", petunjuk: "Ketik konsonan + 'y' + vokal (mis: 'kya')", hana: 70, kaga: 73, warga: 73, alpha: "y_pengkal" },
+        { latin: "-r- / cakra", jenis: "Sandhangan Wyanjana", baru: "ꦿ", lama: "ꦿ", code: "U+A9BF", note_baru": "", note_lama": "", hana: 68, kaga: 71, warga: 71, alpha: "r_cakra" },
+        { latin: "-re- / cakra keret", jenis: "Sandhangan Wyanjana", baru: "ꦽ", lama: "ꦽ", code: "U+A9C2", note_baru": "", note_lama": "", hana: 69, kaga: 72, warga: 72, alpha: "re_cakrakeret" },
+        { latin: "-y- / pengkal", jenis: "Sandhangan Wyanjana", baru: "ꦾ", lama: "ꦾ", code: "U+A9BE", note_baru": "", note_lama": "", hana: 70, kaga: 73, warga: 73, alpha: "y_pengkal" },
 
         // --- ANGKA JAWA ---
-        { latin: "0", jenis: "Angka", baru: "꧐", lama: "꧐", code: "U+A9D0", note_baru: "", note_lama: "", petunjuk: "Ketik angka '0'", hana: 71, kaga: 74, warga: 74, alpha: "0" },
-        { latin: "1", jenis: "Angka", baru: "꧑", lama: "꧑", code: "U+A9D1", note_baru: "", note_lama: "", petunjuk: "Ketik angka '1'", hana: 72, kaga: 75, warga: 75, alpha: "1" },
-        { latin: "2", jenis: "Angka", baru: "꧒", lama: "꧒", code: "U+A9D2", note_baru: "", note_lama: "", petunjuk: "Ketik angka '2'", hana: 73, kaga: 76, warga: 76, alpha: "2" },
-        { latin: "3", jenis: "Angka", baru: "꧓", lama: "꧓", code: "U+A9D3", note_baru: "", note_lama: "", petunjuk: "Ketik angka '3'", hana: 74, kaga: 77, warga: 77, alpha: "3" },
-        { latin: "4", jenis: "Angka", baru: "꧔", lama: "꧔", code: "U+A9D4", note_baru: "", note_lama: "", petunjuk: "Ketik angka '4'", hana: 75, kaga: 78, warga: 78, alpha: "4" },
-        { latin: "5", jenis: "Angka", baru: "꧕", lama: "꧕", code: "U+A9D5", note_baru: "", note_lama: "", petunjuk: "Ketik angka '5'", hana: 76, kaga: 79, warga: 79, alpha: "5" },
-        { latin: "6", jenis: "Angka", baru: "꧖", lama: "꧖", code: "U+A9D6", note_baru: "", note_lama: "", petunjuk: "Ketik angka '6'", hana: 77, kaga: 80, warga: 80, alpha: "6" },
-        { latin: "7", jenis: "Angka", baru: "꧗", lama: "꧗", code: "U+A9D7", note_baru: "", note_lama: "", petunjuk: "Ketik angka '7'", hana: 78, kaga: 81, warga: 81, alpha: "7" },
-        { latin: "8", jenis: "Angka", baru: "꧘", lama: "꧘", code: "U+A9D8", note_baru: "", note_lama: "", petunjuk: "Ketik angka '8'", hana: 79, kaga: 82, warga: 82, alpha: "8" },
-        { latin: "9", jenis: "Angka", baru: "꧙", lama: "꧙", code: "U+A9D9", note_baru: "", note_lama: "", petunjuk: "Ketik angka '9'", hana: 80, kaga: 83, warga: 83, alpha: "9" },
+        { latin: "0", jenis: "Angka", baru: "꧐", lama: "꧐", code: "U+A9D0", note_baru": "", note_lama": "", hana: 71, kaga: 74, warga: 74, alpha: "0" },
+        { latin: "1", jenis: "Angka", baru: "꧑", lama: "꧑", code: "U+A9D1", note_baru": "", note_lama": "", hana: 72, kaga: 75, warga: 75, alpha: "1" },
+        { latin: "2", jenis: "Angka", baru: "꧒", lama: "꧒", code: "U+A9D2", note_baru": "", note_lama": "", hana: 73, kaga: 76, warga: 76, alpha: "2" },
+        { latin: "3", jenis: "Angka", baru: "꧓", lama: "꧓", code: "U+A9D3", note_baru": "", note_lama": "", hana: 74, kaga: 77, warga: 77, alpha: "3" },
+        { latin: "4", jenis: "Angka", baru: "꧔", lama: "꧔", code: "U+A9D4", note_baru": "", note_lama": "", hana: 75, kaga: 78, warga: 78, alpha: "4" },
+        { latin: "5", jenis: "Angka", baru: "꧕", lama: "꧕", code: "U+A9D5", note_baru": "", note_lama": "", hana: 76, kaga: 79, warga: 79, alpha: "5" },
+        { latin: "6", jenis: "Angka", baru: "꧖", lama: "꧖", code: "U+A9D6", note_baru": "", note_lama": "", hana: 80, alpha: "6" },
+        { latin: "7", jenis: "Angka", baru: "꧗", lama: "꧗", code: "U+A9D7", note_baru": "", note_lama": "", hana: 78, kaga: 81, warga: 81, alpha: "7" },
+        { latin: "8", jenis: "Angka", baru: "꧘", lama: "꧘", code: "U+A9D8", note_baru": "", note_lama": "", hana: 79, kaga: 82, warga: 82, alpha: "8" },
+        { latin: "9", jenis: "Angka", baru: "꧙", lama: "꧙", code: "U+A9D9", note_baru": "", note_lama": "", hana: 80, kaga: 83, warga: 83, alpha: "9" },
 
         // --- PADA / TANDA BACA ---
-        { latin: ", (Pada Lingsa)", jenis: "Pada", baru: "꧈", lama: "꧈", code: "U+A9C8", note_baru: "", note_lama: "", petunjuk: "Ketik tanda koma ','", hana: 81, kaga: 84, warga: 84, alpha: "pada_lingsa" },
-        { latin: ". (Pada Lungsi)", jenis: "Pada", baru: "꧉", lama: "꧉", code: "U+A9C9", note_baru: "", note_lama: "", petunjuk: "Ketik tanda titik '.'", hana: 82, kaga: 85, warga: 85, alpha: "pada_lungsi" },
-        { latin: ": (Pada Pangkat)", jenis: "Pada", baru: "꧇", lama: "꧇", code: "U+A9C7", note_baru: "", note_lama: "", petunjuk: "Ketik tanda titik dua ':'", hana: 83, kaga: 86, warga: 86, alpha: "pada_pangkat" },
-        { latin: "Pada Adeg-adeg", jenis: "Pada", baru: "ꧏ", lama: "ꧏ", code: "U+A9CF", note_baru: "", note_lama: "", petunjuk: "Ketik tanda pengulang / adeg-adeg", hana: 84, kaga: 87, warga: 87, alpha: "pada_adegadeg" }
+        { latin: ", (Pada Lingsa)", jenis: "Pada", baru: "꧈", lama: "꧈", code: "U+A9C8", note_baru": "", note_lama": "", hana: 81, kaga: 84, warga: 84, alpha: "pada_lingsa" },
+        { latin: ". (Pada Lungsi)", jenis: "Pada", baru: "꧉", lama: "꧉", code: "U+A9C9", note_baru": "", note_lama": "", hana: 82, kaga: 85, warga: 85, alpha: "pada_lungsi" },
+        { latin: ": (Pada Pangkat)", jenis: "Pada", baru: "꧇", lama: "꧇", code: "U+A9C7", note_baru": "", note_lama": "", hana: 83, kaga: 86, warga: 86, alpha: "pada_pangkat" },
+        { latin: "Pada Adeg-adeg", jenis: "Pada", baru: "ꧏ", lama: "ꧏ", code: "U+A9CF", note_baru": "", note_lama": "", hana: 84, kaga: 87, warga: 87, alpha: "pada_adegadeg" }
     ];
 
     function renderGuideTable(sortMode) {
@@ -820,23 +811,20 @@
         if (sortMode === 'alphabet') {
             sorted.sort((a, b) => a.latin.localeCompare(b.latin, undefined, { sensitivity: 'base' }));
         } else if (sortMode === 'hanacaraka') {
-            sorted.sort((a, b) => (a.hana || 0) - (b.hana || 0));
+            sorted.sort((a, b) => a.hana - b.hana);
         } else if (sortMode === 'kaganga') {
-            sorted.sort((a, b) => (a.kaga || 0) - (b.kaga || 0));
+            sorted.sort((a, b) => a.kaga - b.kaga);
         } else if (sortMode === 'warga') {
-            sorted.sort((a, b) => (a.warga || 0) - (b.warga || 0));
+            sorted.sort((a, b) => a.warga - b.warga);
         }
 
         let html = '';
         sorted.forEach(row => {
             let noteHtml = row.note_baru ? `<span class="note-tag">(${row.note_baru})</span>` : '';
-            let noteLamaHtml = row.note_lama ? `<span class="note-tag">(${row.note_lama})</span>` : '';
-            
             html += `
                 <tr>
-                    <td>
-                        <span class="td-latin-code">${row.latin}</span>
-                        <div class="td-instruction">👉 ${row.petunjuk}</div>
+                    <td class="td-latin">
+                        ${row.latin}
                         <span class="category-badge">${row.jenis}</span>
                     </td>
                     <td>
@@ -845,7 +833,6 @@
                     </td>
                     <td>
                         <span class="td-aksara">${row.lama}</span>
-                        ${noteLamaHtml}
                     </td>
                     <td>
                         <span class="td-codepoint">${row.code}</span>
@@ -872,7 +859,7 @@
         'kbj': { frameId: 'engineKBJ', src: 'kbj.js', fnName: 'transliterasiKalimat' },
         'sriwedari': { frameId: 'engineSriwedari', src: 'sriwedari.js', fnName: 'transliterasiKalimat' },
         'simplified': { frameId: 'engineSimplified', src: 'simplified.js', fnName: 'transliterasiKalimat' },
-        'tradisional': { frameId: 'engineTradisional', src: 'transliterateKawi' },
+        'tradisional': { frameId: 'engineTradisional', src: 'tradisional.js', fnName: 'transliterateKawi' },
         'carakawi': { frameId: 'engineCaraKawi', src: 'carakawi.js', fnName: 'transliterateKawi' }
     };
 
