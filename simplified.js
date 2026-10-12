@@ -2,6 +2,7 @@
  * SIMPLIFIED.JS
  * Modifikasi dari kbj.js untuk mendukung tambahan Aksara Rekan, Aksara Murda, Aksara Swara,
  * Vokal Panjang (aa, ii, uu, ree, lee, ai, au), dan Panglancar Vokal Ber-tanda Hubung (mi-i -> miyi, mu-u -> muwu).
+ * Catatan Khusus: Aturan taling tarung palsu (a -> o) di tengah kata dihapus agar ejaan tetap literal (contoh: tandha -> ꦠꦤ꧀ꦝ).
  */
 
 const KAMUS_AKSARA = {
@@ -601,10 +602,7 @@ function transliterasiSingleKata(rawLatin) {
             .replace(/dh/g, '3').replace(/Dh/g, '7').replace(/DH/g, '#')
             .replace(/th/g, '4').replace(/Th/g, '8').replace(/\$/g, 'TH');
 
-        let isTanpa = /^tanpa$/i.test(wordOnly);
-        if (!isAnuswaraHanja && !isTanpa) {
-            token = token.replace(/a([mnMN125!6@])([bcdfghjklpqrstvwxzBCDFGHJKLPQRSTVWXZ347#8$]+)a(h?a)?$/i, 'o$1$2a$3');
-        }
+        // [KHUSUS SIMPLIFIED.JS]: Aturan taling tarung palsu (penilaian a -> o sebelum kelompok nasal) dihapus.
 
         wordOnly = token
             .replace(/1/g, 'ng').replace(/5/g, 'Ng').replace(/!/g, 'NG')
