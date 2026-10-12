@@ -147,6 +147,25 @@ function transliterateKawi(rawText) {
     if (!rawText) return '';
     
     rawText = processMacros(rawText);
+
+    // Mapping Simbol & Pada Unicode Aksara Jawa
+    rawText = rawText
+        .replace(/\|\|/g, '\uA9CB')
+        .replace(/\|/g, '\uA9CA')
+        .replace(/\(\(/g, '\uA9C1')         .replace(/\)\)/g, '\uA9C2')
+        .replace(/<_/g, '\uA9C3')
+        .replace(/<>/g, '\uA9C4')
+        .replace(/>\^/g, '\uA9C5')
+        .replace(/\(o\)/g, '\uA9C6')
+        .replace(/:=/g, '\uA9C7')
+        .replace(/\[\\/g, '\uA9CC')         .replace(/\\\]/g, '\uA9CD')
+        .replace(/\^2/g, '\uA9CE')
+        .replace(/_2/g, '\uA9CF')
+        .replace(/~~/g, '\uA9DE')
+        .replace(/##/g, '\uA9DF')
+        .replace(/\^3/g, '\uA981')
+        .replace(/\+3/g, '\uA9B3');
+
     let tokens = tokenize(rawText);
     let result = '';
 
