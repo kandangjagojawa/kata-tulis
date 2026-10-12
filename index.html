@@ -1586,7 +1586,7 @@
 
         let fullJgst = '';
         if (aksaraMarked && typeof transliterateToJGST === 'function') {
-            fullJgst = transliterateToJGST(aksaraMarked);
+            fullJgst = transliterateToJGST(aksaraMarked, fnKey);
         } else {
             fullJgst = aksaraMarked;
         }
