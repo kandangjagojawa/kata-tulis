@@ -2,13 +2,17 @@
  * jgst.js
  * Modul Transliterasi Aksara Jawa ke JGST (Javanese General System of Transliteration)
  * Pembaruan:
+ * - Dukungan khusus fnKey (kbj, sriwedari, simplified):
+ *   * Pangkon (꧀) di akhir kata -> JGST: '/,' (PUJL & IPA: ',')
+ *   * Pangkon Pada Lingsa (꧀꧈) di akhir kata -> JGST: '/.' (PUJL & IPA: '.')
  * - Ra Agung (ꦬ): 'ṟa'
- * - Lambang Cakra (ꦿ): 'ŕa'
- * - Lambang Cakra Keret (ꦽ): 'ŕě'
+ * - Cakra (ꦿ): 'ŕa', Cakra Keret (ꦽ): 'ŕě'
  */
 
-function transliterateToJGST(aksaraStr) {
+function transliterateToJGST(aksaraStr, fnKey) {
     if (!aksaraStr || aksaraStr === '-') return '-';
+
+    const isModern = ['kbj', 'sriwedari', 'simplified'].includes(fnKey);
 
     // Map Aksara Jawa ke JGST
     const wyanjanaMap = {
@@ -76,6 +80,30 @@ function transliterateToJGST(aksaraStr) {
                 } else if (i < len && aksaraStr[i] === '꧀') {
                     baseSyl = baseSyl.slice(0, -1);
                     i++;
+
+                    let hasLingsaAfter = (i < len && aksaraStr[i] === '꧈');
+                    if (hasLingsaAfter) {
+                        i++;
+                    }
+
+                    let nextCh = (i < len) ? aksaraStr[i] : '';
+                    let isWordBoundary = (!nextCh || nextCh === ' ' || nextCh === '\n' || nextCh === '\uE000' || nextCh === '꧈' || nextCh === '꧉');
+
+                    if (hasLingsaAfter) {
+                        if (isModern) {
+                            baseSyl += isWordBoundary ? '/.' : '.';
+                        } else {
+                            baseSyl += '/,';
+                        }
+                    } else if (isWordBoundary) {
+                        if (isModern) {
+                            baseSyl += '/,';
+                        } else {
+                            if (!nextCh || nextCh === '꧉' || (i >= len)) {
+                                baseSyl += '/';
+                            }
+                        }
+                    }
                 }
                 result += baseSyl;
                 continue;
@@ -134,12 +162,27 @@ function transliterateToJGST(aksaraStr) {
                 baseSyl = baseSyl.slice(0, -1);
                 i++;
 
+                let hasLingsaAfter = (i < len && aksaraStr[i] === '꧈');
+                if (hasLingsaAfter) {
+                    i++;
+                }
+
                 let nextCh = (i < len) ? aksaraStr[i] : '';
                 let isWordBoundary = (!nextCh || nextCh === ' ' || nextCh === '\n' || nextCh === '\uE000' || nextCh === '꧈' || nextCh === '꧉');
 
-                if (isWordBoundary) {
-                    if (!nextCh || nextCh === '꧉' || (i >= len)) {
-                        baseSyl += '/';
+                if (hasLingsaAfter) {
+                    if (isModern) {
+                        baseSyl += isWordBoundary ? '/.' : '.';
+                    } else {
+                        baseSyl += '/,';
+                    }
+                } else if (isWordBoundary) {
+                    if (isModern) {
+                        baseSyl += '/,';
+                    } else {
+                        if (!nextCh || nextCh === '꧉' || (i >= len)) {
+                            baseSyl += '/';
+                        }
                     }
                 }
             }
