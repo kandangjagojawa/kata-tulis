@@ -1,7 +1,10 @@
 /**
  * ipa.js
  * Modul Konversi Transliterasi JGST ke IPA (International Phonetic Alphabet)
- * Pembaruan Fonem Vokal:
+ * Pembaruan Fonem Vokal & Pengecualian Kata Khusus:
+ * - ora  -> ora
+ * - boya -> boya
+ * - amba -> ɔmbɔ (ambɔ)
  * - Kata 2 Suku Kata Terbuka berakhiran 'a' (termasuk -ana): [ɔ] (mana -> [mɔnɔ], kana -> [kɔnɔ]).
  * - Kata 2 Suku Kata S1 Tertutup Nasal: Terasimilasi ke [ɔ] (kanca -> [kɔɲtʃɔ]).
  * - Kata 3+ Suku Kata dengan Sufiks -ana: Batasi perubahan [ɔ] hanya pada sufiks (panganana -> [paŋanɔnɔ]).
@@ -76,6 +79,12 @@ function convertJGSTtoIPA(jgstStr, rawLatinToken, fnKey) {
         }
 
         str = str.replace(/ỿ/g, 'y');
+
+        // Cek Pengecualian Kata Khusus
+        let cleanRawToken = (rawLatinToken || str || '').toLowerCase().trim().replace(/[^a-zA-Z]/g, '');
+        if (cleanRawToken === 'ora' || str === 'ora') return 'ora' + trailingPunct;
+        if (cleanRawToken === 'boya' || str === 'boya') return 'boya' + trailingPunct;
+        if (cleanRawToken === 'amba' || str === 'amba') return 'ɔmbɔ (ambɔ)' + trailingPunct;
 
         if (fnKey === 'sriwedari') {
             const consPatternDwipurwa = '(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ṡ|ḳ|g̣|c̣|j̣|p̣|ḅ|[bcdfghjklmnpqrstvwxyz])';
