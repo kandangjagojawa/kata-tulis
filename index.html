@@ -1604,9 +1604,11 @@
         let cleanedJgstSegments = [];
         let carryOver = "";
         
-        // Pembaruan Regex Carryover: Mendeteksi Gugus Pasangan (Konsonan Pasangan + Vokal) di akhir segmen
-        const jgstVowelPattern = '(?:lě|ŕě|ṝ|ḹ|[āaīiūuěéèeoꜽꜷṛḷ])';
-        const jgstPasanganRegex = new RegExp(`(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ḥ|c̣|p̣|g̣|ḅ|j̣|ŕ|ṟ|[bcdfghjklmnpqrstvwxyz])?${jgstVowelPattern}$`, 'i');
+        // Pembaruan Regex Pemisahan Pasangan: Mencegah konsonan akhir kata pertama tercabut
+        const jgstSpecialSandhangan = '(?:ŕě|lě|ṝ|ḹ|ṛ|ḷ)';
+        const jgstPasanganConsonant = '(?:th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ḥ|c̣|p̣|g̣|ḅ|j̣|ŕ|ṟ|[bcdfghjklmnpqrstvwxyz])';
+        const jgstStandardVowel = '(?:[āaīiūuěéèeoꜽꜷ])';
+        const jgstPasanganRegex = new RegExp(`(?:${jgstSpecialSandhangan}|${jgstPasanganConsonant}?${jgstStandardVowel})$`, 'i');
 
         let wordIdx = 0;
         for (let i = 0; i < rawJgstSegments.length; i++) {
