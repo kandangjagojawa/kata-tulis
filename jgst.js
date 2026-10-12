@@ -9,6 +9,7 @@
  *     memang tampak karakter Pangkon (di akhir klausa/kalimat/tanda baca).
  * - Ra Agung (ꦬ): 'ṟa'
  * - Cakra (ꦿ): 'ŕa', Cakra Keret (ꦽ): 'ŕě'
+ * - Penambahan Pemetaan Lengkap Codepoint Pada & Simbol Unicode (U+A980 - U+A9DF)
  */
 
 function transliterateToJGST(aksaraStr, fnKey) {
@@ -23,7 +24,7 @@ function transliterateToJGST(aksaraStr, fnKey) {
         'ꦥ': 'pa', 'ꦝ': 'ḍa', 'ꦗ': 'ja', 'ꦪ': 'ya', 'ꦚ': 'ña',
         'ꦩ': 'ma', 'ꦒ': 'ga', 'ꦧ': 'ba', 'ꦛ': 'ṭa', 'ꦔ': 'ṅa',
         // Aksara Murda / Mahaprana / Kawi
-        'ꦟ': 'ṇa', 'ꦑ': 'ḳa', 'ꦡ': 'tha', 'ꦯ': 'śa', 'ꦦ': 'p̣a',
+        'ꦟ': 'ṇa', 'ꦑ': 'ḳa', 'ꦡ': 'tha', 'ꦯ': 'śa', 'ꦰ': 'ṣa', 'ꦦ': 'p̣a',
         'ꦓ': 'g̣a', 'ꦨ': 'ḅa', 'ꦖ': 'c̣a', 'ꦘ': 'jña', 'ꦙ': 'j̣a',
         'ꦞ': 'ḍha', 'ꦣ': 'dha', 'ꦜ': 'ṭha', 'ꦬ': 'ṟa', 'ꦐ': 'qa'
     };
@@ -43,7 +44,8 @@ function transliterateToJGST(aksaraStr, fnKey) {
 
     const sandhanganSwaraMap = {
         'ꦶ': 'i', 'ꦷ': 'ī', 'ꦸ': 'u', 'ꦹ': 'ū',
-        'ꦺ': 'é', 'ꦻ': 'ꜽ', 'ꦼ': 'ě', 'ꦺꦴ': 'o', 'ꦻꦴ': 'ꜷ', 'ꦴ': 'ā'
+        'ꦺ': 'é', 'ꦻ': 'ꜽ', 'ꦼ': 'ě', 'ꦺꦴ': 'o', 'ꦻꦴ': 'ꜷ', 'ꦴ': 'ā',
+        'ꦵ': 'o'
     };
 
     const panyigegMap = {
@@ -53,6 +55,17 @@ function transliterateToJGST(aksaraStr, fnKey) {
     const angkaMap = {
         '꧐': '0', '꧑': '1', '꧒': '2', '꧓': '3', '꧔': '4',
         '꧕': '5', '꧖': '6', '꧗': '7', '꧘': '8', '꧙': '9'
+    };
+
+    // Pemetaan Tanda Baca / Pada Lengkap
+    const padaMap = {
+        '꧈': ',', '꧉': '.', '꧇': ':=',
+        '꧁': '((', '꧂': '))',
+        '꧃': '<_', '꧄': '<>', '꧅': '>^', '꧆': '(o)',
+        '꧊': '|', '꧋': '||',
+        '꧌': '[\\', '꧍': '\\]',
+        '꧎': '^2', 'ꧏ': '_2',
+        '꧞': '~~', '꧟': '##'
     };
 
     let result = '';
@@ -121,6 +134,13 @@ function transliterateToJGST(aksaraStr, fnKey) {
             }
         }
 
+        // Standalone Cecak Telu / Nukta (꦳)
+        if (ch === '꦳') {
+            result += '+3';
+            i++;
+            continue;
+        }
+
         // 2. Handling Angka Jawa
         if (angkaMap[ch]) {
             result += angkaMap[ch];
@@ -129,9 +149,11 @@ function transliterateToJGST(aksaraStr, fnKey) {
         }
 
         // 3. Handling Tanda Baca (Pada)
-        if (ch === '꧈') { result += ','; i++; continue; }
-        if (ch === '꧉') { result += '.'; i++; continue; }
-        if (ch === '꧇') { i++; continue; }
+        if (padaMap[ch]) {
+            result += padaMap[ch];
+            i++;
+            continue;
+        }
 
         // 4. Handling Aksara Swara Independent
         if (swaraMap[ch]) {
