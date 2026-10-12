@@ -429,7 +429,7 @@ function transliterasiKalimat(teks) {
         .replace(/_2/g, '\uA9CF')
         .replace(/~~/g, '\uA9DE')
         .replace(/##/g, '\uA9DF')
-        .replace(/\^3/g, '\uA981')
+        .replace(/\^3/g, '\uA980')
         .replace(/\+3/g, '\uA9B3');
 
     teksDiolah = teksDiolah.replace(/(?<![a-zA-Za-zÀ-ÿ])(mb|ndh|nd|nth|ngg|nj)/gim, function(match) {
