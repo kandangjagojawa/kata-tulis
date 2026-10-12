@@ -1,6 +1,9 @@
 /**
  * jgst.js
  * Modul Transliterasi Aksara Jawa ke JGST (Javanese General System of Transliteration)
+ * Pembaruan:
+ * - Lambang Cakra (ꦿ): 'ŕa'
+ * - Lambang Cakra Keret (ꦽ): 'ŕě'
  */
 
 function transliterateToJGST(aksaraStr) {
@@ -102,15 +105,15 @@ function transliterateToJGST(aksaraStr) {
             let baseSyl = wyanjanaMap[ch];
             i++;
 
-            // Cek Sandhangan Wyanjana (Cakra ꦿ, Pengkal ꦾ, Keret ꦽ)
+            // Cek Sandhangan Wyanjana (Cakra ꦿ -> ŕa, Pengkal ꦾ -> ya, Cakra Keret ꦽ -> ŕě)
             if (i < len && aksaraStr[i] === 'ꦿ') {
-                baseSyl = baseSyl.slice(0, -1) + 'ra';
+                baseSyl = baseSyl.slice(0, -1) + 'ŕa';
                 i++;
             } else if (i < len && aksaraStr[i] === 'ꦾ') {
                 baseSyl = baseSyl.slice(0, -1) + 'ya';
                 i++;
             } else if (i < len && aksaraStr[i] === 'ꦽ') {
-                baseSyl = baseSyl.slice(0, -1) + 'ṛ';
+                baseSyl = baseSyl.slice(0, -1) + 'ŕě';
                 i++;
             }
 
