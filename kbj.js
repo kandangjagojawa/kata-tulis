@@ -350,11 +350,6 @@ function prosesParamasastra() {
         }
     }
 
-    let fullLatinDisplay = resultLatinMain;
-    if (resultLatinAlt !== "") {
-        fullLatinDisplay = `${resultLatinMain} (${resultLatinAlt})`;
-    }
-
     document.getElementById('outParamLatin').value = fullLatinDisplay;
     document.getElementById('outParamJawa').innerText = transliterasiKalimat(fullLatinDisplay);
 }
@@ -383,7 +378,7 @@ function transliterasiKalimat(teks) {
         .replace(/_2/g, '\uA9CF')
         .replace(/~~/g, '\uA9DE')
         .replace(/##/g, '\uA9DF')
-        .replace(/\^3/g, '\uA980')
+        .replace(/\^3/g, '\uA981')
         .replace(/\+3/g, '\uA9B3');
 
     teksDiolah = teksDiolah.replace(/(?<![a-zA-Za-zÀ-ÿ])(mb|ndh|nd|nth|ngg|nj)/gim, function(match) {
@@ -564,7 +559,8 @@ function transliterasiSingleKata(rawLatin) {
             i++; continue; 
         }
         
-        if (!/[a-zA-Z]/i.test(latin[i])) {
+        // Perbaikan Regex: sertakan vokal beraksen agar tidak dilewati sebagai karakter Latin non-huruf
+        if (!/[a-zA-ZéèêÉÈÊ]/i.test(latin[i])) {
             res += latin[i]; i++; continue; 
         }
 
