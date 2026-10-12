@@ -1603,7 +1603,10 @@
 
         let cleanedJgstSegments = [];
         let carryOver = "";
-        const jgstVowelRegex = /(lě|ŕě|ṝ|ḹ|[āaīiūuěéèeoꜽꜷṛḷ])$/;
+        
+        // Pembaruan Regex Carryover: Mendeteksi Gugus Pasangan (Konsonan Pasangan + Vokal) di akhir segmen
+        const jgstVowelPattern = '(?:lě|ŕě|ṝ|ḹ|[āaīiūuěéèeoꜽꜷṛḷ])';
+        const jgstPasanganRegex = new RegExp(`(th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ḥ|c̣|p̣|g̣|ḅ|j̣|ŕ|ṟ|[bcdfghjklmnpqrstvwxyz])?${jgstVowelPattern}$`, 'i');
 
         let wordIdx = 0;
         for (let i = 0; i < rawJgstSegments.length; i++) {
@@ -1619,11 +1622,11 @@
                 let origEndedWithConsonant = !/[aāiīuūěéèeoꜽꜷṛḷ]$/i.test(cleanOrigWord);
 
                 if (origEndedWithConsonant) {
-                    let vMatch = seg.match(jgstVowelRegex);
-                    if (vMatch) {
-                        let vLen = vMatch[0].length;
-                        carryOver = vMatch[0];
-                        seg = seg.slice(0, -vLen);
+                    let match = seg.match(jgstPasanganRegex);
+                    if (match) {
+                        let matchLen = match[0].length;
+                        carryOver = match[0];
+                        seg = seg.slice(0, -matchLen);
                     }
                 }
             }
