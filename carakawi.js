@@ -163,7 +163,7 @@ function transliterateKawi(rawText) {
         .replace(/_2/g, '\uA9CF')
         .replace(/~~/g, '\uA9DE')
         .replace(/##/g, '\uA9DF')
-        .replace(/\^3/g, '\uA981')
+        .replace(/\^3/g, '\uA980')
         .replace(/\+3/g, '\uA9B3');
 
     let tokens = tokenize(rawText);
