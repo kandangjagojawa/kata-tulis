@@ -2,6 +2,7 @@
  * jgst.js
  * Modul Transliterasi Aksara Jawa ke JGST (Javanese General System of Transliteration)
  * Pembaruan:
+ * - Ra Agung (ꦬ): 'ṟa'
  * - Lambang Cakra (ꦿ): 'ŕa'
  * - Lambang Cakra Keret (ꦽ): 'ŕě'
  */
@@ -18,7 +19,7 @@ function transliterateToJGST(aksaraStr) {
         // Aksara Murda / Mahaprana / Kawi
         'ꦟ': 'ṇa', 'ꦑ': 'ḳa', 'ꦡ': 'tha', 'ꦯ': 'śa', 'ꦦ': 'p̣a',
         'ꦓ': 'g̣a', 'ꦨ': 'ḅa', 'ꦖ': 'c̣a', 'ꦘ': 'jña', 'ꦙ': 'j̣a',
-        'ꦞ': 'ḍha', 'ꦣ': 'dha', 'ꦜ': 'ṭha', 'ꦬ': 'ŕa', 'ꦐ': 'qa'
+        'ꦞ': 'ḍha', 'ꦣ': 'dha', 'ꦜ': 'ṭha', 'ꦬ': 'ṟa', 'ꦐ': 'qa'
     };
 
     const rekanMap = {
