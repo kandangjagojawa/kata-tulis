@@ -8,7 +8,7 @@
  *   * Simbol '/' atau '/,' / '/.' HANYA muncul jika secara visual pada Aksara Jawa
  *     memang tampak karakter Pangkon (di akhir klausa/kalimat/tanda baca).
  * - Ra Agung (ꦬ): 'ṟa'
- * - Cakra (ꦿ): 'ŕa', Cakra Keret (ꦽ): 'ŕě'
+ * - Cakra (ꦿ): 'ŕa', Pengkal (ꦾ): 'ỿa', Cakra Keret (ꦽ): 'ŕě'
  * - Penambahan Pemetaan Lengkap Codepoint Pada & Simbol Unicode (U+A980 - U+A9DF)
  */
 
@@ -171,12 +171,12 @@ function transliterateToJGST(aksaraStr, fnKey) {
             let baseSyl = wyanjanaMap[ch];
             i++;
 
-            // Cek Sandhangan Wyanjana (Cakra ꦿ -> ŕa, Pengkal ꦾ -> ya, Cakra Keret ꦽ -> ŕě)
+            // Cek Sandhangan Wyanjana (Cakra ꦿ -> ŕa, Pengkal ꦾ -> ỿa, Cakra Keret ꦽ -> ŕě)
             if (i < len && aksaraStr[i] === 'ꦿ') {
                 baseSyl = baseSyl.slice(0, -1) + 'ŕa';
                 i++;
             } else if (i < len && aksaraStr[i] === 'ꦾ') {
-                baseSyl = baseSyl.slice(0, -1) + 'ya';
+                baseSyl = baseSyl.slice(0, -1) + 'ỿa';
                 i++;
             } else if (i < len && aksaraStr[i] === 'ꦽ') {
                 baseSyl = baseSyl.slice(0, -1) + 'ŕě';
