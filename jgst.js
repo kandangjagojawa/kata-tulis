@@ -127,7 +127,7 @@ function transliterateToJGST(aksaraStr, fnKey) {
                         } else {
                             let nextCh = (i < len) ? aksaraStr[i] : '';
                             let isWordBoundary = (!nextCh || nextCh === ' ' || nextCh === '\n' || nextCh === '\uE000' || nextCh === '꧈' || nextCh === '꧉');
-                            if (isWordBoundary && (!nextCh || nextCh === '꧉' || (i >= len))) {
+                            if (!isPasanganNext) {
                                 baseSyl += '/';
                             }
                         }
@@ -233,7 +233,7 @@ function transliterateToJGST(aksaraStr, fnKey) {
                     } else {
                         let nextCh = (i < len) ? aksaraStr[i] : '';
                         let isWordBoundary = (!nextCh || nextCh === ' ' || nextCh === '\n' || nextCh === '\uE000' || nextCh === '꧈' || nextCh === '꧉');
-                        if (isWordBoundary && (!nextCh || nextCh === '꧉' || (i >= len))) {
+                        if (!isPasanganNext) {
                             baseSyl += '/';
                         }
                     }
