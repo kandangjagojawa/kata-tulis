@@ -3,7 +3,7 @@
  * Modul Transliterasi Aksara Jawa ke JGST (Javanese General System of Transliteration)
  * Pembaruan Khusus:
  * - Penanganan Visual Pangkon (꧀) untuk Tata Tulis Baru (kbj, sriwedari, simplified):
- *   * Jika Pangkon membentuk Pasangan dengan aksara berikutnya (tidak tampak visual Pangkon),
+ *   * Jika Pangkon membentuk Pasangan dengan aksara berikutnya (termasuk Pa Cerek ꦉ, Nga Lelet ꦊ, ꦋ),
  *     JGST TIDAK memunculkan '/' atau '/,'.
  *   * Simbol '/' atau '/,' / '/.' HANYA muncul jika secara visual pada Aksara Jawa
  *     memang tampak karakter Pangkon (di akhir klausa/kalimat/tanda baca).
@@ -106,7 +106,11 @@ function transliterateToJGST(aksaraStr, fnKey) {
                         peekIdx++;
                     }
                     let nextRealChar = (peekIdx < len) ? aksaraStr[peekIdx] : '';
-                    let isPasanganNext = !hasLingsaAfter && !!(wyanjanaMap[nextRealChar] || (peekIdx + 1 < len && rekanMap[nextRealChar + aksaraStr[peekIdx + 1]]));
+                    let isPasanganNext = !hasLingsaAfter && !!(
+                        wyanjanaMap[nextRealChar] ||
+                        ['ꦉ', 'ꦊ', 'ꦋ'].includes(nextRealChar) ||
+                        (peekIdx + 1 < len && rekanMap[nextRealChar + aksaraStr[peekIdx + 1]])
+                    );
 
                     if (isModern) {
                         if (!isPasanganNext) {
@@ -206,7 +210,11 @@ function transliterateToJGST(aksaraStr, fnKey) {
                     peekIdx++;
                 }
                 let nextRealChar = (peekIdx < len) ? aksaraStr[peekIdx] : '';
-                let isPasanganNext = !hasLingsaAfter && !!(wyanjanaMap[nextRealChar] || (peekIdx + 1 < len && rekanMap[nextRealChar + aksaraStr[peekIdx + 1]]));
+                let isPasanganNext = !hasLingsaAfter && !!(
+                    wyanjanaMap[nextRealChar] ||
+                    ['ꦉ', 'ꦊ', 'ꦋ'].includes(nextRealChar) ||
+                    (peekIdx + 1 < len && rekanMap[nextRealChar + aksaraStr[peekIdx + 1]])
+                );
 
                 if (isModern) {
                     if (!isPasanganNext) {
