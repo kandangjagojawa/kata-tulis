@@ -2,6 +2,7 @@
  * CARAKAWI.JS
  * Transliterasi Aksara Jawa Cara Kawi (Mardi Kawi)
  * Penyesuaian aturan r mati di tengah kata: tidak merangkap konsonan ha, nga, nya.
+ * Penyesuaian r mati + ya: menghasilkan ya dipengkal (ꦪꦾ).
  */
 
 const textInput = document.getElementById('textInput');
@@ -491,7 +492,11 @@ function transliterateKawi(rawText) {
                             if (v2Match) {
                                 let v2 = v2Match.val;
                                 if (doubleIt) {
-                                    result += consChar2_1 + '꧀' + consChar2_2 + getSandhanganVowel(v2);
+                                    if (nextConsTemp.key === 'y') {
+                                        result += consChar2_1 + 'ꦾ' + getSandhanganVowel(v2);
+                                    } else {
+                                        result += consChar2_1 + '꧀' + consChar2_2 + getSandhanganVowel(v2);
+                                    }
                                 } else {
                                     result += consChar2_1 + getSandhanganVowel(v2);
                                 }
@@ -499,7 +504,11 @@ function transliterateKawi(rawText) {
                                 lastConsIsMati = false;
                             } else {
                                 if (doubleIt) {
-                                    result += consChar2_1 + '꧀' + consChar2_2 + '꧀';
+                                    if (nextConsTemp.key === 'y') {
+                                        result += consChar2_1 + 'ꦾ꧀';
+                                    } else {
+                                        result += consChar2_1 + '꧀' + consChar2_2 + '꧀';
+                                    }
                                 } else {
                                     result += consChar2_1 + '꧀';
                                 }
