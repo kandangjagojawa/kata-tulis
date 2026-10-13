@@ -1,6 +1,8 @@
 /**
  * TRADISIONAL.JS
- * Modifikasi dari carakawi.js dengan penambahan Aksara Rekan lengkap.
+ * Modifikasi dari carakawi.js dengan penambahan Aksara Rekan lengkap,
+ * serta modul Paramasastra (Morfologi Jawa Tradisional/Kawi).
+ * 
  * Penyesuaian Nga Lelet (ꦊ):
  * - Di dalam satu kata (kluster mlebu/klebu): menggunakan pasangan la + pepet (꧀ꦭꦼ).
  * - Lintas kata disusul kata le- (mangan lebu): menggunakan pasangan Nga Lelet (꧀ꦊ).
@@ -157,13 +159,15 @@ function transliterateKawi(rawText) {
     rawText = rawText
         .replace(/\|\|/g, '\uA9CB')
         .replace(/\|/g, '\uA9CA')
-        .replace(/\(\(/g, '\uA9C1')         .replace(/\)\)/g, '\uA9C2')
+        .replace(/\(\(/g, '\uA9C1')
+        .replace(/\)\)/g, '\uA9C2')
         .replace(/<_/g, '\uA9C3')
         .replace(/<>/g, '\uA9C4')
         .replace(/>\^/g, '\uA9C5')
         .replace(/\(o\)/g, '\uA9C6')
         .replace(/:/g, '\uA9C7')
-        .replace(/\[\\/g, '\uA9CC')         .replace(/\\\]/g, '\uA9CD')
+        .replace(/\[\\/g, '\uA9CC')
+        .replace(/\\\]/g, '\uA9CD')
         .replace(/\^2/g, '\uA9CE')
         .replace(/_2/g, '\uA9CF')
         .replace(/~~/g, '\uA9DE')
@@ -326,7 +330,6 @@ function transliterateKawi(rawText) {
 
                 let handledWyanjana = false;
                 
-                // Aksara Ra tidak boleh diberi pasangan/sandhangan wyanjana (pengkal/cakra/cakra keret/nga lelet)
                 if (cons.key !== 'r' && nextIdx < word.length) {
                     let nextConsTemp2 = matchConsonant(word, nextIdx);
 
@@ -363,7 +366,6 @@ function transliterateKawi(rawText) {
                         let afterLIdx = nextIdx + nextConsTemp2.len;
                         let lVowel = matchVowel(word, afterLIdx);
                         if (lVowel && (lVowel.val === 'e' || lVowel.val === 'E')) {
-                            // Di DALAM satu kata (mlebu/klebu), gunakan pasangan la + pepet (꧀ꦭꦼ)
                             result += consChar + '꧀ꦭꦼ';
                             i = afterLIdx + lVowel.len;
                             lastConsKey = 'l';
@@ -457,10 +459,9 @@ function transliterateKawi(rawText) {
                     continue;
                 }
 
-                // --- PENANGANAN KONSONAN R MATI DI TENGAH KATA ---
                 if (cons.key === 'r') {
                     if (!isWordEnd) {
-                        result += 'ꦂ'; // Menggunakan Layar
+                        result += 'ꦂ'; 
                         let nextConsTemp = matchConsonant(word, peekIdx);
 
                         if (nextConsTemp) {
@@ -498,7 +499,6 @@ function transliterateKawi(rawText) {
                             if (v2Match) {
                                 let v2 = v2Match.val;
                                 if (doubleIt) {
-                                    // Semua pasangan 'ya' adalah pengkal
                                     if (nextConsTemp.key === 'y') {
                                         result += consChar2_1 + 'ꦾ' + getSandhanganVowel(v2);
                                     } else {
@@ -536,7 +536,7 @@ function transliterateKawi(rawText) {
                             nextWordToken.val = nextWordToken.val.substr(crossVowel.len);
                             lastConsIsMati = false;
                         } else {
-                            result += 'ꦂ'; // Akhir kata tetap layar untuk tradisional.js
+                            result += 'ꦂ'; 
                             lastConsIsMati = true;
                         }
                         i = nextIdx;
@@ -553,7 +553,6 @@ function transliterateKawi(rawText) {
                 } else {
                     let handledCrossWord = false;
 
-                    // LINTAS KATA: Jika kata berikutnya diawali 'le'
                     if (nextWordToken && nextWordToken.val.substr(0, 2).toLowerCase() === 'le') {
                         result += consChar + '꧀ꦊ';
                         nextWordToken.val = nextWordToken.val.substr(2);
@@ -665,6 +664,413 @@ function updatePreview() {
     if (charCount) charCount.textContent = `Jumlah Karakter: ${jawaText.length}`;
 }
 
+/**
+ * =========================================================================
+ * MODUL PARAMASASTRA / MORFOLOGI JAWA TRADISIONAL (KAWI)
+ * =========================================================================
+ */
+
+function prosesParamasastra() {
+    let selAter = document.getElementById('selAter');
+    let inDasar = document.getElementById('inDasar');
+    let selPanam = document.getElementById('selPanam');
+    if (!selAter || !inDasar || !selPanam) return;
+
+    let ater = selAter.value;
+    let dasarRaw = inDasar.value.trim();
+    let dasar = dasarRaw.replace(/e'/g, 'é').replace(/E'/g, 'É').toLowerCase();
+    let panam = selPanam.value;
+
+    let warnArea = document.getElementById('paramWarningArea');
+    let outLat = document.getElementById('outParamLatin');
+    let outJaw = document.getElementById('outParamJawa');
+
+    if (warnArea) warnArea.innerHTML = "";
+
+    if (!dasar) {
+        if (outLat) outLat.value = "";
+        if (outJaw) outJaw.innerHTML = "";
+        return;
+    }
+
+    let f = dasar.charAt(0);
+    let isVowelStart = /[aiueoéèê]/i.test(f);
+    let errorMsg = "";
+
+    // Validasi Kelayakan Ater-Ater Anuswara
+    if (ater === 'm' && !['b','p','w','m','f','v'].includes(f)) {
+        errorMsg = `Ater-ater "m-" (am-) khusus untuk kata dasar berawalan p, b, w, m, f, v.`;
+    } else if (ater === 'n' && !['d','t','j','n'].includes(f) && !dasar.startsWith('dh') && !dasar.startsWith('th')) {
+        errorMsg = `Ater-ater "n-" (an-) khusus untuk kata dasar berawalan d, dh, t, th, j, n.`;
+    } else if (ater === 'ny' && !['c','s'].includes(f) && !dasar.startsWith('ny')) {
+        errorMsg = `Ater-ater "ny-" (any-) khusus untuk kata dasar berawalan c, s, ny.`;
+    } else if (ater === 'ng' && !['g','k','l','r','y','w'].includes(f) && !isVowelStart && !dasar.startsWith('ng')) {
+        errorMsg = `Ater-ater "ng-" (ang-) khusus untuk kata dasar berawalan k, g, l, r, y, w, atau vokal.`;
+    }
+
+    if (errorMsg !== "") {
+        if (warnArea) warnArea.innerHTML = `<div class="param-warning">⚠️ WARNING PAUGERAN TRADISIONAL: ${errorMsg}</div>`;
+        if (outLat) outLat.value = "";
+        if (outJaw) outJaw.innerHTML = "";
+        return;
+    }
+
+    let stem = dasar;
+    let prefixAppended = "";
+    let altPrefixAppended = "";
+
+    // Pemrosesan Ater-Ater Anuswara Ejaan Tradisional/Kawi (m-/am-, n-/an-, ny-/any-, ng-/ang-)
+    if (['N', 'm', 'n', 'ny', 'ng', 'pa'].includes(ater)) {
+        if (dasar.startsWith('ng')) {
+            stem = dasar;
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (dasar.startsWith('ny')) {
+            stem = dasar;
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (f === 'n') {
+            stem = dasar;
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (f === 'm') {
+            stem = dasar;
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (['d','j'].includes(f) || dasar.startsWith('dh')) {
+            if (f === 'j') {
+                prefixAppended = 'an';
+                altPrefixAppended = 'any';
+                stem = dasar;
+            } else {
+                prefixAppended = 'an';
+                altPrefixAppended = 'n';
+                stem = dasar;
+            }
+        } else if (f === 'b') {
+            prefixAppended = 'am';
+            altPrefixAppended = 'm';
+            stem = dasar;
+        } else if (f === 'g') {
+            prefixAppended = 'ang';
+            altPrefixAppended = 'ng';
+            stem = dasar;
+        } else if (['p','w'].includes(f)) {
+            stem = 'm' + dasar.slice(1);
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (dasar.startsWith('th')) {
+            stem = 'n' + dasar.slice(2);
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (f === 't') {
+            stem = 'n' + dasar.slice(1);
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (['c','s'].includes(f)) {
+            stem = 'ny' + dasar.slice(1);
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (f === 'k') {
+            stem = 'ng' + dasar.slice(1);
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (isVowelStart) {
+            stem = 'ng' + dasar;
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else if (['l','r','y'].includes(f)) {
+            stem = 'ng' + dasar;
+            prefixAppended = '';
+            altPrefixAppended = 'a';
+        } else {
+            stem = 'ng' + dasar;
+            altPrefixAppended = 'a';
+        }
+
+        if (ater === 'pa') {
+            prefixAppended = 'pa';
+            altPrefixAppended = '';
+        }
+    } else if (ater === 'pating_paN') {
+        let nasal = '';
+        if (['p','b','w','m','f','v'].includes(f)) nasal = 'm';
+        else if (['t','d','j','n'].includes(f) || dasar.startsWith('dh') || dasar.startsWith('th')) nasal = 'n';
+        else if (['c','s'].includes(f) || dasar.startsWith('ny')) nasal = 'ny';
+        else nasal = 'ng';
+        
+        stem = 'pa' + nasal + dasar; 
+        prefixAppended = 'pating ';
+    } else if (ater === 'kuma') {
+        if (isVowelStart || f === 'r' || f === 'l') {
+            stem = dasar; prefixAppended = 'kum'; 
+        } else {
+            prefixAppended = 'kuma';
+        }
+    } else if (ater === 'pi' || ater === 'kapi') {
+        if (dasar === 'ambak' || dasar === 'hambak') {
+            stem = 'yambak'; prefixAppended = ater;
+        } else if (isVowelStart) {
+            stem = dasar.startsWith('h') ? dasar : 'h' + dasar; prefixAppended = ater;
+        } else {
+            prefixAppended = ater;
+        }
+    } else if (ater === 'ma') {
+        if (f === 'i') stem = 'mé' + dasar.slice(1);
+        else prefixAppended = 'ma';
+    } else if (ater === 'sa') {
+        const saExclusions = ['wengi', 'wulan', 'wis', 'weruh', 'wiji', 'wanci'];
+        if (f === 'w' && !saExclusions.includes(dasar)) prefixAppended = 'su';
+        else prefixAppended = 'sa';
+    } else if (ater === 'in') {
+        if (isVowelStart) stem = 'in' + dasar;
+        else stem = f + 'in' + dasar.slice(1); // Sisipan (infix) -in- dalam Tradisional/Kawi
+        prefixAppended = '';
+    } else if (ater !== '') {
+        prefixAppended = ater;
+    }
+
+    let resultLatinMain = "";
+    let resultLatinAlt = "";
+
+    function bentakAkhiran(pStem, pPrefix) {
+        if (panam === '') return pPrefix ? (pPrefix + pStem) : pStem;
+        
+        let stemLastChar = pStem.slice(-1);
+        let stemIsVowel = /[aiueoéèê]/i.test(stemLastChar);
+        let isTanggapI = (panam === 'i' && (ater === 'ka' || ater === 'in'));
+
+        if (!stemIsVowel) {
+            let formattedStem = pPrefix ? (pPrefix + pStem) : pStem;
+            if (panam === 'an_e') return formattedStem + '-anné';
+            let currentPanam = isTanggapI ? 'an' : panam;
+            return formattedStem + '-' + currentPanam;
+        } else {
+            let rootVowel = stemLastChar;
+            let body = pStem;
+            let suffixMod = panam;
+
+            if (isTanggapI) {
+                if (rootVowel === 'a') { body = pStem; suffixMod = 'nnan'; }
+                else if (rootVowel === 'i') { body = pStem.slice(0, -1) + 'è'; suffixMod = 'nnan'; }
+                else if (rootVowel === 'u') { body = pStem.slice(0, -1) + 'o'; suffixMod = 'nnan'; }
+                else if (['e','é','è','o'].includes(rootVowel)) { body = pStem; suffixMod = 'nnan'; }
+            } else if (panam === 'i' || panam === 'ana') {
+                suffixMod = (panam === 'i') ? 'nni' : 'nnana';
+                if (rootVowel === 'u') body = pStem.slice(0, -1) + 'o';
+                else if (rootVowel === 'i') body = pStem.slice(0, -1) + 'é';
+                else if (rootVowel === 'a') body = pStem;
+                else if (['e','é','è','o'].includes(rootVowel)) body = pStem;
+            } else if (panam === 'a') {
+                const explicitHaWords = ['priyé', 'priyayi', 'tawu', 'suwowo'];
+                if (explicitHaWords.includes(pStem)) { body = pStem; suffixMod = 'ha'; }
+                else {
+                    if (rootVowel === 'i') { body = pStem; suffixMod = 'ya'; }
+                    else if (['e','é','è'].includes(rootVowel)) { body = pStem; suffixMod = 'a'; }
+                    else if (rootVowel === 'u' || rootVowel === 'o') { body = pStem; suffixMod = 'wa'; }
+                    else { body = pStem; suffixMod = 'a'; }
+                }
+            } else if (panam === 'na') {
+                if (rootVowel === 'a') body = pStem;
+                else if (rootVowel === 'i') body = pStem.slice(0, -1) + 'é';
+                else if (rootVowel === 'u') body = pStem.slice(0, -1) + 'o';
+                suffixMod = 'kna';
+            } else if (panam === 'an_e') {
+                if (['e','é','è'].includes(rootVowel)) {
+                    body = pStem;
+                    suffixMod = 'anné';
+                } else {
+                    if (rootVowel === 'a') body = pStem;
+                    else if (rootVowel === 'i') body = pStem.slice(0, -1) + 'è';
+                    else if (rootVowel === 'u') body = pStem.slice(0, -1) + 'o';
+                    suffixMod = 'nnanné';
+                }
+            } else {
+                if (panam === 'an') {
+                    if (pStem === 'uji') { body = pStem; suffixMod = 'an'; }
+                    else if (rootVowel === 'a') { body = pStem; suffixMod = 'n'; }
+                    else if (rootVowel === 'i') { body = pStem.slice(0, -1) + 'è'; suffixMod = 'n'; }
+                    else if (rootVowel === 'u') { body = pStem.slice(0, -1) + 'o'; suffixMod = 'n'; }
+                    else if (['e','é','è'].includes(rootVowel)) { body = pStem; suffixMod = 'an'; }
+                    else { body = pStem; suffixMod = 'nan'; }
+                } else if (rootVowel === 'a') {
+                    if(['ake', 'aké'].includes(panam)) suffixMod = 'kake';
+                    else if(panam === 'aken') suffixMod = 'kaken';
+                    else if(panam === 'en') suffixMod = 'nen';
+                    else if(['e', 'é'].includes(panam)) suffixMod = 'ne';
+                    else if(panam === 'ipun') suffixMod = 'nipun';
+                    else if(panam === 'ira') suffixMod = 'nira';
+                    else suffixMod = panam;
+                } else if (rootVowel === 'i') {
+                    if (['e', 'é', 'ipun', 'ira'].includes(panam)) {
+                        body = pStem;
+                        if (panam === 'ipun') suffixMod = 'nipun';
+                        else if (panam === 'ira') suffixMod = 'nira';
+                        else suffixMod = 'ne';
+                    } else {
+                        body = pStem.slice(0, -1) + 'é';
+                        if(['ake', 'aké'].includes(panam)) suffixMod = 'kake';
+                        else if(panam === 'aken') suffixMod = 'kaken';
+                        else if(panam === 'en') suffixMod = 'nen';
+                        else suffixMod = panam;
+                    }
+                } else if (rootVowel === 'u') {
+                    if (panam === 'ipun') { body = pStem; suffixMod = 'nipun'; }
+                    else if (panam === 'ira') { body = pStem; suffixMod = 'nira'; }
+                    else if (['e', 'é'].includes(panam)) { body = pStem; suffixMod = 'ne'; }
+                    else if (['ake', 'aké', 'aken', 'en'].includes(panam)) {
+                        body = pStem.slice(0, -1) + 'o';
+                        if(['ake','aké'].includes(panam)) suffixMod='kake';
+                        if(panam==='aken') suffixMod='kaken';
+                        if(panam==='en') suffixMod='nen';
+                    } else suffixMod = panam;
+                } else if (['e','é','è'].includes(rootVowel)) {
+                    body = pStem;
+                    if(['ake', 'aké'].includes(panam)) suffixMod = 'kake';
+                    else if(panam === 'aken') suffixMod = 'kaken';
+                    else if(panam === 'en') suffixMod = 'nen';
+                    else if(['e', 'é'].includes(panam)) suffixMod = 'ne';
+                    else if(panam === 'ipun') suffixMod = 'nipun';
+                    else if(panam === 'ira') suffixMod = 'nira';
+                    else suffixMod = panam;
+                } else {
+                    suffixMod = panam;
+                }
+            }
+
+            let fullBody = pPrefix ? (pPrefix + body) : body;
+            return fullBody + '-' + suffixMod;
+        }
+    }
+
+    resultLatinMain = bentakAkhiran(stem, prefixAppended);
+
+    if (altPrefixAppended !== "") {
+        if (altPrefixAppended === 'a') {
+            resultLatinAlt = bentakAkhiran('a' + (prefixAppended ? (prefixAppended + stem) : stem), '');
+        } else {
+            resultLatinAlt = bentakAkhiran(stem, altPrefixAppended);
+        }
+    }
+
+    let fullLatinDisplay = resultLatinMain;
+    if (resultLatinAlt !== "" && resultLatinAlt !== resultLatinMain) {
+        fullLatinDisplay = `${resultLatinMain} (${resultLatinAlt})`;
+    }
+
+    if (outLat) outLat.value = fullLatinDisplay;
+    if (outJaw) outJaw.innerText = transliterateKawi(fullLatinDisplay);
+}
+
+function updateParamFromManualInput() {
+    let inp = document.getElementById('outParamLatin');
+    let out = document.getElementById('outParamJawa');
+    if (inp && out) {
+        out.innerText = transliterateKawi(inp.value);
+    }
+}
+
+function salinParamLatin() {
+    let el = document.getElementById('outParamLatin');
+    if (!el) return;
+    let teksLatin = el.value;
+    if (!teksLatin) return;
+    navigator.clipboard.writeText(teksLatin);
+}
+
+function salinParamJawa() {
+    let el = document.getElementById('outParamJawa');
+    if (!el) return;
+    let teksAksara = el.innerText;
+    if (!teksAksara) return;
+    navigator.clipboard.writeText(teksAksara).then(() => {
+        let btn = document.getElementById('btnSalinParam');
+        if (btn) {
+            let originalText = btn.innerText;
+            btn.innerText = 'Tersalin!';
+            setTimeout(() => { btn.innerText = originalText; }, 2000);
+        }
+    });
+}
+
+function prosesDwipurwa() {
+    let inDwi = document.getElementById('inDwipurwa');
+    let outLat = document.getElementById('outDwipurwaLatin');
+    let outJaw = document.getElementById('outDwipurwaJawa');
+    if (!inDwi) return;
+
+    let dasarRaw = inDwi.value.trim();
+    let dasar = dasarRaw.replace(/e'/g, 'é').replace(/E'/g, 'É').toLowerCase();
+
+    if(!dasar) {
+        if (outLat) outLat.value = "";
+        if (outJaw) outJaw.innerHTML = "";
+        return;
+    }
+
+    let firstVowelMatch = dasar.match(/[aiueoéèê]/i);
+    let resultLatin = dasar;
+
+    if (firstVowelMatch) {
+        let vokalIndex = firstVowelMatch.index;
+        let vokal = dasar[vokalIndex];
+        let awalan = dasar.substring(0, vokalIndex);
+        
+        let konsonan = "h"; 
+        if (awalan !== "") {
+            let match = awalan.match(/^(dh|th|ng|ny|kh|dz|gh|sh|sy|[bcdfghjklmnpqrstvwxyz])([rylw])?$/);
+            if (match) {
+                konsonan = match[1];
+            } else {
+                let matchComplex = awalan.match(/^((?:dh|th|ng|ny|kh|dz|gh|sh|sy|[bcdfghjklmnpqrstvwxyz])+?)([rylw])?$/);
+                if (matchComplex) {
+                    konsonan = matchComplex[1];
+                } else {
+                    konsonan = awalan;
+                }
+            }
+        }
+        
+        let prefix = konsonan + 'e';
+        resultLatin = prefix + dasar;
+    }
+
+    if (outLat) outLat.value = resultLatin;
+    if (outJaw) outJaw.innerText = transliterateKawi(resultLatin);
+}
+
+function salinDwipurwaLatin() {
+    let el = document.getElementById('outDwipurwaLatin');
+    if (!el) return;
+    let teksLatin = el.value;
+    if (!teksLatin) return;
+    navigator.clipboard.writeText(teksLatin);
+}
+
+function salinDwipurwaJawa() {
+    let el = document.getElementById('outDwipurwaJawa');
+    if (!el) return;
+    let teksAksara = el.innerText;
+    if (!teksAksara) return;
+    navigator.clipboard.writeText(teksAksara).then(() => {
+        let btn = document.getElementById('btnSalinDwipurwa');
+        if (btn) {
+            let originalText = btn.innerText;
+            btn.innerText = 'Tersalin!';
+            setTimeout(() => { btn.innerText = originalText; }, 2000);
+        }
+    });
+}
+
+function updateDwipurwaFromManualInput() {
+    let inp = document.getElementById('outDwipurwaLatin');
+    let out = document.getElementById('outDwipurwaJawa');
+    if (inp && out) {
+        out.innerText = transliterateKawi(inp.value);
+    }
+}
+
+// Event Listeners UI (dengan penanganan defensif)
 if (fontSelect) {
     fontSelect.addEventListener('change', (e) => {
         if (previewOutput) previewOutput.style.fontFamily = `'${e.target.value}', sans-serif`;
@@ -711,4 +1117,17 @@ if (clearBtn) {
 
 if (textInput && previewOutput) {
     updatePreview();
+}
+
+// Ekspor Fungsi Global ke Window Object
+if (typeof window !== 'undefined') {
+    window.transliterateKawi = transliterateKawi;
+    window.prosesParamasastra = prosesParamasastra;
+    window.updateParamFromManualInput = updateParamFromManualInput;
+    window.salinParamLatin = salinParamLatin;
+    window.salinParamJawa = salinParamJawa;
+    window.prosesDwipurwa = prosesDwipurwa;
+    window.salinDwipurwaLatin = salinDwipurwaLatin;
+    window.salinDwipurwaJawa = salinDwipurwaJawa;
+    window.updateDwipurwaFromManualInput = updateDwipurwaFromManualInput;
 }
