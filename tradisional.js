@@ -1,6 +1,7 @@
 /**
  * TRADISIONAL.JS
  * Modifikasi dari carakawi.js dengan penambahan Aksara Rekan lengkap,
+ * preprocessing Anuswara Tancap berbasis Warga Aksara (Talawya: nc/nj -> nyc/nyj),
  * serta modul Paramasastra (Morfologi Jawa Tradisional/Kawi).
  * 
  * Penyesuaian Nga Lelet (ꦊ):
@@ -155,6 +156,18 @@ function transliterateKawi(rawText) {
     if (!rawText) return '';
     
     rawText = processMacros(rawText);
+
+    // --- PREPROCESSING ANUSWARA TANCAP DENGAN PENYELARASAN WARGA TALAWYA ---
+    // nc & nj diselaraskan secara ketat menjadi nyc & nyj agar menghasilkan Aksara Nya (ꦚ)
+    rawText = rawText.replace(/(?<![a-zA-Za-zÀ-ÿ])(mb|ndh|nd|nth|nc|nj|ngg)/gim, function(match) {
+        let isUpper = match[0] === match[0].toUpperCase();
+        let lower = match.toLowerCase();
+
+        if (lower === 'nc') lower = 'nyc';
+        else if (lower === 'nj') lower = 'nyj';
+
+        return (isUpper ? 'H' : 'h') + 'a' + lower;
+    });
 
     rawText = rawText
         .replace(/\|\|/g, '\uA9CB')
@@ -739,8 +752,8 @@ function prosesParamasastra() {
             altPrefixAppended = 'a';
         } else if (['d','j'].includes(f) || dasar.startsWith('dh')) {
             if (f === 'j') {
-                prefixAppended = 'an';
-                altPrefixAppended = 'any';
+                prefixAppended = 'any';
+                altPrefixAppended = 'ny';
                 stem = dasar;
             } else {
                 prefixAppended = 'an';
