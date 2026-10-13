@@ -521,14 +521,6 @@ function transliterasiSingleKata(rawLatin) {
         });
     }
 
-    const prefixRegexStr = "kuma|kami|kapi|dak|tak|kok|tar|pra|ng|ny|ko|di|ha|ka|ke|sa|pa|pi|m|n|a";
-    const keretRegex = new RegExp(`^(${prefixRegexStr})?([bcdfghjklmnpqrstvwxyz]*)([eê])r([bcdfghjklmnpqrstvwxyz])`, 'i');
-    
-    latinProcessed = latinProcessed.replace(keretRegex, function(match, p1, p2, p3, p4) {
-        let prefix = p1 || '';
-        return prefix + p2 + 'r' + p3 + p4; 
-    });
-
     let wordMatchForExc = latinProcessed.match(/^([a-zA-ZéèêÉÈÊ]+)/);
     let isPrefixException = false;
     
