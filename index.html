@@ -1711,7 +1711,7 @@
         for (let i = 0; i < tokens.length; i++) {
             let t = tokens[i];
             if (/^\s+$/.test(t)) {
-                markedInput += t; // spasi tetap ikut di text marked
+                markedInput += t;
             } else if (t !== '') {
                 markedInput += t + MARKER;
                 wordTokens.push(t);
@@ -1744,6 +1744,7 @@
         const jgstPasanganConsonant = '(?:th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ḥ|c̣|p̣|g̣|ḅ|j̣|ŕ|ṟ|[bcdfghjklmnpqrstvwxyz])';
         const jgstStandardVowel = '(?:[āaīiūuěéèeoꜽꜷ])';
         const jgstPasanganRegex = new RegExp(`(?:${jgstSpecialSandhangan}|${jgstPasanganConsonant}?${jgstStandardVowel})$`, 'i');
+        const jgstTrailingVowelRegex = new RegExp(`(${jgstStandardVowel})$`, 'i');
 
         let wordIdx = 0;
         for (let i = 0; i < rawJgstSegments.length; i++) {
@@ -1765,24 +1766,16 @@
 
                 if (origEndedWithConsonant) {
                     if (isSastraLampah && nextWordStartsWithVowel) {
-                        // Sastra Lampah (Tradisional/Cara Kawi)
-                        // Konsonan 'n' di "jaman" dilebur dengan 'é' di "édan", sehingga 'n' terdorong 
-                        // ke kanan melewati marker, berada di ujung kiri kata kedua.
-                        // Kita ekstrak dari awal segmen berikutnya (kata ke-2) dan kembalikan ke segmen saat ini.
-                        if (i + 1 < rawJgstSegments.length) {
-                            let nextSegRaw = rawJgstSegments[i + 1];
-                            let nextSegClean = nextSegRaw.replace(/^\s+/, '');
-                            let leadingConsonantRegex = new RegExp(`^${jgstPasanganConsonant}+`, 'i');
-                            let cMatch = nextSegClean.match(leadingConsonantRegex);
-                            if (cMatch) {
-                                seg += cMatch[0]; // kembalikan konsonan (misal 'n') ke kata pertama (jaman)
-                                rawJgstSegments[i + 1] = nextSegRaw.replace(cMatch[0], ''); // hilangkan 'n' dari kata kedua (nédan -> édan)
-                            }
+                        // Sastra Lampah: Vokal awal kata ke-2 ("é") terdorong ke kata ke-1 ("jamané" & "dan/").
+                        // Kembalikan vokal "é" dari ujung kata ke-1 ke awal kata ke-2.
+                        let vMatch = seg.match(jgstTrailingVowelRegex);
+                        if (vMatch) {
+                            let vLen = vMatch[0].length;
+                            carryOver = vMatch[0];
+                            seg = seg.slice(0, -vLen);
                         }
                     } else {
-                        // Pasangan Extraction (Tata Tulis Baru: KBJ/Sriwedari/Simplified)
-                        // Pasangan meminjam vokal sehingga terdorong ke kiri melewati marker.
-                        // Kita ekstrak dari ujung kanan kata pertama, dan simpan untuk disorongkan ke awal kata kedua.
+                        // Pasangan Extraction (Tata Tulis Baru)
                         let match = seg.match(jgstPasanganRegex);
                         if (match) {
                             let matchLen = match[0].length;
