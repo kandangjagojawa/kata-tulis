@@ -460,8 +460,10 @@ function transliterasiKalimat(teks) {
         return (match[0] === 'N' || match[0] === 'H') ? 'Hangg' : 'hangg';
     });
 
-    teksDiolah = teksDiolah.replace(/(^|[\.\?!]\s*)(mb|ndh|nd|nth|nc|nj)/gim, function(match, p1, p2) {
-        return p1 + 'ha' + p2;
+    // PERBAIKAN: Anuswara Tancap kini berlaku untuk semua kata (tidak hanya di awal kalimat)
+    // Menggunakan \b untuk menangkap batas awal semua kata
+    teksDiolah = teksDiolah.replace(/\b(mb|ndh|nd|nth|nc|nj)/gim, function(match, p1) {
+        return 'ha' + p1;
     });
 
     let baris = teksDiolah.split('\n');
