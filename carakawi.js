@@ -156,7 +156,7 @@ function transliterateKawi(rawText) {
         .replace(/<>/g, '\uA9C4')
         .replace(/>\^/g, '\uA9C5')
         .replace(/\(o\)/g, '\uA9C6')
-        .replace(/:=/g, '\uA9C7')
+        .replace(/:/g, '\uA9C7')
         .replace(/\[\\/g, '\uA9CC')         .replace(/\\\]/g, '\uA9CD')
         .replace(/\^2/g, '\uA9CE')
         .replace(/_2/g, '\uA9CF')
