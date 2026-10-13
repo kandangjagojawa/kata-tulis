@@ -2,11 +2,8 @@
  * jgst.js
  * Modul Transliterasi Aksara Jawa ke JGST (Javanese General System of Transliteration)
  * Pembaruan Khusus:
- * - Penanganan Visual Pangkon (꧀) untuk Tata Tulis Baru (kbj, sriwedari, simplified):
- *   * Jika Pangkon membentuk Pasangan dengan aksara berikutnya (termasuk Pa Cerek ꦉ, Nga Lelet ꦊ, ꦋ),
- *     JGST TIDAK memunculkan '/' atau '/,'.
- *   * Simbol '/' atau '/,' / '/.' HANYA muncul jika secara visual pada Aksara Jawa
- *     memang tampak karakter Pangkon (di akhir klausa/kalimat/tanda baca).
+ * - Penanganan Visual Pangkon (꧀) untuk Tata Tulis Baru (kbj, sriwedari, simplified) & Lama (tradisional, carakawi)
+ * - Perbaikan penanganan pangkon Tata Tulis Lama agar menghasilkan '/' secara tepat (misal: "jaman/ édan/")
  * - Ra Agung (ꦬ): 'ṟa'
  * - Cakra (ꦿ): 'ŕa', Cakra Keret (ꦽ): 'ŕě'
  * - Penambahan Pemetaan Lengkap Codepoint Pada & Simbol Unicode (U+A980 - U+A9DF)
@@ -112,22 +109,18 @@ function transliterateToJGST(aksaraStr, fnKey) {
                         (peekIdx + 1 < len && rekanMap[nextRealChar + aksaraStr[peekIdx + 1]])
                     );
 
-                    if (isModern) {
-                        if (!isPasanganNext) {
+                    if (!isPasanganNext) {
+                        if (isModern) {
                             if (hasLingsaAfter) {
                                 baseSyl += '/.';
                             } else {
                                 let isEnd = (!nextRealChar || nextRealChar === '꧉' || nextRealChar === '\n');
                                 baseSyl += isEnd ? '/' : '/,';
                             }
-                        }
-                    } else {
-                        if (hasLingsaAfter) {
-                            baseSyl += '/,';
                         } else {
-                            let nextCh = (i < len) ? aksaraStr[i] : '';
-                            let isWordBoundary = (!nextCh || nextCh === ' ' || nextCh === '\n' || nextCh === '\uE000' || nextCh === '꧈' || nextCh === '꧉');
-                            if (isWordBoundary && (!nextCh || nextCh === '꧉' || (i >= len))) {
+                            if (hasLingsaAfter) {
+                                baseSyl += '/,';
+                            } else {
                                 baseSyl += '/';
                             }
                         }
@@ -216,24 +209,18 @@ function transliterateToJGST(aksaraStr, fnKey) {
                     (peekIdx + 1 < len && rekanMap[nextRealChar + aksaraStr[peekIdx + 1]])
                 );
 
-                if (isModern) {
-                    if (!isPasanganNext) {
-                        // Hanya munculkan / atau /, jika secara VISUAL aksara Jawa menampilkan Pangkon
+                if (!isPasanganNext) {
+                    if (isModern) {
                         if (hasLingsaAfter) {
                             baseSyl += '/.';
                         } else {
                             let isEnd = (!nextRealChar || nextRealChar === '꧉' || nextRealChar === '\n');
                             baseSyl += isEnd ? '/' : '/,';
                         }
-                    }
-                } else {
-                    // Tata Tulis Lama (Tradisional & Cara Kawi) - pertahankan perilaku asli
-                    if (hasLingsaAfter) {
-                        baseSyl += '/,';
                     } else {
-                        let nextCh = (i < len) ? aksaraStr[i] : '';
-                        let isWordBoundary = (!nextCh || nextCh === ' ' || nextCh === '\n' || nextCh === '\uE000' || nextCh === '꧈' || nextCh === '꧉');
-                        if (isWordBoundary && (!nextCh || nextCh === '꧉' || (i >= len))) {
+                        if (hasLingsaAfter) {
+                            baseSyl += '/,';
+                        } else {
                             baseSyl += '/';
                         }
                     }
