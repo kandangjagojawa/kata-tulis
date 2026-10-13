@@ -1741,7 +1741,7 @@
         let carryOver = "";
         
         const jgstSpecialSandhangan = '(?:ŕě|lě|ṝ|ḹ|ṛ|ḷ)';
-        const jgstPasanganConsonant = '(?:th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ḥ|c̣|p̣|g̣|ḅ|j̣|ŕ|ṟ|[bcdfghjklmnpqrstvwxyz])';
+        const jgstPasanganConsonant = '(?:th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ḥ|c̣|p̣|g̣|ḅ|j̣|ŕ|ṟ|ỿ|[bcdfghjklmnpqrstvwxyz])';
         const jgstStandardVowel = '(?:[āaīiūuěéèeoꜽꜷ])';
         const jgstPasanganRegex = new RegExp(`(?:${jgstSpecialSandhangan}|${jgstPasanganConsonant}?${jgstStandardVowel})$`, 'i');
         const jgstTrailingVowelRegex = new RegExp(`(${jgstStandardVowel})$`, 'i');
