@@ -294,12 +294,12 @@
                 </div>
                 <div class="card-toggles">
                     <span class="toggle-label">Tata Tulis:</span>
-                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="KBJ" checked> 1. KBJ</label>
-                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Sriwedari" checked> 2. Sriwedari</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="KBJ" checked> 1. Paugeran KBJ</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Sriwedari" checked> 2. Paugeran Sriwedari</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Simplified" checked> 3. KAJ Simplified</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Tradisional" checked> 4. KAJ Tradisional</label>
-                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="CaraKawi" checked> 5. Cara Kawi</label>
-                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan" checked> 6. Ringkasan</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="CaraKawi" checked> 5. Cara Kawi (Mardi Kawi)</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan" checked> 6. Ringkasan Transliterasi</label>
                 </div>
                 <div class="sub-toggles">
                     <span class="toggle-label">Latin:</span>
@@ -333,9 +333,9 @@
     </div>
 
     <div class="grid-container">
-        <!-- 1. KBJ -->
+        <!-- 1. Paugeran KBJ -->
         <div class="card" id="cardKBJ">
-            <div class="card-header">1. KBJ</div>
+            <div class="card-header">1. Paugeran KBJ</div>
             <div class="output-group group-aksara">
                 <div class="output-label">Aksara Jawa</div>
                 <div id="outKBJ_Aksara" class="box-aksara font-ngayogyann">-</div>
@@ -354,9 +354,9 @@
             </div>
         </div>
 
-        <!-- 2. Sriwedari -->
+        <!-- 2. Paugeran Sriwedari -->
         <div class="card" id="cardSriwedari">
-            <div class="card-header">2. Sriwedari</div>
+            <div class="card-header">2. Paugeran Sriwedari</div>
             <div class="output-group group-aksara">
                 <div class="output-label">Aksara Jawa</div>
                 <div id="outSriwedari_Aksara" class="box-aksara font-ngayogyann">-</div>
@@ -417,7 +417,7 @@
             </div>
         </div>
 
-        <!-- 5. Cara Kawi -->
+        <!-- 5. Cara Kawi (Mardi Kawi) -->
         <div class="card" id="cardCaraKawi">
             <div class="card-header">5. Cara Kawi (Mardi Kawi)</div>
             <div class="output-group group-aksara">
@@ -446,7 +446,7 @@
                 <div id="outRingkasan_PUJL" class="box-pujl">-</div>
             </div>
             <div class="output-group">
-                <div class="output-label">KBJ</div>
+                <div class="output-label">Paugeran KBJ</div>
                 <div id="outRingkasan_KBJ" class="box-aksara font-ngayogyann">-</div>
                 <div class="ringkasan-sub-row">
                     <div id="outRingkasan_KBJ_JGST" class="box-jgst">-</div>
@@ -454,7 +454,7 @@
                 </div>
             </div>
             <div class="output-group">
-                <div class="output-label">Sriwedari</div>
+                <div class="output-label">Paugeran Sriwedari</div>
                 <div id="outRingkasan_Sriwedari" class="box-aksara font-ngayogyann">-</div>
                 <div class="ringkasan-sub-row">
                     <div id="outRingkasan_Sriwedari_JGST" class="box-jgst">-</div>
@@ -462,7 +462,7 @@
                 </div>
             </div>
             <div class="output-group">
-                <div class="output-label">Simplified</div>
+                <div class="output-label">KAJ Simplified</div>
                 <div id="outRingkasan_Simplified" class="box-aksara font-ngayogyann">-</div>
                 <div class="ringkasan-sub-row">
                     <div id="outRingkasan_Simplified_JGST" class="box-jgst">-</div>
@@ -470,7 +470,7 @@
                 </div>
             </div>
             <div class="output-group">
-                <div class="output-label">Tradisional</div>
+                <div class="output-label">KAJ Tradisional</div>
                 <div id="outRingkasan_Tradisional" class="box-aksara font-ngayogyan">-</div>
                 <div class="ringkasan-sub-row">
                     <div id="outRingkasan_Tradisional_JGST" class="box-jgst">-</div>
@@ -1563,7 +1563,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr data-alfabet="68" data-hanacaraka="56" data-warga="105" data-unicode="304" data-tatatulisbaru="707">
+                    <tr data-alfabet="68" data-hanacaraka="56" data-warga="105" data-unicode="304" data-tatatulisbaru="708">
                         <td>| / ||</td>
                         <td><span class="aksara-cell">꧊ / ꧋</span></td>
                         <td><span class="aksara-lama-cell">꧊ / ꧋</span></td>
@@ -1766,8 +1766,6 @@
 
                 if (origEndedWithConsonant) {
                     if (isSastraLampah && nextWordStartsWithVowel) {
-                        // Sastra Lampah: Vokal awal kata ke-2 ("é") terdorong ke kata ke-1 ("jamané" & "dan/").
-                        // Kembalikan vokal "é" dari ujung kata ke-1 ke awal kata ke-2.
                         let vMatch = seg.match(jgstTrailingVowelRegex);
                         if (vMatch) {
                             let vLen = vMatch[0].length;
@@ -1775,7 +1773,6 @@
                             seg = seg.slice(0, -vLen);
                         }
                     } else {
-                        // Pasangan Extraction (Tata Tulis Baru)
                         let match = seg.match(jgstPasanganRegex);
                         if (match) {
                             let matchLen = match[0].length;
@@ -1884,8 +1881,8 @@
                 });
 
                 let namaPaugeranMap = {
-                    'KBJ': 'KBJ',
-                    'Sriwedari': 'Sriwedari',
+                    'KBJ': 'Paugeran KBJ',
+                    'Sriwedari': 'Paugeran Sriwedari',
                     'CaraKawi': 'Cara Kawi (Mardi Kawi)'
                 };
 
