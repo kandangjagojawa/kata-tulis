@@ -1138,7 +1138,7 @@
                             <div class="combined-notation">
                                 <span class="tag-jgst">JGST: sa / śa / ṣa</span>
                                 <span>|</span>
-                                <span class="tag-ipa">IPA: [sa] / [ʃa] / [ʂa]</span>
+                                <span class="tag-ipa">IPA: [sa] / [ʃa]</span>
                                 <span>|</span>
                                 <span class="tag-pujl">PUJL: sa</span>
                             </div>
@@ -1711,7 +1711,7 @@
         for (let i = 0; i < tokens.length; i++) {
             let t = tokens[i];
             if (/^\s+$/.test(t)) {
-                markedInput += t;
+                markedInput += t; // spasi tetap ikut di text marked
             } else if (t !== '') {
                 markedInput += t + MARKER;
                 wordTokens.push(t);
@@ -1740,7 +1740,6 @@
         let cleanedJgstSegments = [];
         let carryOver = "";
         
-        // Pembaruan Regex Pemisahan Pasangan: Mencegah konsonan akhir kata pertama tercabut
         const jgstSpecialSandhangan = '(?:ŕě|lě|ṝ|ḹ|ṛ|ḷ)';
         const jgstPasanganConsonant = '(?:th|dh|ng|ny|ñ|ṅ|ŋ|ṇ|ṭha|ṭh|ṭ|ḍha|ḍh|ḍ|ś|ṣ|ḥ|c̣|p̣|g̣|ḅ|j̣|ŕ|ṟ|[bcdfghjklmnpqrstvwxyz])';
         const jgstStandardVowel = '(?:[āaīiūuěéèeoꜽꜷ])';
@@ -1756,15 +1755,40 @@
 
             if (wordIdx < wordTokens.length - 1) {
                 let origWord = wordTokens[wordIdx] || "";
+                let nextOrigWord = wordTokens[wordIdx + 1] || "";
+
                 let cleanOrigWord = origWord.replace(/[^a-zA-Za-zA-Zāāīīūūěéèeoꜽꜷṛḷ]/g, '');
+                let cleanNextOrigWord = nextOrigWord.replace(/[^a-zA-Za-zA-Zāāīīūūěéèeoꜽꜷṛḷ]/g, '');
+
                 let origEndedWithConsonant = !/[aāiīuūěéèeoꜽꜷṛḷ]$/i.test(cleanOrigWord);
+                let nextWordStartsWithVowel = /^[aāiīuūěéèeoꜽꜷṛḷ]/i.test(cleanNextOrigWord);
 
                 if (origEndedWithConsonant) {
-                    let match = seg.match(jgstPasanganRegex);
-                    if (match) {
-                        let matchLen = match[0].length;
-                        carryOver = match[0];
-                        seg = seg.slice(0, -matchLen);
+                    if (isSastraLampah && nextWordStartsWithVowel) {
+                        // Sastra Lampah (Tradisional/Cara Kawi)
+                        // Konsonan 'n' di "jaman" dilebur dengan 'é' di "édan", sehingga 'n' terdorong 
+                        // ke kanan melewati marker, berada di ujung kiri kata kedua.
+                        // Kita ekstrak dari awal segmen berikutnya (kata ke-2) dan kembalikan ke segmen saat ini.
+                        if (i + 1 < rawJgstSegments.length) {
+                            let nextSegRaw = rawJgstSegments[i + 1];
+                            let nextSegClean = nextSegRaw.replace(/^\s+/, '');
+                            let leadingConsonantRegex = new RegExp(`^${jgstPasanganConsonant}+`, 'i');
+                            let cMatch = nextSegClean.match(leadingConsonantRegex);
+                            if (cMatch) {
+                                seg += cMatch[0]; // kembalikan konsonan (misal 'n') ke kata pertama (jaman)
+                                rawJgstSegments[i + 1] = nextSegRaw.replace(cMatch[0], ''); // hilangkan 'n' dari kata kedua (nédan -> édan)
+                            }
+                        }
+                    } else {
+                        // Pasangan Extraction (Tata Tulis Baru: KBJ/Sriwedari/Simplified)
+                        // Pasangan meminjam vokal sehingga terdorong ke kiri melewati marker.
+                        // Kita ekstrak dari ujung kanan kata pertama, dan simpan untuk disorongkan ke awal kata kedua.
+                        let match = seg.match(jgstPasanganRegex);
+                        if (match) {
+                            let matchLen = match[0].length;
+                            carryOver = match[0];
+                            seg = seg.slice(0, -matchLen);
+                        }
                     }
                 }
             }
