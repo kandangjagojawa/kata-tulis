@@ -2,7 +2,7 @@
  * CARAKAWI.JS
  * Transliterasi Aksara Jawa Cara Kawi (Mardi Kawi)
  * Penyesuaian aturan r mati di tengah kata: tidak merangkap konsonan ha, nga, nya.
- * Penyesuaian R mati + ya: Aksara ra tidak dipengkal, melainkan repha (layar) + ya dipengkal (ꦂꦪꦾ).
+ * Penyesuaian r mati + ya: Aksara ra diberi pasangan untuk membentuk Repha (ꦫ꧀) dan ya didobel menggunakan pengkal (ꦪꦾ).
  */
 
 const textInput = document.getElementById('textInput');
@@ -450,10 +450,11 @@ function transliterateKawi(rawText) {
                     continue;
                 }
 
-                // --- PENANGANAN KONSONAN R MATI DI TENGAH KATA ---
+                // --- PENANGANAN KONSONAN R MATI DI TENGAH KATA (KHUSUS KAWI/REPHA) ---
                 if (cons.key === 'r') {
                     if (!isWordEnd) {
-                        result += 'ꦂ'; // Menggunakan Repha (Layar)
+                        // Menggunakan r diberi pasangan (ꦫ꧀) dengan struktur penyambungan asli
+                        result += consChar + '꧀';
                         let nextConsTemp = matchConsonant(word, peekIdx);
 
                         if (nextConsTemp) {
@@ -492,10 +493,11 @@ function transliterateKawi(rawText) {
                             if (v2Match) {
                                 let v2 = v2Match.val;
                                 if (doubleIt) {
-                                    // Semua pasangan 'ya' adalah pengkal
                                     if (nextConsTemp.key === 'y') {
+                                        // Khusus ya yang didobel: gunakan pengkal sebagai pasangannya
                                         result += consChar2_1 + 'ꦾ' + getSandhanganVowel(v2);
                                     } else {
+                                        // Konsonan selain ya
                                         result += consChar2_1 + '꧀' + consChar2_2 + getSandhanganVowel(v2);
                                     }
                                 } else {
@@ -530,7 +532,7 @@ function transliterateKawi(rawText) {
                             nextWordToken.val = nextWordToken.val.substr(crossVowel.len);
                             lastConsIsMati = false;
                         } else {
-                            result += 'ꦫ꧀'; // Kawi tetap mempertahankan pangkon di akhir kata
+                            result += 'ꦫ꧀'; // Kawi di akhir kata tetap menggunakan Pangkon (ꦫ꧀)
                             lastConsIsMati = true;
                         }
                         i = nextIdx;
