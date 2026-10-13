@@ -59,7 +59,7 @@ function transliterateToJGST(aksaraStr, fnKey) {
 
     // Pemetaan Tanda Baca / Pada Lengkap
     const padaMap = {
-        '꧈': ',', '꧉': '.', '꧇': ':=',
+        '꧈': ',', '꧉': '.', '꧇': ':',
         '꧁': '((', '꧂': '))',
         '꧃': '<_', '꧄': '<>', '꧅': '>^', '꧆': '(o)',
         '꧊': '|', '꧋': '||',
