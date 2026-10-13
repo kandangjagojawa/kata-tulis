@@ -4,6 +4,7 @@
  * Penyesuaian Nga Lelet (ꦊ):
  * - Di dalam satu kata (kluster mlebu/klebu): menggunakan pasangan la + pepet (꧀ꦭꦼ).
  * - Lintas kata disusul kata le- (mangan lebu): menggunakan pasangan Nga Lelet (꧀ꦊ).
+ * Penyesuaian r mati + ya: menghasilkan ya dipengkal (ꦪꦾ).
  */
 
 const textInput = document.getElementById('textInput');
@@ -506,7 +507,11 @@ function transliterateKawi(rawText) {
                             if (v2Match) {
                                 let v2 = v2Match.val;
                                 if (doubleIt) {
-                                    result += consChar2_1 + '꧀' + consChar2_2 + getSandhanganVowel(v2);
+                                    if (nextConsTemp.key === 'y') {
+                                        result += consChar2_1 + 'ꦾ' + getSandhanganVowel(v2);
+                                    } else {
+                                        result += consChar2_1 + '꧀' + consChar2_2 + getSandhanganVowel(v2);
+                                    }
                                 } else {
                                     result += consChar2_1 + getSandhanganVowel(v2);
                                 }
@@ -514,7 +519,11 @@ function transliterateKawi(rawText) {
                                 lastConsIsMati = false;
                             } else {
                                 if (doubleIt) {
-                                    result += consChar2_1 + '꧀' + consChar2_2 + '꧀';
+                                    if (nextConsTemp.key === 'y') {
+                                        result += consChar2_1 + 'ꦾ꧀';
+                                    } else {
+                                        result += consChar2_1 + '꧀' + consChar2_2 + '꧀';
+                                    }
                                 } else {
                                     result += consChar2_1 + '꧀';
                                 }
