@@ -4,7 +4,7 @@
  * Penyesuaian Nga Lelet (ꦊ):
  * - Di dalam satu kata (kluster mlebu/klebu): menggunakan pasangan la + pepet (꧀ꦭꦼ).
  * - Lintas kata disusul kata le- (mangan lebu): menggunakan pasangan Nga Lelet (꧀ꦊ).
- * Penyesuaian r mati + ya: menghasilkan ya dipengkal (ꦪꦾ).
+ * Penyesuaian R mati + ya: Aksara ra tidak dipengkal, melainkan layar + ya dipengkal (ꦂꦪꦾ).
  */
 
 const textInput = document.getElementById('textInput');
@@ -18,23 +18,12 @@ const charCount = document.getElementById('charCount');
 const copyBtn = document.getElementById('copyBtn');
 const clearBtn = document.getElementById('clearBtn');
 
-// Map Konsonan Mardi Kawi dengan penambahan Aksara Rekan & Ra Agung ('R' -> 'ꦬ')
 const CONS_MAP = {
-    // Aksara Rekan
     'f': 'ꦥ꦳', 'v': 'ꦮ꦳', 'z': 'ꦗ꦳',
     'kh': 'ꦏ꦳', 'dz': 'ꦢ꦳', 'gh': 'ꦒ꦳',
-    'q': 'ꦐ',
-    'hh': 'ꦲ꦳',
-    'xng': 'ꦔ꦳',
-    'ts': 'ꦱ꦳',
-    'shh': 'ꦰ꦳',
-    'xsy': 'ꦯ꦳',
-    'dl': 'ꦭ꦳',
-    'tth': 'ꦡ꦳',
-    'zh': 'ꦣ꦳',
-    'x': 'ꦑ꦳',
-
-    // Konsonan Standar & Mahaprana Kawi
+    'q': 'ꦐ', 'hh': 'ꦲ꦳', 'xng': 'ꦔ꦳', 'ts': 'ꦱ꦳',
+    'shh': 'ꦰ꦳', 'xsy': 'ꦯ꦳', 'dl': 'ꦭ꦳', 'tth': 'ꦡ꦳',
+    'zh': 'ꦣ꦳', 'x': 'ꦑ꦳',
     'th': 'ꦛ', 'dh': 'ꦝ', 'ny': 'ꦚ', 'ng': 'ꦔ',
     'TH': 'ꦜ', 'DH': 'ꦞ', 'NY': 'ꦘ', 'Ny': 'ꦘ', 'NG': 'ꦔ',
     'tH': 'ꦡ', 'dH': 'ꦣ', 'Th': 'ꦜ', 'Dh': 'ꦞ', 
@@ -165,7 +154,6 @@ function transliterateKawi(rawText) {
     
     rawText = processMacros(rawText);
 
-    // Mapping Simbol & Pada Unicode Aksara Jawa
     rawText = rawText
         .replace(/\|\|/g, '\uA9CB')
         .replace(/\|/g, '\uA9CA')
@@ -337,7 +325,9 @@ function transliterateKawi(rawText) {
                 if (cons.key === 'r') rSeenInWord = true;
 
                 let handledWyanjana = false;
-                if (nextIdx < word.length) {
+                
+                // Aksara Ra tidak boleh diberi pasangan/sandhangan wyanjana (pengkal/cakra/cakra keret/nga lelet)
+                if (cons.key !== 'r' && nextIdx < word.length) {
                     let nextConsTemp2 = matchConsonant(word, nextIdx);
 
                     if (nextConsTemp2 && nextConsTemp2.key === 'r') {
@@ -467,9 +457,10 @@ function transliterateKawi(rawText) {
                     continue;
                 }
 
+                // --- PENANGANAN KONSONAN R MATI DI TENGAH KATA ---
                 if (cons.key === 'r') {
                     if (!isWordEnd) {
-                        result += 'ꦂ';
+                        result += 'ꦂ'; // Menggunakan Layar
                         let nextConsTemp = matchConsonant(word, peekIdx);
 
                         if (nextConsTemp) {
@@ -507,6 +498,7 @@ function transliterateKawi(rawText) {
                             if (v2Match) {
                                 let v2 = v2Match.val;
                                 if (doubleIt) {
+                                    // Semua pasangan 'ya' adalah pengkal
                                     if (nextConsTemp.key === 'y') {
                                         result += consChar2_1 + 'ꦾ' + getSandhanganVowel(v2);
                                     } else {
@@ -544,7 +536,7 @@ function transliterateKawi(rawText) {
                             nextWordToken.val = nextWordToken.val.substr(crossVowel.len);
                             lastConsIsMati = false;
                         } else {
-                            result += 'ꦂ';
+                            result += 'ꦂ'; // Akhir kata tetap layar untuk tradisional.js
                             lastConsIsMati = true;
                         }
                         i = nextIdx;
@@ -561,7 +553,7 @@ function transliterateKawi(rawText) {
                 } else {
                     let handledCrossWord = false;
 
-                    // LINTAS KATA: Jika kata berikutnya diawali 'le' (seperti 'mangan lebu'), gunakan Pasangan Nga Lelet (꧀ꦊ)
+                    // LINTAS KATA: Jika kata berikutnya diawali 'le'
                     if (nextWordToken && nextWordToken.val.substr(0, 2).toLowerCase() === 'le') {
                         result += consChar + '꧀ꦊ';
                         nextWordToken.val = nextWordToken.val.substr(2);
