@@ -1,7 +1,7 @@
 /**
  * CARAKAWI.JS
  * Engine Transliterasi Aksara Jawa / Kawi
- * Dengan pemrosesan sandhi vokal, Aksara Rekan, dan Warga Aksara.
+ * Dengan pemrosesan sandhi vokal, Aksara Rekan, dan Warga Aksara (Murni Filologis).
  */
 
 const textInput = document.getElementById('textInput');
@@ -150,18 +150,6 @@ function transliterateKawi(rawText) {
     if (!rawText) return '';
     
     rawText = processMacros(rawText);
-
-    // --- PREPROCESSING ANUSWARA TANCAP DENGAN PENYELARASAN WARGA TALAWYA ---
-    // nc & nj diselaraskan secara ketat menjadi nyc & nyj agar menghasilkan Aksara Nya (ꦚ)
-    rawText = rawText.replace(/(?<![a-zA-Za-zÀ-ÿ])(mb|ndh|nd|nth|nc|nj|ngg)/gim, function(match) {
-        let isUpper = match[0] === match[0].toUpperCase();
-        let lower = match.toLowerCase();
-
-        if (lower === 'nc') lower = 'nyc';
-        else if (lower === 'nj') lower = 'nyj';
-
-        return (isUpper ? 'H' : 'h') + 'a' + lower;
-    });
 
     rawText = rawText
         .replace(/\|\|/g, '\uA9CB')
