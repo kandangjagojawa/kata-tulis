@@ -8,6 +8,11 @@
  * - Di dalam satu kata (kluster mlebu/klebu): menggunakan pasangan la + pepet (꧀ꦭꦼ).
  * - Lintas kata disusul kata le- (mangan lebu): menggunakan pasangan Nga Lelet (꧀ꦊ).
  * Penyesuaian R mati + ya: Aksara ra tidak dipengkal, melainkan layar + ya dipengkal (ꦂꦪꦾ).
+ * 
+ * Pembaruan:
+ * 1. Awalan pi/pri + kata berawalan ha/vokal (pi+ala=ꦥꦶꦲꦭ, pi+andel=ꦥꦶꦲꦤ꧀ꦢꦼꦭ꧀).
+ * 2. Aksara na (ꦤ) dan sa (ꦱ) tetap menggunakan ꦤ/ꦱ setelah ra (dengan/tanpa sandhangan),
+ *    cakra, atau keret. (Mati r di tengah kata/Layar tetap ꦂꦟ / ꦂꦰ).
  */
 
 const textInput = document.getElementById('textInput');
@@ -157,6 +162,20 @@ function transliterateKawi(rawText) {
     
     rawText = processMacros(rawText);
 
+    // --- REVISI 1: AWALAN PI / PRI + KATA BERAWALAN HA / VOKAL ---
+    // Mencegah luluh hiatus menjadi 'y' (misal: pi-ala -> pihala -> ꦥꦶꦲꦭ, pi-andel -> pihandel -> ꦥꦶꦲꦤ꧀ꦢꦼꦭ꧀)
+    rawText = rawText.replace(/(?<![a-zA-Za-zÀ-ÿ])(pi|pri)-?([aiueoéèêAIUEOÉÈÊ])/gi, function(match, p1, p2) {
+        let p1Low = p1.toLowerCase();
+        let p2Low = p2.toLowerCase();
+        if (p1Low === 'pi' && p2Low === 'a') {
+            let fullMatch = match.toLowerCase().replace('-', '');
+            if (fullMatch.startsWith('piambak')) {
+                return p1 + 'y' + p2;
+            }
+        }
+        return p1 + 'h' + p2;
+    });
+
     // --- PREPROCESSING ANUSWARA TANCAP DENGAN PENYELARASAN WARGA TALAWYA ---
     // nc & nj diselaraskan secara ketat menjadi nyc & nyj agar menghasilkan Aksara Nya (ꦚ)
     rawText = rawText.replace(/(?<![a-zA-Za-zÀ-ÿ])(mb|ndh|nd|nth|nc|nj|ngg)/gim, function(match) {
@@ -206,7 +225,6 @@ function transliterateKawi(rawText) {
         let word = token.val;
         let i = 0;
         
-        let rSeenInWord = false;
         let lastConsKey = null;
         let lastConsIsMati = false;
 
@@ -319,10 +337,9 @@ function transliterateKawi(rawText) {
                     nextConsTemp = matchConsonant(word, peekIdx);
                 }
 
-                if (cons.key === 'n') {
-                    if (rSeenInWord) consChar = 'ꦟ';
-                } else if (cons.key === 's') {
-                    if (rSeenInWord) consChar = 'ꦰ';
+                // --- REVISI 2: Dihapus logika rSeenInWord agar na (ꦤ) dan sa (ꦱ) ---
+                // tetap berupa ꦤ & ꦱ setelah ra / cakra / keret.
+                if (cons.key === 's') {
                     if (lastConsKey === 'k' && lastConsIsMati) consChar = 'ꦰ';
                 }
 
@@ -338,8 +355,6 @@ function transliterateKawi(rawText) {
                         else if (nextWarga === 'dantya') consChar = 'ꦤ';
                     }
                 }
-
-                if (cons.key === 'r') rSeenInWord = true;
 
                 let handledWyanjana = false;
                 
@@ -357,7 +372,6 @@ function transliterateKawi(rawText) {
                                 result += consChar + 'ꦿ' + getSandhanganVowel(v); 
                             }
                             i = afterRIdx + rVowel.len;
-                            rSeenInWord = true;
                             lastConsKey = 'r';
                             lastConsIsMati = false;
                             handledWyanjana = true;
@@ -472,6 +486,7 @@ function transliterateKawi(rawText) {
                     continue;
                 }
 
+                // --- ATURAN R MATI / LAYAR (ꦂ) DI TENGAH KATA TETAP UTUH & UNCHANGED ---
                 if (cons.key === 'r') {
                     if (!isWordEnd) {
                         result += 'ꦂ'; 
@@ -735,75 +750,43 @@ function prosesParamasastra() {
     // Pemrosesan Ater-Ater Anuswara Ejaan Tradisional/Kawi (m-/am-, n-/an-, ny-/any-, ng-/ang-)
     if (['N', 'm', 'n', 'ny', 'ng', 'pa'].includes(ater)) {
         if (dasar.startsWith('ng')) {
-            stem = dasar;
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = dasar; prefixAppended = ''; altPrefixAppended = 'a';
         } else if (dasar.startsWith('ny')) {
-            stem = dasar;
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = dasar; prefixAppended = ''; altPrefixAppended = 'a';
         } else if (f === 'n') {
-            stem = dasar;
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = dasar; prefixAppended = ''; altPrefixAppended = 'a';
         } else if (f === 'm') {
-            stem = dasar;
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = dasar; prefixAppended = ''; altPrefixAppended = 'a';
         } else if (['d','j'].includes(f) || dasar.startsWith('dh')) {
             if (f === 'j') {
-                prefixAppended = 'any';
-                altPrefixAppended = 'ny';
-                stem = dasar;
+                prefixAppended = 'any'; altPrefixAppended = 'ny'; stem = dasar;
             } else {
-                prefixAppended = 'an';
-                altPrefixAppended = 'n';
-                stem = dasar;
+                prefixAppended = 'an'; altPrefixAppended = 'n'; stem = dasar;
             }
         } else if (f === 'b') {
-            prefixAppended = 'am';
-            altPrefixAppended = 'm';
-            stem = dasar;
+            prefixAppended = 'am'; altPrefixAppended = 'm'; stem = dasar;
         } else if (f === 'g') {
-            prefixAppended = 'ang';
-            altPrefixAppended = 'ng';
-            stem = dasar;
+            prefixAppended = 'ang'; altPrefixAppended = 'ng'; stem = dasar;
         } else if (['p','w'].includes(f)) {
-            stem = 'm' + dasar.slice(1);
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = 'm' + dasar.slice(1); prefixAppended = ''; altPrefixAppended = 'a';
         } else if (dasar.startsWith('th')) {
-            stem = 'n' + dasar.slice(2);
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = 'n' + dasar.slice(2); prefixAppended = ''; altPrefixAppended = 'a';
         } else if (f === 't') {
-            stem = 'n' + dasar.slice(1);
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = 'n' + dasar.slice(1); prefixAppended = ''; altPrefixAppended = 'a';
         } else if (['c','s'].includes(f)) {
-            stem = 'ny' + dasar.slice(1);
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = 'ny' + dasar.slice(1); prefixAppended = ''; altPrefixAppended = 'a';
         } else if (f === 'k') {
-            stem = 'ng' + dasar.slice(1);
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = 'ng' + dasar.slice(1); prefixAppended = ''; altPrefixAppended = 'a';
         } else if (isVowelStart) {
-            stem = 'ng' + dasar;
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = 'ng' + dasar; prefixAppended = ''; altPrefixAppended = 'a';
         } else if (['l','r','y'].includes(f)) {
-            stem = 'ng' + dasar;
-            prefixAppended = '';
-            altPrefixAppended = 'a';
+            stem = 'ng' + dasar; prefixAppended = ''; altPrefixAppended = 'a';
         } else {
-            stem = 'ng' + dasar;
-            altPrefixAppended = 'a';
+            stem = 'ng' + dasar; altPrefixAppended = 'a';
         }
 
         if (ater === 'pa') {
-            prefixAppended = 'pa';
-            altPrefixAppended = '';
+            prefixAppended = 'pa'; altPrefixAppended = '';
         }
     } else if (ater === 'pating_paN') {
         let nasal = '';
@@ -820,10 +803,10 @@ function prosesParamasastra() {
         } else {
             prefixAppended = 'kuma';
         }
-    } else if (ater === 'pi' || ater === 'kapi') {
+    } else if (ater === 'pi' || ater === 'pri' || ater === 'kapi') {
         if (dasar === 'ambak' || dasar === 'hambak') {
             stem = 'yambak'; prefixAppended = ater;
-        } else if (isVowelStart) {
+        } else if (isVowelStart || dasar.startsWith('h')) {
             stem = dasar.startsWith('h') ? dasar : 'h' + dasar; prefixAppended = ater;
         } else {
             prefixAppended = ater;
