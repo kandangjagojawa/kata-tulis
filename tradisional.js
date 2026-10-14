@@ -480,6 +480,43 @@ function transliterateKawi(rawText) {
                 if (cons.key === 'r') {
                     if (!isWordEnd) {
                         result += 'ꦂ'; 
+
+                        // 1. PENDEKATAN B: Pasangan Kustom Eksplisit [C1|C2]
+                        let handledOverrideB = false;
+                        if (word[peekIdx] === '[') {
+                            let closeBracketIdx = word.indexOf(']', peekIdx);
+                            if (closeBracketIdx !== -1) {
+                                let content = word.substring(peekIdx + 1, closeBracketIdx);
+                                let parts = content.split('|');
+                                if (parts.length === 2) {
+                                    let c1Match = matchConsonant(parts[0], 0);
+                                    let c2Match = matchConsonant(parts[1], 0);
+                                    if (c1Match && c2Match) {
+                                        let afterBracketIdx = closeBracketIdx + 1;
+                                        let vMatch = matchVowel(word, afterBracketIdx);
+                                        let vStr = vMatch ? getSandhanganVowel(vMatch.val) : '';
+                                        
+                                        result += c1Match.char + '꧀' + c2Match.char + vStr;
+                                        i = afterBracketIdx + (vMatch ? vMatch.len : 0);
+                                        lastConsKey = c2Match.key;
+                                        lastConsIsMati = !vMatch;
+                                        handledOverrideB = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (handledOverrideB) continue;
+
+                        // 2. PENDEKATAN A (~, !) & PENDEKATAN C (#, ^)
+                        let overrideType = null;
+                        if (word[peekIdx] === '~' || word[peekIdx] === '!') {
+                            overrideType = 'A';
+                            peekIdx++;
+                        } else if (word[peekIdx] === '#' || word[peekIdx] === '^') {
+                            overrideType = 'C';
+                            peekIdx++;
+                        }
+
                         let nextConsTemp = matchConsonant(word, peekIdx);
 
                         if (nextConsTemp) {
@@ -495,19 +532,29 @@ function transliterateKawi(rawText) {
 
                             let doubleIt = true;
                             
-                            if (['h', 'H', 'ng', 'NG', 'ny', 'NY', 'Ny'].includes(nextConsTemp.key)) {
-                                doubleIt = false;
-                            }
-                            else if (nextConsTemp.key === 'n' || nextConsTemp.key === 'N' || consChar2_1.includes('ꦟ')) {
-                                consChar2_1 = consChar2_1.replace('ꦤ', 'ꦟ');
-                                consChar2_2 = consChar2_2.replace('ꦟ', 'ꦤ');
-                            } 
-                            else if (nextConsTemp.key === 's' || nextConsTemp.key === 'sh' || consChar2_1.includes('ꦰ')) {
-                                consChar2_1 = consChar2_1.replace('ꦱ', 'ꦰ');
-                                doubleIt = false;
-                            } 
-                            else if (consChar2_1.includes('ꦡ')) {
-                                doubleIt = false;
+                            if (overrideType === 'A') {
+                                doubleIt = false; // Batal double, paksa Dantya/Single Biasa
+                                const dantyaMap = {'ꦟ':'ꦤ', 'ꦡ':'ꦠ', 'ꦣ':'ꦢ', 'ꦦ':'ꦥ', 'ꦨ':'ꦧ', 'ꦑ':'ꦏ', 'ꦓ':'ꦒ', 'ꦯ':'ꦱ', 'ꦰ':'ꦱ', 'ꦖ':'ꦕ', 'ꦙ':'ꦗ', 'ꦜ':'ꦛ', 'ꦞ':'ꦝ'};
+                                consChar2_1 = dantyaMap[consChar2_1] || consChar2_1;
+                            } else if (overrideType === 'C') {
+                                doubleIt = false; // Batal double, paksa Mahaprana/Murda Single
+                                const murdaMap = {'ꦤ':'ꦟ', 'ꦠ':'ꦡ', 'ꦢ':'ꦣ', 'ꦥ':'ꦦ', 'ꦧ':'ꦨ', 'ꦏ':'ꦑ', 'ꦒ':'ꦓ', 'ꦱ':'ꦯ', 'ꦕ':'ꦖ', 'ꦗ':'ꦙ', 'ꦛ':'ꦜ', 'ꦝ':'ꦞ'};
+                                consChar2_1 = murdaMap[consChar2_1] || consChar2_1;
+                            } else {
+                                if (['h', 'H', 'ng', 'NG', 'ny', 'NY', 'Ny'].includes(nextConsTemp.key)) {
+                                    doubleIt = false;
+                                }
+                                else if (nextConsTemp.key === 'n' || nextConsTemp.key === 'N' || consChar2_1.includes('ꦟ')) {
+                                    consChar2_1 = consChar2_1.replace('ꦤ', 'ꦟ');
+                                    consChar2_2 = consChar2_2.replace('ꦟ', 'ꦤ');
+                                } 
+                                else if (nextConsTemp.key === 's' || nextConsTemp.key === 'sh' || consChar2_1.includes('ꦰ')) {
+                                    consChar2_1 = consChar2_1.replace('ꦱ', 'ꦰ');
+                                    doubleIt = false;
+                                } 
+                                else if (consChar2_1.includes('ꦡ')) {
+                                    doubleIt = false;
+                                }
                             }
                             
                             let cons2Idx = doubleNextIdx;
