@@ -1,11 +1,8 @@
 /**
  * SRIWEDARI.JS
  * Modul Transliterasi Aksara Jawa Paugeran Sriwedari (Murni 1926).
- * Kekhasan: Warga Talawya mutlak (nc/nj -> nyc/nyj tanpa kurung alternatif), 
- * aturan Cakra Keret, dan penyesuaian taling tarung miring (a -> o).
- * 
- * Perbaikan: Mengganti \b dengan (?<![a-zA-Za-zÀ-ÿ]) pada Anuswara Tancap
- * agar kata ber-vokal aksen (misal: naréndra) tidak terpotong.
+ * Perbaikan: Pengelompokan vokal hiatus (é/è -> h), Anuswara Tancap lookbehind,
+ * dan konversi Warga Talawya otomatis (nc/nj -> nyc/nyj).
  */
 
 const KAMUS_AKSARA = {
@@ -522,8 +519,6 @@ function transliterasiKalimat(teks) {
         .replace(/\^3/g, '\uA980')
         .replace(/\+3/g, '\uA9B3');
 
-    // PERBAIKAN REGEX: Gunakan (?<![a-zA-Za-zÀ-ÿ]) agar huruf vokal beraksen (seperti é pada naréndra)
-    // tidak memicu batas kata baru (\b) secara salah.
     teksDiolah = teksDiolah.replace(/(?<![a-zA-Za-zÀ-ÿ])ngg/gi, function(match) {
         return (match[0] === 'N' || match[0] === 'H') ? 'Hangg' : 'hangg';
     });
@@ -561,7 +556,6 @@ function transliterasiKata(rawLatin) {
     let marker = markerMatch ? markerMatch[1] : "";
     let cleanLatin = marker ? rawLatin.slice(0, -marker.length) : rawLatin;
 
-    // Transliterasi tunggal murni tanpa kurung alternatif (khas Sriwedari)
     return transliterasiSingleKata(cleanLatin) + marker;
 }
 
@@ -622,12 +616,10 @@ function transliterasiSingleKata(rawLatin) {
         });
     }
 
-    // ATURAN KHAS SRIWEDARI: Otomatisasi Warga Talawya (nc/nj -> nyc/nyj)
     latinProcessed = latinProcessed.replace(/nc/g, 'nyc').replace(/nj/g, 'nyj');
     latinProcessed = latinProcessed.replace(/Nc/g, 'Nyc').replace(/Nj/g, 'Nyj');
     latinProcessed = latinProcessed.replace(/NC/g, 'NYC').replace(/NJ/g, 'NYJ');
 
-    // ATURAN KHAS SRIWEDARI: Pemrosesan Cakra Keret (Pepet + r -> r + pepet)
     const prefixRegexStr = "kuma|kami|kapi|dak|tak|kok|tar|pra|ng|ny|ko|di|ha|ka|ke|sa|pa|pi|m|n|a";
     const keretRegex = new RegExp(`^(${prefixRegexStr})?([bcdfghjklmnpqrstvwxyz]*)([eê])r([bcdfghjklmnpqrstvwxyz])`, 'i');
     
@@ -666,8 +658,9 @@ function transliterasiSingleKata(rawLatin) {
 
     latinProcessed = latinProcessed.replace(/^(di)-([iI])/i, '$1hx$2');
 
-    latinProcessed = latinProcessed.replace(/([aAEÊaeê])-([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
-    latinProcessed = latinProcessed.replace(/([iIÉÈiéè])-([aiueoéèêAIUEOÉÈÊ])/g, '$1y$2');
+    // PERBAIKAN HIATUS (é/è dikelompokkan dengan vokal h)
+    latinProcessed = latinProcessed.replace(/([aAEÊaeêéèÉÈ])-([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
+    latinProcessed = latinProcessed.replace(/([iI])-([aiueoéèêAIUEOÉÈÊ])/g, '$1y$2');
     latinProcessed = latinProcessed.replace(/([uoUO])-([aiueoéèêAIUEOÉÈÊ])/g, '$1w$2');
 
     while (/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/.test(latinProcessed)) {
@@ -702,11 +695,12 @@ function transliterasiSingleKata(rawLatin) {
         });
     }
 
+    // PERBAIKAN HIATUS BERURUTAN LANGSUNG
     let prevLatin = "";
     while (latinProcessed !== prevLatin) {
         prevLatin = latinProcessed;
-        latinProcessed = latinProcessed.replace(/([aeêAEÊ])([aiueoéèê])/g, '$1h$2');
-        latinProcessed = latinProcessed.replace(/([iéèIÉÈ])([aiueoéèê])/g, '$1y$2');
+        latinProcessed = latinProcessed.replace(/([aeêéèAEÊÉÈ])([aiueoéèê])/g, '$1h$2');
+        latinProcessed = latinProcessed.replace(/([iI])([aiueoéèê])/g, '$1y$2');
         latinProcessed = latinProcessed.replace(/([uoUO])([aiueoéèê])/g, '$1w$2');
     }
 
@@ -721,7 +715,6 @@ function transliterasiSingleKata(rawLatin) {
             .replace(/dh/g, '3').replace(/Dh/g, '7').replace(/DH/g, '#')
             .replace(/th/g, '4').replace(/Th/g, '8').replace(/\$/g, 'TH');
 
-        // ATURAN KHAS SRIWEDARI: Fonotaktik a -> o miring
         let isTanpa = /^tanpa$/i.test(wordOnly);
         if (!isAnuswaraHanja && !isTanpa) {
             token = token.replace(/a([mnMN125!6@])([bcdfghjklpqrstvwxzBCDFGHJKLPQRSTVWXZ347#8$]+)a(h?a)?$/i, 'o$1$2a$3');
