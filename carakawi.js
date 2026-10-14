@@ -117,7 +117,7 @@ function tokenize(rawStr) {
 
     for (let i = 0; i < rawStr.length; i++) {
         let c = rawStr[i];
-        if (/[a-zA-ZéèÉÈ0-9\-\+_'\~!\#\^\[\]\|]/.test(c)) {
+        if (/[a-zA-ZéèÉÈ0-9\-\+_'\~!\#\^\[\]\*]/.test(c)) {
             currentWord += c;
         } else {
             if (currentWord) {
@@ -456,13 +456,13 @@ function transliterateKawi(rawText) {
                         // Menggunakan r diberi pasangan (ꦫ꧀) dengan struktur penyambungan asli
                         result += consChar + '꧀';
 
-                        // 1. PENDEKATAN B: Pasangan Kustom Eksplisit [C1|C2]
+                        // 1. PENDEKATAN B: Pasangan Kustom Eksplisit [C1*C2]
                         let handledOverrideB = false;
                         if (word[peekIdx] === '[') {
                             let closeBracketIdx = word.indexOf(']', peekIdx);
                             if (closeBracketIdx !== -1) {
                                 let content = word.substring(peekIdx + 1, closeBracketIdx);
-                                let parts = content.split('|');
+                                let parts = content.split('*');
                                 if (parts.length === 2) {
                                     let c1Match = matchConsonant(parts[0], 0);
                                     let c2Match = matchConsonant(parts[1], 0);
