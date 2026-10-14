@@ -1,8 +1,8 @@
 /**
  * SIMPLIFIED.JS
- * Modifikasi dari kbj.js untuk mendukung tambahan Aksara Rekan, Aksara Murda, Aksara Swara,
- * Vokal Panjang (aa, ii, uu, ree, lee, ai, au), dan Panglancar Vokal Ber-tanda Hubung (mi-i -> miyi, mu-u -> muwu).
- * Catatan Khusus: Aturan taling tarung palsu (a -> o) di tengah kata dihapus agar ejaan tetap literal (contoh: tandha -> ꦠꦤ꧀ꦝ).
+ * Modifikasi dari kbj.js untuk mendukung vokal panjang (aa, ii, uu, ree, lee, ai, au).
+ * Tanpa aturan taling tarung palsu (a -> o miring).
+ * Perbaikan: Pengelompokan vokal hiatus (é/è -> h).
  */
 
 const KAMUS_AKSARA = {
@@ -167,68 +167,43 @@ function prosesParamasastra() {
 
     if (['N', 'm', 'n', 'ny', 'ng', 'pa'].includes(ater)) {
         if (dasar.startsWith('ng')) {
-            stem = dasar;
-            altPrefixAppended = 'ha';
+            stem = dasar; altPrefixAppended = 'ha';
         } else if (dasar.startsWith('ny')) {
-            stem = dasar;
-            altPrefixAppended = 'ha';
+            stem = dasar; altPrefixAppended = 'ha';
         } else if (f === 'n') {
-            stem = dasar;
-            altPrefixAppended = 'ha';
+            stem = dasar; altPrefixAppended = 'ha';
         } else if (f === 'm') {
-            stem = dasar;
-            altPrefixAppended = 'ha';
+            stem = dasar; altPrefixAppended = 'ha';
         } else if (['d','j'].includes(f) || dasar.startsWith('dh')) {
             if (f === 'j') {
-                prefixAppended = 'han';
-                altPrefixAppended = 'hany';
-                stem = dasar;
+                prefixAppended = 'han'; altPrefixAppended = 'hany'; stem = dasar;
             } else {
-                prefixAppended = 'han';
-                stem = dasar;
+                prefixAppended = 'han'; stem = dasar;
             }
         } else if (f === 'b') {
-            prefixAppended = 'ham';
-            stem = dasar;
+            prefixAppended = 'ham'; stem = dasar;
         } else if (f === 'g') {
-            prefixAppended = 'hang';
-            stem = dasar;
-        }
-        else if (['p','w'].includes(f)) {
-            stem = 'm' + dasar.slice(1);
-            altPrefixAppended = 'ha';
-        }
-        else if (dasar.startsWith('th')) {
-            stem = 'n' + dasar.slice(2);
-            altPrefixAppended = 'ha';
-        }
-        else if (f === 't') {
-            stem = 'n' + dasar.slice(1);
-            altPrefixAppended = 'ha';
-        }
-        else if (['c','s'].includes(f)) {
-            stem = 'ny' + dasar.slice(1);
-            altPrefixAppended = 'ha';
-        }
-        else if (f === 'k') {
-            stem = 'ng' + dasar.slice(1);
-            altPrefixAppended = 'ha';
-        }
-        else if (isVowelStart) {
-            stem = 'ng' + dasar;
-            altPrefixAppended = 'hang';
-        }
-        else if (['l','r','y'].includes(f)) {
-            stem = 'ng' + dasar;
-            altPrefixAppended = 'ha';
-        }
-        else {
+            prefixAppended = 'hang'; stem = dasar;
+        } else if (['p','w'].includes(f)) {
+            stem = 'm' + dasar.slice(1); altPrefixAppended = 'ha';
+        } else if (dasar.startsWith('th')) {
+            stem = 'n' + dasar.slice(2); altPrefixAppended = 'ha';
+        } else if (f === 't') {
+            stem = 'n' + dasar.slice(1); altPrefixAppended = 'ha';
+        } else if (['c','s'].includes(f)) {
+            stem = 'ny' + dasar.slice(1); altPrefixAppended = 'ha';
+        } else if (f === 'k') {
+            stem = 'ng' + dasar.slice(1); altPrefixAppended = 'ha';
+        } else if (isVowelStart) {
+            stem = 'ng' + dasar; altPrefixAppended = 'hang';
+        } else if (['l','r','y'].includes(f)) {
+            stem = 'ng' + dasar; altPrefixAppended = 'ha';
+        } else {
             stem = 'ng' + dasar;
         }
 
         if (ater === 'pa') {
-            prefixAppended = 'pa';
-            altPrefixAppended = '';
+            prefixAppended = 'pa'; altPrefixAppended = '';
         }
     } else if (ater === 'pating_paN') {
         let nasal = '';
@@ -319,8 +294,7 @@ function prosesParamasastra() {
                 suffixMod = 'kna';
             } else if (panam === 'an_e') {
                 if (['e','é','è'].includes(rootVowel)) {
-                    body = pStem;
-                    suffixMod = 'anné';
+                    body = pStem; suffixMod = 'anné';
                 } else {
                     if (rootVowel === 'a') body = pStem;
                     else if (rootVowel === 'i') body = pStem.slice(0, -1) + 'è';
@@ -344,8 +318,7 @@ function prosesParamasastra() {
                     else suffixMod = panam;
                 } else if (rootVowel === 'i') {
                     if (['e', 'é', 'ipun'].includes(panam)) {
-                        body = pStem;
-                        suffixMod = (panam === 'ipun') ? 'nipun' : 'ne';
+                        body = pStem; suffixMod = (panam === 'ipun') ? 'nipun' : 'ne';
                     } else {
                         body = pStem.slice(0, -1) + 'é';
                         if(['ake', 'aké'].includes(panam)) suffixMod = 'kake';
@@ -418,13 +391,15 @@ function transliterasiKalimat(teks) {
     teksDiolah = teksDiolah
         .replace(/\|\|/g, '\uA9CB')
         .replace(/\|/g, '\uA9CA')
-        .replace(/\(\(/g, '\uA9C1')         .replace(/\)\)/g, '\uA9C2')
+        .replace(/\(\(/g, '\uA9C1')
+        .replace(/\)\)/g, '\uA9C2')
         .replace(/<_/g, '\uA9C3')
         .replace(/<>/g, '\uA9C4')
         .replace(/>\^/g, '\uA9C5')
         .replace(/\(o\)/g, '\uA9C6')
         .replace(/:/g, '\uA9C7')
-        .replace(/\[\\/g, '\uA9CC')         .replace(/\\\]/g, '\uA9CD')
+        .replace(/\[\\/g, '\uA9CC')
+        .replace(/\\\]/g, '\uA9CD')
         .replace(/\^2/g, '\uA9CE')
         .replace(/_2/g, '\uA9CF')
         .replace(/~~/g, '\uA9DE')
@@ -551,12 +526,11 @@ function transliterasiSingleKata(rawLatin) {
 
     latinProcessed = latinProcessed.replace(/^(di)-([iI])/i, '$1hx$2');
 
-    // 1. Konversi vokal pemisah diftong ber-tanda hubung (a-u -> ahu, a-i -> ahi, dsb.)
-    latinProcessed = latinProcessed.replace(/([aAEÊaeê])-([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
-    latinProcessed = latinProcessed.replace(/([iIÉÈiéè])-([aiueoéèêAIUEOÉÈÊ])/g, '$1y$2');
+    // PERBAIKAN HIATUS (é/è dikelompokkan dengan vokal h)
+    latinProcessed = latinProcessed.replace(/([aAEÊaeêéèÉÈ])-([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
+    latinProcessed = latinProcessed.replace(/([iI])-([aiueoéèêAIUEOÉÈÊ])/g, '$1y$2');
     latinProcessed = latinProcessed.replace(/([uoUO])-([aiueoéèêAIUEOÉÈÊ])/g, '$1w$2');
 
-    // 2. Pemrosesan sufiks/imbuhan ber-tanda hubung secara berulang (iteratif while-loop)
     while (/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/.test(latinProcessed)) {
         latinProcessed = latinProcessed.replace(/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/g, function(match, root, suffix) {
             if (root.toLowerCase() === suffix.toLowerCase()) return root + suffix;
@@ -589,11 +563,12 @@ function transliterasiSingleKata(rawLatin) {
         });
     }
 
+    // PERBAIKAN HIATUS BERURUTAN LANGSUNG
     let prevLatin = "";
     while (latinProcessed !== prevLatin) {
         prevLatin = latinProcessed;
-        latinProcessed = latinProcessed.replace(/([aeêAEÊ])([aiueoéèê])/g, '$1h$2');
-        latinProcessed = latinProcessed.replace(/([iéèIÉÈ])([aiueoéèê])/g, '$1y$2');
+        latinProcessed = latinProcessed.replace(/([aeêéèAEÊÉÈ])([aiueoéèê])/g, '$1h$2');
+        latinProcessed = latinProcessed.replace(/([iI])([aiueoéèê])/g, '$1y$2');
         latinProcessed = latinProcessed.replace(/([uoUO])([aiueoéèê])/g, '$1w$2');
     }
 
@@ -607,8 +582,6 @@ function transliterasiSingleKata(rawLatin) {
             .replace(/ny/g, '2').replace(/Ny/g, '6').replace(/NY/g, '@')
             .replace(/dh/g, '3').replace(/Dh/g, '7').replace(/DH/g, '#')
             .replace(/th/g, '4').replace(/Th/g, '8').replace(/\$/g, 'TH');
-
-        // [KHUSUS SIMPLIFIED.JS]: Aturan taling tarung palsu (penilaian a -> o sebelum kelompok nasal) dihapus.
 
         wordOnly = token
             .replace(/1/g, 'ng').replace(/5/g, 'Ng').replace(/!/g, 'NG')
