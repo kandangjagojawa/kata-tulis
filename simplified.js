@@ -618,6 +618,12 @@ function transliterasiSingleKata(rawLatin) {
         if (latin[i] === '-') {
             i++; continue;
         }
+
+        // Abaikan simbol pemicu Pendekatan A (~, !), B ([, ], *), dan C (#, ^)
+        if (/[\~!\#\^\[\]\*]/.test(latin[i])) {
+            i++;
+            continue;
+        }
         
         if (!/[a-zA-ZéèêÉÈÊ]/.test(latin[i])) {
             res += latin[i]; i++; continue; 
@@ -773,4 +779,16 @@ function transliterasiSingleKata(rawLatin) {
         if (c !== "") isFirstAksara = false;
     }
     return res;
+}
+
+if (typeof window !== 'undefined') {
+    window.transliterasiKalimat = transliterasiKalimat;
+    window.prosesParamasastra = prosesParamasastra;
+    window.updateParamFromManualInput = updateParamFromManualInput;
+    window.salinParamLatin = salinParamLatin;
+    window.salinParamJawa = salinParamJawa;
+    window.prosesDwipurwa = prosesDwipurwa;
+    window.salinDwipurwaLatin = salinDwipurwaLatin;
+    window.salinDwipurwaJawa = salinDwipurwaJawa;
+    window.updateDwipurwaFromManualInput = updateDwipurwaFromManualInput;
 }
