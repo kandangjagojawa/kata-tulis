@@ -1,8 +1,7 @@
 /**
  * SRIWEDARI.JS
- * Modul Transliterasi Aksara Jawa Paugeran Sriwedari.
- * Perbaikan: Mengganti \b dengan (?<![a-zA-Za-zÀ-ÿ]) untuk mencegah kesalahan
- * deteksi Anuswara Tancap pada kata ber-vokal aksen (misal: naréndra).
+ * Modul Transliterasi Aksara Jawa Paugeran Sriwedari (Murni tanpa alternatif KBJ).
+ * Perbaikan: Hanya perbaikan Regex lookbehind pada vokal beraksen (misal: naréndra).
  */
 
 const KAMUS_AKSARA = {
@@ -503,15 +502,13 @@ function transliterasiKalimat(teks) {
     teksDiolah = teksDiolah
         .replace(/\|\|/g, '\uA9CB')
         .replace(/\|/g, '\uA9CA')
-        .replace(/\(\(/g, '\uA9C1')
-        .replace(/\)\)/g, '\uA9C2')
+        .replace(/\(\(/g, '\uA9C1')         .replace(/\)\)/g, '\uA9C2')
         .replace(/<_/g, '\uA9C3')
         .replace(/<>/g, '\uA9C4')
         .replace(/>\^/g, '\uA9C5')
         .replace(/\(o\)/g, '\uA9C6')
         .replace(/:/g, '\uA9C7')
-        .replace(/\[\\/g, '\uA9CC')
-        .replace(/\\\]/g, '\uA9CD')
+        .replace(/\[\\/g, '\uA9CC')         .replace(/\\\]/g, '\uA9CD')
         .replace(/\^2/g, '\uA9CE')
         .replace(/_2/g, '\uA9CF')
         .replace(/~~/g, '\uA9DE')
@@ -558,15 +555,7 @@ function transliterasiKata(rawLatin) {
     let marker = markerMatch ? markerMatch[1] : "";
     let cleanLatin = marker ? rawLatin.slice(0, -marker.length) : rawLatin;
 
-    if (/[a-zA-Z]/i.test(cleanLatin) && /(nc|nj)/i.test(cleanLatin) && !/^\(/.test(cleanLatin)) {
-        let mainRes = transliterasiSingleKata(cleanLatin);
-        let altLatin = cleanLatin.replace(/nc/gi, 'nyc').replace(/nj/gi, 'nyj');
-        let altRes = transliterasiSingleKata(altLatin);
-        
-        if (mainRes !== altRes) {
-            return `${mainRes} (${altRes})${marker}`;
-        }
-    }
+    // Menghasilkan transliterasi tunggal murni sesuai Paugeran Sriwedari
     return transliterasiSingleKata(cleanLatin) + marker;
 }
 
