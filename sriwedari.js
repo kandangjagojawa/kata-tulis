@@ -715,11 +715,6 @@ function transliterasiSingleKata(rawLatin) {
             .replace(/dh/g, '3').replace(/Dh/g, '7').replace(/DH/g, '#')
             .replace(/th/g, '4').replace(/Th/g, '8').replace(/\$/g, 'TH');
 
-        let isTanpa = /^tanpa$/i.test(wordOnly);
-        if (!isAnuswaraHanja && !isTanpa) {
-            token = token.replace(/a([mnMN125!6@])([bcdfghjklpqrstvwxzBCDFGHJKLPQRSTVWXZ347#8$]+)a(h?a)?$/i, 'o$1$2a$3');
-        }
-
         wordOnly = token
             .replace(/1/g, 'ng').replace(/5/g, 'Ng').replace(/!/g, 'NG')
             .replace(/2/g, 'ny').replace(/6/g, 'Ny').replace(/@/g, 'NY')
@@ -754,6 +749,12 @@ function transliterasiSingleKata(rawLatin) {
 
         if (latin[i] === '-') {
             i++; continue;
+        }
+
+        // Abaikan simbol pemicu Pendekatan A (~, !), B ([, ], *), dan C (#, ^)
+        if (/[\~!\#\^\[\]\*]/.test(latin[i])) {
+            i++;
+            continue;
         }
         
         if (!/[a-zA-ZéèêÉÈÊ]/.test(latin[i])) {
