@@ -15,6 +15,9 @@
 function transliterateToJGST(aksaraStr, fnKey) {
     if (!aksaraStr || aksaraStr === '-') return '-';
 
+    // Abaikan simbol mentah pemicu Pendekatan A (~, !), B ([, ], *), dan C (#, ^)
+    aksaraStr = aksaraStr.replace(/[\~!\#\^\[\]\*]/g, '');
+
     const isModern = ['kbj', 'sriwedari', 'simplified'].includes(fnKey);
 
     // Map Aksara Jawa ke JGST
@@ -258,6 +261,11 @@ function transliterateToJGST(aksaraStr, fnKey) {
         }
 
         // 7. Karakter Passthrough (Spasi, Marker \uE000, Tanda Baca Latin)
+        if (/[\~!\#\^\[\]\*]/.test(ch)) {
+            i++;
+            continue;
+        }
+
         result += ch;
         i++;
     }
