@@ -577,6 +577,12 @@ function transliterasiSingleKata(rawLatin) {
             i++; continue; 
         }
         
+        // Abaikan simbol pemicu Pendekatan A (~, !), B ([, ], *), dan C (#, ^)
+        if (/[\~!\#\^\[\]\*]/.test(latin[i])) {
+            i++;
+            continue;
+        }
+
         if (!/[a-zA-ZéèêÉÈÊ]/i.test(latin[i])) {
             res += latin[i]; i++; continue; 
         }
