@@ -216,7 +216,7 @@ function transliterateKawi(rawText) {
                 nextWordToken = tokens[nt];
                 break;
             }
-            if (tokens[nt].type === 'sep' && (tokens[nt].val === '.' || tokens[nt].val === ',' || tokens[nt].val === '\n')) {
+            if (tokens[nt].type === 'sep' && tokens[nt].val !== ' ') {
                 break;
             }
         }
