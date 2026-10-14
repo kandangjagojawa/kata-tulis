@@ -10,7 +10,8 @@
  * Penyesuaian R mati + ya: Aksara ra tidak dipengkal, melainkan layar + ya dipengkal (ꦂꦪꦾ).
  * 
  * Pembaruan:
- * 1. Awalan pi/pri + kata berawalan ha/vokal (pi+ala=ꦥꦶꦲꦭ, pi+andel=ꦥꦶꦲꦤ꧀ꦢꦼꦭ꧀).
+ * 1. Ater-ater pi- / pri- WAJIB menggunakan tanda hubung (pi-ala=ꦥꦶꦲꦭ, pri-andel=ꦥꦿꦶꦲꦤ꧀ꦢꦼꦭ꧀).
+ *    Kata dasar tanpa tanda hubung seperti piano (ꦥꦶꦪꦤꦺꦴ) & piagam (ꦥꦶꦪꦒꦩ꧀) tetap alami.
  * 2. Aksara na (ꦤ) dan sa (ꦱ) tetap menggunakan ꦤ/ꦱ setelah ra (dengan/tanpa sandhangan),
  *    cakra, atau keret. (Mati r di tengah kata/Layar tetap ꦂꦟ / ꦂꦰ).
  */
@@ -162,17 +163,9 @@ function transliterateKawi(rawText) {
     
     rawText = processMacros(rawText);
 
-    // --- REVISI 1: AWALAN PI / PRI + KATA BERAWALAN HA / VOKAL ---
-    // Mencegah luluh hiatus menjadi 'y' (misal: pi-ala -> pihala -> ꦥꦶꦲꦭ, pi-andel -> pihandel -> ꦥꦶꦲꦤ꧀ꦢꦼꦭ꧀)
-    rawText = rawText.replace(/(?<![a-zA-Za-zÀ-ÿ])(pi|pri)-?([aiueoéèêAIUEOÉÈÊ])/gi, function(match, p1, p2) {
-        let p1Low = p1.toLowerCase();
-        let p2Low = p2.toLowerCase();
-        if (p1Low === 'pi' && p2Low === 'a') {
-            let fullMatch = match.toLowerCase().replace('-', '');
-            if (fullMatch.startsWith('piambak')) {
-                return p1 + 'y' + p2;
-            }
-        }
+    // --- REVISI 1: AWALAN PI- / PRI- DENGAN TANDA HUBUNG + VOKAL ---
+    // Mewajibkan tanda hubung (pi- / pri-) agar kata seperti 'piano' dan 'piagam' tidak terpengaruh
+    rawText = rawText.replace(/(?<![a-zA-Za-zÀ-ÿ])(pi|pri)-([aiueoéèêAIUEOÉÈÊ])/gi, function(match, p1, p2) {
         return p1 + 'h' + p2;
     });
 
@@ -337,8 +330,6 @@ function transliterateKawi(rawText) {
                     nextConsTemp = matchConsonant(word, peekIdx);
                 }
 
-                // --- REVISI 2: Dihapus logika rSeenInWord agar na (ꦤ) dan sa (ꦱ) ---
-                // tetap berupa ꦤ & ꦱ setelah ra / cakra / keret.
                 if (cons.key === 's') {
                     if (lastConsKey === 'k' && lastConsIsMati) consChar = 'ꦰ';
                 }
@@ -486,7 +477,6 @@ function transliterateKawi(rawText) {
                     continue;
                 }
 
-                // --- ATURAN R MATI / LAYAR (ꦂ) DI TENGAH KATA TETAP UTUH & UNCHANGED ---
                 if (cons.key === 'r') {
                     if (!isWordEnd) {
                         result += 'ꦂ'; 
