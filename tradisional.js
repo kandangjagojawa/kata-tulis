@@ -132,7 +132,7 @@ function tokenize(rawStr) {
 
     for (let i = 0; i < rawStr.length; i++) {
         let c = rawStr[i];
-        if (/[a-zA-ZéèÉÈ0-9\-\+_']/.test(c)) {
+        if (/[a-zA-ZéèÉÈ0-9\-\+_'\~!\#\^\[\]\|]/.test(c)) {
             currentWord += c;
         } else {
             if (currentWord) {
