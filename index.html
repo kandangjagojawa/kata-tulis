@@ -2198,6 +2198,21 @@
         };
     }
 
+    function bersihkanKonsonanDobelImbuhan(teks) {
+        if (!teks) return teks;
+        return teks
+            .replace(/-nni\b/g, '-ni')
+            .replace(/-nnana\b/g, '-ana')
+            .replace(/-nnan\b/g, '-an')
+            .replace(/-nnanné\b/g, '-anné')
+            .replace(/-nnanne\b/g, '-anne')
+            .replace(/-kake\b/g, '-ake')
+            .replace(/-kaké\b/g, '-aké')
+            .replace(/-kaken\b/g, '-aken')
+            .replace(/-nen\b/g, '-en')
+            .replace(/-kna\b/g, '-na');
+    }
+
     function processCardOutput(moduleId, fnKey, rawInput, isSastraLampah = false, checkRekanKhusus = false) {
         const outAksara = document.getElementById(`out${moduleId}_Aksara`);
         const outJGST = document.getElementById(`out${moduleId}_JGST`);
@@ -2215,8 +2230,13 @@
         }
 
         let formattedInput = rawInput;
+
+        if (['Tradisional', 'CaraKawi', 'Praktis'].includes(moduleId)) {
+            formattedInput = bersihkanKonsonanDobelImbuhan(formattedInput);
+        }
+
         if (moduleId === 'Tradisional' || moduleId === 'CaraKawi') {
-            formattedInput = rawInput.replace(/e'/g, 'é').replace(/E'/g, 'É');
+            formattedInput = formattedInput.replace(/e'/g, 'é').replace(/E'/g, 'É');
         }
 
         let aksaraUtuh = runModuleTransliteration(fnKey, formattedInput);
