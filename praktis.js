@@ -172,12 +172,10 @@ function transliterasiKalimat(teks) {
     if (!teks) return "";
     let teksDiolah = teks.replace(/e'/g, 'é').replace(/E'/g, 'É');
 
-    // Pre-processing: Resolusi Sintaks Kontrol & Simbol Khusus
     teksDiolah = teksDiolah
         .replace(/\[[a-zA-ZéèêÉÈÊ]+\*([a-zA-ZéèêÉÈÊ]+)\]/gi, '$1')
         .replace(/[\~!\#\^]/g, '');
 
-    // Mapping Simbol & Unicode Aksara Jawa
     teksDiolah = teksDiolah
         .replace(/\|\|/g, '\uA9CB')
         .replace(/\|/g, '\uA9CA')
@@ -200,7 +198,6 @@ function transliterasiKalimat(teks) {
         let kataKata = line.split(/\s+/);
         let kataJawa = kataKata.map(kata => transliterasiKata(kata));
         
-        // Scripto Continua Murni: kata disambung langsung tanpa penyisipan ZWNJ
         let lineJoined = kataJawa.join('');
         
         lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦣ/g, '꧀$1ꦝ');
@@ -224,7 +221,6 @@ function transliterasiSingleKata(rawLatin) {
 
     let isKataNingrat = latinProcessed.toLowerCase().includes('ningrat');
 
-    // Singkatan titik (a.b.c.) -> Aksara Swara / Nglegena + Pada Lingsa
     if (/^([a-zA-Z]\.)+$/.test(latinProcessed)) {
         let abbr = "";
         for (let j = 0; j < latinProcessed.length; j += 2) {
@@ -243,7 +239,6 @@ function transliterasiSingleKata(rawLatin) {
         return abbr;
     }
 
-    // 1. DETEKSI TEMBUNG DWILINGGA (KATA ULANG)
     let dwiMatch = latinProcessed.match(/^([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)([^a-zA-ZéèêÉÈÊ]*)$/i);
     if (dwiMatch) {
         let root = dwiMatch[1];
@@ -257,7 +252,6 @@ function transliterasiSingleKata(rawLatin) {
         }
     }
 
-    // 2. PANAMBANG NATURAL & ATER-ATER (LEBUR TANPA DOBEL KONSONAN / HAPUS TANDA HUBUNG KATA DASAR)
     latinProcessed = latinProcessed.replace(/([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)/g, '$1$2');
 
     let res = "";
@@ -312,7 +306,6 @@ function transliterasiSingleKata(rawLatin) {
         let c3_upper = c3_raw.toUpperCase();
         let c2_upper = c2_raw.toUpperCase();
 
-        // Cek Vokal Panjang Swara Mandiri (REE, LEE, AA, II, UU, AI, AU)
         if ((c3_upper === 'REE' || c3_upper === 'LEE') && c3_raw === c3_upper && SWARA_MAP[c3_upper]) {
             c = c3_upper; isSwara = true; jump = 3;
         } 
@@ -323,9 +316,9 @@ function transliterasiSingleKata(rawLatin) {
             c = 'ny'; jump = 2; isMurda = true;
         } else if (c1_raw === 'J' && AKSARA_MURDA['j']) {
             c = 'j'; jump = 1; isMurda = true;
-        } else if (['ngx'].includes(c3)) {
+        } else if (KAMUS_AKSARA[c3] && c3.length === 3) {
             c = c3; jump = 3;
-        } else if (['ng','ny','dh','th','nx','kh','dz','gh','kx','rx','hx','sy','sh'].includes(c2)) {
+        } else if (KAMUS_AKSARA[c2] && c2.length === 2) {
             c = c2; jump = 2;
         } else if (KAMUS_AKSARA[c1]) {
             c = c1; jump = 1;
@@ -336,7 +329,6 @@ function transliterasiSingleKata(rawLatin) {
             c = c1_raw; isSwara = true; jump = 1;
         }
 
-        // 3. VOKAL AWAL KATA & HIATUS (VOKAL MANDIRI/RANGKAP -> OTOMATIS AKSARA SWARA)
         if (c === "" && /[aieéèêou]/i.test(c1)) {
             let sub2V_raw = i+1 < latin.length ? latin.substring(i, i+2) : "";
             let sub2V_upper = sub2V_raw.toUpperCase();
@@ -365,7 +357,6 @@ function transliterasiSingleKata(rawLatin) {
         let lowerLatin = latin.toLowerCase();
         let medial = "";
         
-        // Medial Konsonan (Pengkal / Cakra)
         if (!isSwara && i < lowerLatin.length && (lowerLatin[i] === 'y' || lowerLatin[i] === 'r')) {
             if (i+1 < lowerLatin.length && /[aieéèêou]/.test(lowerLatin[i+1])) {
                 medial = lowerLatin[i]; 
@@ -375,7 +366,6 @@ function transliterasiSingleKata(rawLatin) {
             }
         }
 
-        // 4. PENANGANAN SANDHANGAN VOKAL SETELAH KONSONAN (TERMASUK DIFTONG AI & AU)
         let v = "";
         if (!isSwara && i < lowerLatin.length) {
             let sub3V = lowerLatin.substring(i, i+3);
@@ -408,7 +398,6 @@ function transliterasiSingleKata(rawLatin) {
             }
         }
 
-        // Konsonan Mati (Tanpa Vokal)
         if (v === "" && !isSwara) {
             if (c === 'ng' && !isFirstAksara && canTakeSandhangan) res += 'ꦁ'; 
             else if (c === 'r' && !isFirstAksara && canTakeSandhangan) res += 'ꦂ'; 
@@ -451,8 +440,8 @@ function transliterasiSingleKata(rawLatin) {
                 else if (v === 'u') res += 'ꦸ';
                 else if (v === 'uu') res += 'ꦹ';
                 else if (v === 'aa') res += 'ꦴ';
-                else if (v === 'ai') res += 'ꦻ';   // Sandhangan Dirga Mure
-                else if (v === 'au') res += 'ꦻꦴ';  // Sandhangan Au
+                else if (v === 'ai') res += 'ꦻ';   
+                else if (v === 'au') res += 'ꦻꦴ';  
                 else if (v === 'ree') res += 'ꦉꦴ';
                 else if (v === 'lee') res += 'ꦋ';
                 else if (v === 'é' || v === 'è') res += 'ꦺ';
