@@ -301,12 +301,12 @@
                 </div>
                 <div class="card-toggles">
                     <span class="toggle-label">Tata Tulis:</span>
-                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Praktis" checked> Aksara Jawa Praktis</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="KBJ" checked> 1. Paugeran KBJ</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Sriwedari" checked> 2. Paugeran Sriwedari</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Simplified" checked> 3. KAJ Simplified</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Tradisional" checked> 4. KAJ Tradisional</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="CaraKawi" checked> 5. Cara Kawi (Mardi Kawi)</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Praktis" checked> Aksara Jawa Praktis</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan"> 6. Ringkasan Transliterasi</label>
                 </div>
                 <div class="sub-toggles">
@@ -341,27 +341,6 @@
     </div>
 
     <div class="grid-container">
-        <!-- Aksara Jawa Praktis -->
-        <div class="card" id="cardPraktis">
-            <div class="card-header">Aksara Jawa Praktis</div>
-            <div class="output-group group-aksara">
-                <div class="output-label">Aksara Jawa</div>
-                <div id="outPraktis_Aksara" class="box-aksara font-ngayogyann">-</div>
-            </div>
-            <div class="output-group group-jgst">
-                <div class="output-label">JGST</div>
-                <div id="outPraktis_JGST" class="box-jgst">-</div>
-            </div>
-            <div class="output-group group-ipa">
-                <div class="output-label">IPA</div>
-                <div id="outPraktis_IPA" class="box-ipa">-</div>
-            </div>
-            <div class="output-group group-pujl">
-                <div class="output-label">PUJL</div>
-                <div id="outPraktis_PUJL" class="box-pujl">-</div>
-            </div>
-        </div>
-
         <!-- 1. Paugeran KBJ -->
         <div class="card" id="cardKBJ">
             <div class="card-header">1. Paugeran KBJ</div>
@@ -467,20 +446,33 @@
             </div>
         </div>
 
+        <!-- Aksara Jawa Praktis -->
+        <div class="card" id="cardPraktis">
+            <div class="card-header">Aksara Jawa Praktis</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outPraktis_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outPraktis_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outPraktis_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outPraktis_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
         <!-- 6. Ringkasan Transliterasi (Default Hidden) -->
         <div class="card" id="cardRingkasan" style="display: none;">
             <div class="card-header">6. Ringkasan Transliterasi</div>
             <div class="output-group group-pujl">
                 <div class="output-label">PUJL</div>
                 <div id="outRingkasan_PUJL" class="box-pujl">-</div>
-            </div>
-            <div class="output-group">
-                <div class="output-label">Aksara Jawa Praktis</div>
-                <div id="outRingkasan_Praktis" class="box-aksara font-ngayogyann">-</div>
-                <div class="ringkasan-sub-row">
-                    <div id="outRingkasan_Praktis_JGST" class="box-jgst group-jgst">-</div>
-                    <div id="outRingkasan_Praktis_IPA" class="box-ipa group-ipa">-</div>
-                </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Paugeran KBJ</div>
@@ -520,6 +512,14 @@
                 <div class="ringkasan-sub-row">
                     <div id="outRingkasan_CaraKawi_JGST" class="box-jgst group-jgst">-</div>
                     <div id="outRingkasan_CaraKawi_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Aksara Jawa Praktis</div>
+                <div id="outRingkasan_Praktis" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Praktis_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Praktis_IPA" class="box-ipa group-ipa">-</div>
                 </div>
             </div>
         </div>
@@ -2158,14 +2158,18 @@
         });
     });
 
-    document.querySelectorAll('.toggle-sub').forEach(cb => {
-        cb.addEventListener('change', (e) => {
-            const subType = e.target.dataset.sub;
+    function updateSubToggles() {
+        document.querySelectorAll('.toggle-sub').forEach(cb => {
+            const subType = cb.dataset.sub;
             const groups = document.querySelectorAll('.group-' + subType);
             groups.forEach(group => {
-                group.style.display = e.target.checked ? '' : 'none';
+                group.style.display = cb.checked ? 'block' : 'none';
             });
         });
+    }
+
+    document.querySelectorAll('.toggle-sub').forEach(cb => {
+        cb.addEventListener('change', updateSubToggles);
     });
 
     const sliderFontSize = document.getElementById('sliderFontSize');
@@ -2200,6 +2204,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
         initEngineFrames();
+        updateSubToggles();
         setTimeout(processTransliteration, 50);
     });
 </script>
