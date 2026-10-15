@@ -203,13 +203,9 @@ function transliterasiKalimat(teks) {
         for (let k = 0; k < kataJawa.length; k++) {
             if (k > 0) {
                 let prev = kataJawa[k - 1];
-                let curr = kataJawa[k];
-                // Pencegahan Pasangan Tumpuk Lintas Kata (Double / Triple Pasangan):
-                // Jika kata sebelumnya diakhiri Pangkon (꧀) dan kata berikutnya diawali 
-                // gugus konsonan ber-Pangkon (seperti mb-, nd-, ngg-, nj-, nc-, mbl-, dll),
-                // sisipkan Zero-Width Non-Joiner (\u200C) agar kata pertama tetap menggunakan
-                // Pangkon mandiri tanpa menumpukkan Pasangan secara ilegal.
-                if (/꧀[\u200C\uE000]*$/.test(prev) && /^[\uA980-\uA9B3]+꧀/.test(curr)) {
+                // Memisah batas kata jika kata pertama berakhiran konsonan mati (Pangkon),
+                // sehingga kata pertama dipangkon mandiri dan kata kedua bebas membentuk tumpuk secara utuh.
+                if (/꧀[\u200C\uE000]*$/.test(prev)) {
                     lineJoined += '\u200C';
                 }
             }
@@ -429,10 +425,6 @@ function transliterasiSingleKata(rawLatin) {
             else if (c === 'h' && !isFirstAksara && canTakeSandhangan) res += 'ꦃ'; 
             else if (c !== "") {
                 let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
-                // Mencegah penumpukan Pasangan ganda/triple di dalam kata (seperti mbl-, ndl-, nggl-)
-                if (res.endsWith('꧀')) {
-                    res += '\u200C';
-                }
                 res += base + '꧀'; 
             }
             
