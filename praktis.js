@@ -203,10 +203,16 @@ function transliterasiKalimat(teks) {
         for (let k = 0; k < kataJawa.length; k++) {
             if (k > 0) {
                 let prev = kataJawa[k - 1];
-                // Memisah batas kata jika kata pertama berakhiran konsonan mati (Pangkon),
-                // sehingga kata pertama dipangkon mandiri dan kata kedua bebas membentuk tumpuk secara utuh.
+                let curr = kataJawa[k];
+
+                // Jika kata sebelumnya diakhiri Pangkon (꧀), periksa kata berikutnya.
+                // Jika kata berikutnya diawali panjingan (la/wa) atau sandhangan wyanjana (pengkal/cakra/cakra-keret),
+                // IZINKAN membentuk pasangan tumpuk secara murni (TANPA ZWNJ \u200C).
                 if (/꧀[\u200C\uE000]*$/.test(prev)) {
-                    lineJoined += '\u200C';
+                    let hasPanjinganOrMedial = /^.꧀[ꦭꦮ]|^.[ꦾꦿꦽ]/.test(curr);
+                    if (!hasPanjinganOrMedial) {
+                        lineJoined += '\u200C';
+                    }
                 }
             }
             lineJoined += kataJawa[k];
