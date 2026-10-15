@@ -387,12 +387,10 @@ function transliterasiKalimat(teks) {
     if (!teks) return "";
     let teksDiolah = teks.replace(/e'/g, 'é').replace(/E'/g, 'É');
 
-    // Pre-processing Solusi A: Resolusi Sintaks Pendekatan B [C1*C2] -> C2 & Hapus Simbol Kontrol A, B, C
     teksDiolah = teksDiolah
         .replace(/\[[a-zA-ZéèêÉÈÊ]+\*([a-zA-ZéèêÉÈÊ]+)\]/gi, '$1')
         .replace(/[\~!\#\^]/g, '');
 
-    // Mapping Simbol & Pada Unicode Aksara Jawa
     teksDiolah = teksDiolah
         .replace(/\|\|/g, '\uA9CB')
         .replace(/\|/g, '\uA9CA')
@@ -445,7 +443,6 @@ function transliterasiKata(rawLatin) {
 function transliterasiSingleKata(rawLatin) {
     if (!rawLatin) return "";
 
-    // Pre-processing Solusi A: Resolusi Sintaks Pendekatan B [C1*C2] -> C2 & Hapus Simbol Kontrol A, B, C
     rawLatin = rawLatin
         .replace(/\[[a-zA-ZéèêÉÈÊ]+\*([a-zA-ZéèêÉÈÊ]+)\]/gi, '$1')
         .replace(/[\~!\#\^]/g, '');
@@ -512,7 +509,6 @@ function transliterasiSingleKata(rawLatin) {
 
     latinProcessed = latinProcessed.replace(/^(di)-([iI])/i, '$1hx$2');
 
-    // DETEKSI & PENANGANAN KHUSUS TEMBUNG DWILINGGA (KATA ULANG)
     let dwiMatch = latinProcessed.match(/^([a-zA-ZéèêÉÈÊ]+)-([a-zA-ZéèêÉÈÊ]+)([^a-zA-ZéèêÉÈÊ]*)$/i);
     if (dwiMatch) {
         let root = dwiMatch[1];
@@ -526,7 +522,6 @@ function transliterasiSingleKata(rawLatin) {
         }
     }
 
-    // PERBAIKAN HIATUS (é/è dikelompokkan dengan vokal h)
     latinProcessed = latinProcessed.replace(/([aAEÊaeêéèÉÈ])-([aiueoéèêAIUEOÉÈÊ])/g, '$1h$2');
     latinProcessed = latinProcessed.replace(/([iI])-([aiueoéèêAIUEOÉÈÊ])/g, '$1y$2');
     latinProcessed = latinProcessed.replace(/([uoUO])-([aiueoéèêAIUEOÉÈÊ])/g, '$1w$2');
@@ -561,7 +556,6 @@ function transliterasiSingleKata(rawLatin) {
         });
     }
 
-    // PERBAIKAN HIATUS BERURUTAN LANGSUNG
     let prevLatin = "";
     while (latinProcessed !== prevLatin) {
         prevLatin = latinProcessed;
@@ -652,9 +646,9 @@ function transliterasiSingleKata(rawLatin) {
             c = 'ny'; jump = 2; isMurda = true;
         } else if (c1_raw === 'J' && AKSARA_MURDA['j']) {
             c = 'j'; jump = 1; isMurda = true;
-        } else if (['ngx'].includes(c3)) {
+        } else if (KAMUS_AKSARA[c3] && c3.length === 3) {
             c = c3; jump = 3;
-        } else if (['ng','ny','dh','th','nx','kh','dz','gh','kx','rx','hx','sy','sh'].includes(c2)) {
+        } else if (KAMUS_AKSARA[c2] && c2.length === 2) {
             c = c2; jump = 2;
         } else if (KAMUS_AKSARA[c1]) {
             c = c1; jump = 1;
