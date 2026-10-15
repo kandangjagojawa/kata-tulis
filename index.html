@@ -65,6 +65,8 @@
             text-decoration: none;
             box-shadow: 0 3px 8px rgba(220, 38, 38, 0.4);
             transition: all 0.2s ease-in-out;
+            border: none;
+            cursor: pointer;
         }
         .btn-petunjuk-latin:hover {
             background-color: #b91c1c;
@@ -273,6 +275,158 @@
             margin-top: 2px;
             font-weight: 600;
         }
+
+        /* GAYA POP-UP MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            background: #1e293b;
+            color: #ffffff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.15rem;
+            font-weight: bold;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.6rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: #ffffff; }
+        .modal-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .form-group-custom {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group-custom label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #334155;
+        }
+        .form-group-custom select, .form-group-custom input[type="text"] {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group-custom select:focus, .form-group-custom input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+        .modal-preview-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .modal-preview-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .modal-latin-out {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #0f172a;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            word-break: break-all;
+        }
+        .modal-aksara-out {
+            font-size: 1.8rem;
+            line-height: 1.5;
+            color: #0284c7;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            min-height: 50px;
+            word-break: break-all;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .btn-modal-action {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-modal-copy {
+            background-color: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-modal-copy:hover {
+            background-color: #e2e8f0;
+        }
+        .btn-modal-use {
+            background-color: #16a34a;
+            color: #ffffff;
+        }
+        .btn-modal-use:hover {
+            background-color: #15803d;
+        }
     </style>
 </head>
 <body>
@@ -287,7 +441,11 @@
 <div class="container">
     <div class="header-bar">
         <h1>Membandingkan Tata Tulis Aksara Jawa</h1>
-        <a href="#petunjukLatin" class="btn-petunjuk-latin">📖 Petunjuk Penulisan Huruf Latin</a>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button type="button" id="btnOpenDwipurwa" class="btn-petunjuk-latin" style="background-color: #0284c7; box-shadow: 0 3px 8px rgba(2, 132, 199, 0.4);">🌀 Membentuk Tembung Dwipurwa</button>
+            <button type="button" id="btnOpenImbuhan" class="btn-petunjuk-latin" style="background-color: #0d9488; box-shadow: 0 3px 8px rgba(13, 148, 136, 0.4);">🧩 Memberi Imbuhan</button>
+            <a href="#petunjukLatin" class="btn-petunjuk-latin">📖 Petunjuk Penulisan Huruf Latin</a>
+        </div>
     </div>
 
     <div class="input-section">
@@ -1723,6 +1881,137 @@
     </div>
 </div>
 
+<!-- MODAL TEMBUNG DWIPURWA -->
+<div class="modal-overlay" id="modalDwipurwa">
+    <div class="modal-box">
+        <div class="modal-header">
+            <span>🌀 Membentuk Tembung Dwipurwa</span>
+            <button class="modal-close" id="btnCloseDwipurwa">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group-custom">
+                    <label for="dwipAter">Ater-ater (Awalan - Opsional):</label>
+                    <select id="dwipAter">
+                        <option value="" selected>(Tanpa Ater-ater)</option>
+                        <option value="N">N- (Anuswara: m-, n-, ny-, ng-)</option>
+                        <option value="di">di-</option>
+                        <option value="ka">ka-</option>
+                        <option value="ke">ke-</option>
+                        <option value="sa">sa-</option>
+                        <option value="pi">pi-</option>
+                        <option value="kuma">kuma-</option>
+                        <option value="kapi">kapi-</option>
+                        <option value="dak">dak-</option>
+                        <option value="tak">tak-</option>
+                        <option value="kok">kok-</option>
+                    </select>
+                </div>
+                <div class="form-group-custom">
+                    <label for="dwipDasar">Tembung Lingga (Kata Dasar):</label>
+                    <input type="text" id="dwipDasar" placeholder="Contoh: tuku, sawang, pangan..." autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+
+            <div class="modal-preview-card">
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Hasil Huruf Latin:</span>
+                    <div class="modal-latin-out" id="dwipOutLatin">-</div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Pratinjau Aksara Jawa (Sriwedari):</span>
+                    <div class="modal-aksara-out font-ngayogyann" id="dwipOutAksara">-</div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-action btn-modal-copy" id="btnCopyDwip">📋 Salin Latin</button>
+                <button type="button" class="btn-modal-action btn-modal-use" id="btnUseDwip">🚀 Gunakan di Input Utama</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MEMBERI IMBUHAN (PARAMASASTRA) -->
+<div class="modal-overlay" id="modalImbuhan">
+    <div class="modal-box">
+        <div class="modal-header">
+            <span>🧩 Memberi Imbuhan (Paramasastra)</span>
+            <button class="modal-close" id="btnCloseImbuhan">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group-custom">
+                    <label for="imbAter">Ater-ater (Awalan):</label>
+                    <select id="imbAter">
+                        <option value="" selected>(Tanpa Ater-ater)</option>
+                        <option value="N">N- (Anuswara otomatis: m, n, ny, ng)</option>
+                        <option value="m">m-</option>
+                        <option value="n">n-</option>
+                        <option value="ny">ny-</option>
+                        <option value="ng">ng-</option>
+                        <option value="pa">pa-</option>
+                        <option value="pating_paN">pating paN-</option>
+                        <option value="kuma">kuma-</option>
+                        <option value="kami">kami-</option>
+                        <option value="kapi">kapi-</option>
+                        <option value="pi">pi-</option>
+                        <option value="ma">ma-</option>
+                        <option value="sa">sa-</option>
+                        <option value="in">in-</option>
+                        <option value="dak">dak-</option>
+                        <option value="tak">tak-</option>
+                        <option value="kok">kok-</option>
+                        <option value="ko">ko-</option>
+                        <option value="di">di-</option>
+                        <option value="ka">ka-</option>
+                        <option value="ke">ke-</option>
+                    </select>
+                </div>
+                <div class="form-group-custom">
+                    <label for="imbDasar">Tembung Lingga (Kata Dasar):</label>
+                    <input type="text" id="imbDasar" placeholder="Contoh: pangan, tuku, jupuk..." autocomplete="off" spellcheck="false">
+                </div>
+                <div class="form-group-custom" style="grid-column: 1 / -1;">
+                    <label for="imbPanam">Panambang (Akhiran):</label>
+                    <select id="imbPanam">
+                        <option value="" selected>(Tanpa Panambang)</option>
+                        <option value="i">-i / -ni / -nni</option>
+                        <option value="ake">-ake / -aké</option>
+                        <option value="aken">-aken</option>
+                        <option value="en">-en / -nen</option>
+                        <option value="ana">-ana / -nnana</option>
+                        <option value="ne">-ne / -é</option>
+                        <option value="ku">-ku</option>
+                        <option value="mu">-mu</option>
+                        <option value="an">-an / -nan</option>
+                        <option value="e">-e / -é</option>
+                        <option value="a">-a / -ya / -wa</option>
+                        <option value="na">-na / -kna</option>
+                        <option value="ipun">-ipun / -nipun</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-preview-card">
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Hasil Huruf Latin:</span>
+                    <div class="modal-latin-out" id="imbOutLatin">-</div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Pratinjau Aksara Jawa (Sriwedari):</span>
+                    <div class="modal-aksara-out font-ngayogyann" id="imbOutAksara">-</div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-action btn-modal-copy" id="btnCopyImb">📋 Salin Latin</button>
+                <button type="button" class="btn-modal-action btn-modal-use" id="btnUseImb">🚀 Gunakan di Input Utama</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="morfologi.js"></script>
 <script src="jgst.js"></script>
 <script src="ipa.js"></script>
@@ -2203,6 +2492,174 @@
         inputLatin.value = '';
         processTransliteration();
         inputLatin.focus();
+    });
+
+    /* =========================================================================
+     * PENAMBAHAN INTERAKSI POP-UP MODAL DWIPURWA & IMBUHAN
+     * ========================================================================= */
+
+    function tempelKeInputUtama(teksLatin) {
+        if (!teksLatin || teksLatin === '-') return;
+        const inputUtama = document.getElementById('inputLatin');
+        if (!inputUtama) return;
+
+        let currentVal = inputUtama.value;
+        if (currentVal.length > 0) {
+            if (!currentVal.endsWith('\n') && !currentVal.endsWith(' ')) {
+                currentVal += ' ';
+            }
+            inputUtama.value = currentVal + teksLatin;
+        } else {
+            inputUtama.value = teksLatin;
+        }
+
+        inputUtama.focus();
+        const endPos = inputUtama.value.length;
+        inputUtama.setSelectionRange(endPos, endPos);
+        inputUtama.scrollTop = inputUtama.scrollHeight;
+
+        if (typeof processTransliteration === 'function') {
+            processTransliteration();
+        }
+    }
+
+    // Handlers Modal Dwipurwa
+    const modalDwipurwa = document.getElementById('modalDwipurwa');
+    const btnOpenDwipurwa = document.getElementById('btnOpenDwipurwa');
+    const btnCloseDwipurwa = document.getElementById('btnCloseDwipurwa');
+    const dwipAter = document.getElementById('dwipAter');
+    const dwipDasar = document.getElementById('dwipDasar');
+    const dwipOutLatin = document.getElementById('dwipOutLatin');
+    const dwipOutAksara = document.getElementById('dwipOutAksara');
+    const btnCopyDwip = document.getElementById('btnCopyDwip');
+    const btnUseDwip = document.getElementById('btnUseDwip');
+
+    function updateDwipurwaModal() {
+        const ater = dwipAter ? dwipAter.value : '';
+        const dasar = dwipDasar ? dwipDasar.value.trim() : '';
+        if (!dasar) {
+            if (dwipOutLatin) dwipOutLatin.textContent = '-';
+            if (dwipOutAksara) dwipOutAksara.textContent = '-';
+            return;
+        }
+        let latinRes = typeof prosesDwipurwaSriwedari === 'function' 
+            ? prosesDwipurwaSriwedari(ater, dasar)
+            : (ater ? ater + '-' + dasar : dasar);
+        
+        if (dwipOutLatin) dwipOutLatin.textContent = latinRes;
+        let aksaraRes = runModuleTransliteration('sriwedari', latinRes);
+        if (dwipOutAksara) dwipOutAksara.textContent = aksaraRes || '-';
+    }
+
+    if (btnOpenDwipurwa) {
+        btnOpenDwipurwa.addEventListener('click', () => {
+            if (modalDwipurwa) modalDwipurwa.style.display = 'flex';
+            if (dwipDasar) dwipDasar.focus();
+            updateDwipurwaModal();
+        });
+    }
+    if (btnCloseDwipurwa) {
+        btnCloseDwipurwa.addEventListener('click', () => {
+            if (modalDwipurwa) modalDwipurwa.style.display = 'none';
+        });
+    }
+    if (dwipAter) dwipAter.addEventListener('change', updateDwipurwaModal);
+    if (dwipDasar) dwipDasar.addEventListener('input', updateDwipurwaModal);
+
+    if (btnCopyDwip) {
+        btnCopyDwip.addEventListener('click', () => {
+            const txt = dwipOutLatin ? dwipOutLatin.textContent : '';
+            if (txt && txt !== '-') {
+                navigator.clipboard.writeText(txt).then(() => {
+                    let orig = btnCopyDwip.textContent;
+                    btnCopyDwip.textContent = 'Tersalin!';
+                    setTimeout(() => { btnCopyDwip.textContent = orig; }, 1500);
+                });
+            }
+        });
+    }
+    if (btnUseDwip) {
+        btnUseDwip.addEventListener('click', () => {
+            const txt = dwipOutLatin ? dwipOutLatin.textContent : '';
+            if (txt && txt !== '-') {
+                tempelKeInputUtama(txt);
+                if (modalDwipurwa) modalDwipurwa.style.display = 'none';
+            }
+        });
+    }
+
+    // Handlers Modal Imbuhan
+    const modalImbuhan = document.getElementById('modalImbuhan');
+    const btnOpenImbuhan = document.getElementById('btnOpenImbuhan');
+    const btnCloseImbuhan = document.getElementById('btnCloseImbuhan');
+    const imbAter = document.getElementById('imbAter');
+    const imbDasar = document.getElementById('imbDasar');
+    const imbPanam = document.getElementById('imbPanam');
+    const imbOutLatin = document.getElementById('imbOutLatin');
+    const imbOutAksara = document.getElementById('imbOutAksara');
+    const btnCopyImb = document.getElementById('btnCopyImb');
+    const btnUseImb = document.getElementById('btnUseImb');
+
+    function updateImbuhanModal() {
+        const ater = imbAter ? imbAter.value : '';
+        const dasar = imbDasar ? imbDasar.value.trim() : '';
+        const panam = imbPanam ? imbPanam.value : '';
+        if (!dasar) {
+            if (imbOutLatin) imbOutLatin.textContent = '-';
+            if (imbOutAksara) imbOutAksara.textContent = '-';
+            return;
+        }
+        let latinRes = typeof prosesImbuhanSriwedari === 'function'
+            ? prosesImbuhanSriwedari(ater, dasar, panam)
+            : (ater ? ater + '-' + dasar : dasar);
+
+        if (imbOutLatin) imbOutLatin.textContent = latinRes;
+        let aksaraRes = runModuleTransliteration('sriwedari', latinRes);
+        if (imbOutAksara) imbOutAksara.textContent = aksaraRes || '-';
+    }
+
+    if (btnOpenImbuhan) {
+        btnOpenImbuhan.addEventListener('click', () => {
+            if (modalImbuhan) modalImbuhan.style.display = 'flex';
+            if (imbDasar) imbDasar.focus();
+            updateImbuhanModal();
+        });
+    }
+    if (btnCloseImbuhan) {
+        btnCloseImbuhan.addEventListener('click', () => {
+            if (modalImbuhan) modalImbuhan.style.display = 'none';
+        });
+    }
+    if (imbAter) imbAter.addEventListener('change', updateImbuhanModal);
+    if (imbDasar) imbDasar.addEventListener('input', updateImbuhanModal);
+    if (imbPanam) imbPanam.addEventListener('change', updateImbuhanModal);
+
+    if (btnCopyImb) {
+        btnCopyImb.addEventListener('click', () => {
+            const txt = imbOutLatin ? imbOutLatin.textContent : '';
+            if (txt && txt !== '-') {
+                navigator.clipboard.writeText(txt).then(() => {
+                    let orig = btnCopyImb.textContent;
+                    btnCopyImb.textContent = 'Tersalin!';
+                    setTimeout(() => { btnCopyImb.textContent = orig; }, 1500);
+                });
+            }
+        });
+    }
+    if (btnUseImb) {
+        btnUseImb.addEventListener('click', () => {
+            const txt = imbOutLatin ? imbOutLatin.textContent : '';
+            if (txt && txt !== '-') {
+                tempelKeInputUtama(txt);
+                if (modalImbuhan) modalImbuhan.style.display = 'none';
+            }
+        });
+    }
+
+    // Menutup Modal saat mengklik area di luar kotak modal
+    window.addEventListener('click', (e) => {
+        if (e.target === modalDwipurwa) modalDwipurwa.style.display = 'none';
+        if (e.target === modalImbuhan) modalImbuhan.style.display = 'none';
     });
 
     window.addEventListener('DOMContentLoaded', () => {
