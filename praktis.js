@@ -354,6 +354,7 @@ function transliterasiSingleKata(rawLatin) {
                 else if (['E', 'Ê'].includes(vUpper)) { c = 'E'; isSwara = true; jump = 1; }
                 else { c = 'A'; isSwara = true; jump = 1; }
             }
+            i += jump; // PERBAIKAN: Menjamin indeks bertambah saat pemrosesan vokal mandiri/hiatus
         } else if (c !== "") {
             i += jump;
         } else {
