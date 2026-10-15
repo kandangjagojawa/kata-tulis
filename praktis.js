@@ -9,10 +9,11 @@
  *    - Setelah konsonan: Sandhangan Dirga Mure (ꦻ) & Sandhangan Au (ꦻꦴ).
  *    - Awal kata / tanpa konsonan: Aksara Swara AI (ꦍ) & AU (ꦎꦴ).
  * 3. Panambang Natural -> Meleburkan konsonan akhir kata dasar ke vokal panambang secara alami 
- *    tanpa dobel konsonan dan tanpa Pangkon (mangan-e -> ꦩꦔꦤꦺ).
+ *    tanpa dobel konsonan dan tanpa Pangkon (mangan-e -> ꦩꦔꦤ꺺).
  * 4. Tembung Dwilingga Mandiri -> Kata ulang ber-tanda hubung diproses terpisah (alun-alun -> ꦄꦭꦸꦤ꧀ꦄꦭꦸꦤ꧀).
  * 5. Ater-ater Anuswara Literal -> Ditulis murni sesuai ketikan tanpa penyisipan Aksara Ha di depan (ngombe -> ꦔꦺꦴꦩ꧀ꦧꦺ).
  * 6. Vokal Panjang & Aksara Rekan/Murda -> Dipertahankan penuh dari simplified.js.
+ * 7. Aksara Ganti (ꦊ/ꦉ) & Panjingan (la/wa) -> Dipertahankan mandiri antar-kata tanpa paksaan ZWNJ atau penggantian aksara.
  */
 
 const KAMUS_AKSARA = {
@@ -206,10 +207,10 @@ function transliterasiKalimat(teks) {
                 let curr = kataJawa[k];
 
                 // Jika kata sebelumnya diakhiri Pangkon (꧀), periksa kata berikutnya.
-                // Jika kata berikutnya diawali panjingan (la/wa) atau sandhangan wyanjana (pengkal/cakra/cakra-keret),
-                // IZINKAN membentuk pasangan tumpuk secara murni (TANPA ZWNJ \u200C).
+                // Jika kata berikutnya diawali panjingan (la/wa), sandhangan wyanjana (pengkal/cakra/cakra-keret),
+                // atau Aksara Ganti (ꦊ/ꦉ), IZINKAN menempel langsung (TANPA ZWNJ \u200C).
                 if (/꧀[\u200C\uE000]*$/.test(prev)) {
-                    let hasPanjinganOrMedial = /^.꧀[ꦭꦮ]|^.[ꦾꦿꦽ]/.test(curr);
+                    let hasPanjinganOrMedial = /^.꧀[ꦭꦮ]|^.[ꦾꦿꦽ]|^[ꦊꦉ]/.test(curr);
                     if (!hasPanjinganOrMedial) {
                         lineJoined += '\u200C';
                     }
@@ -218,7 +219,6 @@ function transliterasiKalimat(teks) {
             lineJoined += kataJawa[k];
         }
         
-        lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦊ/g, '꧀$1ꦭꦼ');
         lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦣ/g, '꧀$1ꦝ');
 
         return lineJoined;
@@ -440,9 +440,17 @@ function transliterasiSingleKata(rawLatin) {
         }
 
         if (c === 'l' && (v === 'e' || v === 'ê') && medial === "") {
-            res += 'ꦊ'; 
+            if (res.endsWith('꧀')) {
+                res += 'ꦭꦼ';
+            } else {
+                res += 'ꦊ';
+            }
         } else if (c === 'r' && (v === 'e' || v === 'ê') && medial === "") {
-            res += 'ꦉ'; 
+            if (res.endsWith('꧀')) {
+                res += 'ꦿꦼ';
+            } else {
+                res += 'ꦉ';
+            }
         } else {
             let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (isSwara ? SWARA_MAP[c] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]));
             res += base;
