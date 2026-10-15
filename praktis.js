@@ -4,16 +4,16 @@
  * Diperuntukkan bagi generasi modern untuk kemudahan penulisan dan pembelajaran.
  * 
  * KETENTUAN LOGIKA:
- * 1. Vokal Awal Kata & Hiatus -> Otomatis menggunakan Aksara Swara (ꦄ, ꦆ, ꦈ, ꦌ, ꦎ).
- * 2. Diftong ai & au -> 
+ * 1. Scripto Continua Murni -> Penulisan menyambung alami antar-kata menggunakan pasangan/tumpuk.
+ * 2. Vokal Awal Kata & Hiatus -> Otomatis menggunakan Aksara Swara (ꦄ, ꦆ, ꦈ, ꦌ, ꦎ).
+ * 3. Diftong ai & au -> 
  *    - Setelah konsonan: Sandhangan Dirga Mure (ꦻ) & Sandhangan Au (ꦻꦴ).
  *    - Awal kata / tanpa konsonan: Aksara Swara AI (ꦍ) & AU (ꦎꦴ).
- * 3. Panambang Natural -> Meleburkan konsonan akhir kata dasar ke vokal panambang secara alami 
+ * 4. Panambang Natural -> Meleburkan konsonan akhir kata dasar ke vokal panambang secara alami 
  *    tanpa dobel konsonan dan tanpa Pangkon (mangan-e -> ꦩꦔꦤ꺺).
- * 4. Tembung Dwilingga Mandiri -> Kata ulang ber-tanda hubung diproses terpisah (alun-alun -> ꦄꦭꦸꦤ꧀ꦄꦭꦸꦤ꧀).
- * 5. Ater-ater Anuswara Literal -> Ditulis murni sesuai ketikan tanpa penyisipan Aksara Ha di depan (ngombe -> ꦔꦺꦴꦩ꧀ꦧꦺ).
- * 6. Vokal Panjang & Aksara Rekan/Murda -> Dipertahankan penuh dari simplified.js.
- * 7. Aksara Swara & Aksara Ganti (ꦄ-ꦎ) Sebagai Pasangan -> Menempel langsung tanpa dipisah ZWNJ.
+ * 5. Tembung Dwilingga Mandiri -> Kata ulang ber-tanda hubung diproses terpisah (alun-alun -> ꦄꦭꦸꦤ꧀ꦄꦭꦸꦤ꧀).
+ * 6. Ater-ater Anuswara Literal -> Ditulis murni sesuai ketikan tanpa penyisipan Aksara Ha di depan (ngombe -> ꦔꦺꦴꦩ꧀ꦧꦺ).
+ * 7. Vokal Panjang & Aksara Rekan/Murda -> Dipertahankan penuh dari simplified.js.
  */
 
 const KAMUS_AKSARA = {
@@ -200,24 +200,8 @@ function transliterasiKalimat(teks) {
         let kataKata = line.split(/\s+/);
         let kataJawa = kataKata.map(kata => transliterasiKata(kata));
         
-        let lineJoined = "";
-        for (let k = 0; k < kataJawa.length; k++) {
-            if (k > 0) {
-                let prev = kataJawa[k - 1];
-                let curr = kataJawa[k];
-
-                // Jika kata sebelumnya diakhiri Pangkon (꧀), periksa kata berikutnya.
-                // Jika kata berikutnya diawali panjingan (la/wa), sandhangan wyanjana (pengkal/cakra/cakra-keret),
-                // atau seluruh Aksara Swara / Aksara Ganti (ꦄ-ꦎ), IZINKAN menempel langsung (TANPA ZWNJ \u200C).
-                if (/꧀[\u200C\uE000]*$/.test(prev)) {
-                    let hasPanjinganOrMedial = /^.꧀[ꦭꦮ]|^.[ꦾꦿꦽ]|^[ꦄ-ꦎ]/.test(curr);
-                    if (!hasPanjinganOrMedial) {
-                        lineJoined += '\u200C';
-                    }
-                }
-            }
-            lineJoined += kataJawa[k];
-        }
+        // Scripto Continua Murni: kata disambung langsung tanpa penyisipan ZWNJ
+        let lineJoined = kataJawa.join('');
         
         lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦣ/g, '꧀$1ꦝ');
 
