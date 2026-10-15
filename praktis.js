@@ -199,7 +199,22 @@ function transliterasiKalimat(teks) {
         let kataKata = line.split(/\s+/);
         let kataJawa = kataKata.map(kata => transliterasiKata(kata));
         
-        let lineJoined = kataJawa.join(''); 
+        let lineJoined = "";
+        for (let k = 0; k < kataJawa.length; k++) {
+            if (k > 0) {
+                let prev = kataJawa[k - 1];
+                let curr = kataJawa[k];
+                // Pencegahan Pasangan Tumpuk (Double Pasangan):
+                // Jika kata sebelumnya diakhiri Pangkon (꧀) dan kata berikutnya diawali 
+                // gugus konsonan ber-Pangkon (seperti mb-, nd-, ngg-, nj-, nc-, dll),
+                // sisipkan Zero-Width Non-Joiner (\u200C) agar kata pertama tetap menggunakan
+                // Pangkon mandiri tanpa menumpukkan Pasangan secara ilegal.
+                if (/꧀[\u200C\uE000]*$/.test(prev) && /^[\uA980-\uA9B3]+꧀/.test(curr)) {
+                    lineJoined += '\u200C';
+                }
+            }
+            lineJoined += kataJawa[k];
+        }
         
         lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦊ/g, '꧀$1ꦭꦼ');
         lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦣ/g, '꧀$1ꦝ');
@@ -414,6 +429,9 @@ function transliterasiSingleKata(rawLatin) {
             else if (c === 'h' && !isFirstAksara && canTakeSandhangan) res += 'ꦃ'; 
             else if (c !== "") {
                 let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
+                if (res.endsWith('꧀')) {
+                    res += '\u200C';
+                }
                 res += base + '꧀'; 
             }
             
