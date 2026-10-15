@@ -194,7 +194,9 @@ function prosesDwipurwaSriwedari(ater, dasarRaw) {
         if (['c', 's'].includes(f)) return 'ny' + dwipStem.slice(1);
         if (['k'].includes(f)) return 'ng' + dwipStem.slice(1);
         if (dwipStem.startsWith('th')) return 'n' + dwipStem.slice(2);
-        if (dwipStem.startsWith('dh')) return 'han' + dwipStem;
+        if (dwipStem.startsWith('dh') || ['d', 'j'].includes(f)) return 'n' + dwipStem;
+        if (f === 'b') return 'm' + dwipStem;
+        if (f === 'g') return 'ng' + dwipStem;
         return 'ng' + dwipStem;
     }
 
@@ -219,11 +221,11 @@ function prosesImbuhanSriwedari(ater, dasarRaw, panam) {
         if (dasar.startsWith('ng') || dasar.startsWith('ny') || f === 'n' || f === 'm') {
             stem = dasar;
         } else if (['d', 'j'].includes(f) || dasar.startsWith('dh')) {
-            prefixAppended = 'han'; stem = dasar;
+            prefixAppended = 'n'; stem = dasar;
         } else if (f === 'b') {
-            prefixAppended = 'ham'; stem = dasar;
+            prefixAppended = 'm'; stem = dasar;
         } else if (f === 'g') {
-            prefixAppended = 'hang'; stem = dasar;
+            prefixAppended = 'ng'; stem = dasar;
         } else if (['p', 'w'].includes(f)) {
             stem = 'm' + dasar.slice(1);
         } else if (dasar.startsWith('th')) {
