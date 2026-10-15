@@ -2,7 +2,7 @@
  * SRIWEDARI.JS
  * Modul Transliterasi Aksara Jawa Paugeran Sriwedari (Murni 1926).
  * Perbaikan: Pengelompokan vokal hiatus (é/è -> h), Anuswara Tancap lookbehind,
- * dan konversi Warga Talawya otomatis (nc/nj -> nyc/nyj).
+ * konversi Warga Talawya otomatis (nc/nj -> nyc/nyj), serta koreksi Tembung Dwipurwa.
  */
 
 const KAMUS_AKSARA = {
@@ -564,8 +564,30 @@ function transliterasiKata(rawLatin) {
     return transliterasiSingleKata(cleanLatin) + marker;
 }
 
+function koreksiDwipurwa(rawLatin) {
+    if (!rawLatin) return "";
+
+    const consPattern = "(?:dh|th|ng|ny|kh|dz|gh|sy|sh|[bcdfghjklmnpqrstvwxyz])";
+    const dwipurwaRegex = new RegExp(
+        `^(${consPattern})[eêEÊ](${consPattern}(?:[rylw])?)([aiueoéèêAIUEOÉÈÊ])(.*)$`,
+        'i'
+    );
+
+    return rawLatin.replace(dwipurwaRegex, function(match, c1Prefix, c2Root, v1, rest) {
+        let baseC1 = c1Prefix.toLowerCase();
+        let baseC2 = c2Root.toLowerCase();
+
+        if (baseC2.startsWith(baseC1)) {
+            return c1Prefix + v1 + c2Root + v1 + rest;
+        }
+        return match;
+    });
+}
+
 function transliterasiSingleKata(rawLatin) {
     if (!rawLatin) return "";
+
+    rawLatin = koreksiDwipurwa(rawLatin);
 
     // Pre-processing Solusi A: Resolusi Sintaks Pendekatan B [C1*C2] -> C2 & Hapus Simbol Kontrol A, B, C
     rawLatin = rawLatin
@@ -925,4 +947,5 @@ if (typeof window !== 'undefined') {
     window.salinDwipurwaLatin = salinDwipurwaLatin;
     window.salinDwipurwaJawa = salinDwipurwaJawa;
     window.updateDwipurwaFromManualInput = updateDwipurwaFromManualInput;
+    window.koreksiDwipurwa = koreksiDwipurwa;
 }
