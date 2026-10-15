@@ -1,6 +1,6 @@
 /**
  * MORFOLOGI.JS
- * Engine Analisis Morfologi & Normalisasi Vokal E (Pepet vs Taling) Client-Side.
+ * Engine Analisis Morfologi & Normalisasi Vokal E (Taling é/è Client-Side).
  * Fitur: Pemotong Ater-ater, Panambang, & Restorasi Peluluhan Anuswara.
  */
 
@@ -32,7 +32,7 @@ function potongPanambang(stem) {
             let modSuf = suf;
             if (suf === 'e' || suf === 'ne') modSuf = suf.slice(0, -1) + 'é';
             if (suf === 'ake') modSuf = 'aké';
-            if (suf === 'aken') modSuf = 'akên';
+            if (suf === 'aken') modSuf = 'aken';
 
             suffix = '-' + modSuf;
             stem = lower.slice(0, -suf.length);
@@ -50,7 +50,7 @@ function potongAterAterBiasa(kata) {
 
     for (let pref of ATER_PEPÈT) {
         if (lower.startsWith(pref) && lower.length > pref.length + 2) {
-            prefix = pref.slice(0, -1) + 'ê-';
+            prefix = pref + '-';
             stem = lower.slice(pref.length);
             return { prefix, stem };
         }
