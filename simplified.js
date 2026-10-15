@@ -1,8 +1,8 @@
 /**
  * SIMPLIFIED.JS
- * Modifikasi dari kbj.js untuk mendukung vokal panjang (aa, ii, uu, ree, lee, ai, au).
- * Tanpa aturan taling tarung palsu (a -> o miring).
- * Perbaikan: Pengelompokan vokal hiatus (é/è -> h).
+ * Modifikasi transliterasi modern untuk mendukung vokal panjang (aa, ii, uu, ree, lee, ai, au).
+ * Mempertahankan Sandhangan Pepet pada kata 3 suku kata (konsisten seperti KBJ).
+ * Tanpa aturan taling tarung palsu (a -> o miring Sriwedari).
  */
 
 const KAMUS_AKSARA = {
@@ -396,15 +396,13 @@ function transliterasiKalimat(teks) {
     teksDiolah = teksDiolah
         .replace(/\|\|/g, '\uA9CB')
         .replace(/\|/g, '\uA9CA')
-        .replace(/\(\(/g, '\uA9C1')
-        .replace(/\)\)/g, '\uA9C2')
+        .replace(/\(\(/g, '\uA9C1') .replace(/\)\)/g, '\uA9C2')
         .replace(/<_/g, '\uA9C3')
         .replace(/<>/g, '\uA9C4')
         .replace(/>\^/g, '\uA9C5')
         .replace(/\(o\)/g, '\uA9C6')
         .replace(/:/g, '\uA9C7')
-        .replace(/\[\\/g, '\uA9CC')
-        .replace(/\\\]/g, '\uA9CD')
+        .replace(/\[\\/g, '\uA9CC') .replace(/\\\]/g, '\uA9CD')
         .replace(/\^2/g, '\uA9CE')
         .replace(/_2/g, '\uA9CF')
         .replace(/~~/g, '\uA9DE')
@@ -483,28 +481,6 @@ function transliterasiSingleKata(rawLatin) {
     }
 
     let latinProcessed = rawLatin;
-    const cons = "(?:dh|th|ng|ny|kh|dz|gh|kx|rx|hx|ngx|sy|sh|[bcdfghjklmnpqrstvwxyz])";
-    const nas = "(?:m|n|ng|ny)";
-
-    let isAnuswaraHanja = /^hanj[aA]|^hany[aA]/i.test(latinProcessed);
-
-    if (!isAnuswaraHanja) {
-        if (/^p[aeêEÊ]ndhawa(-[a-zA-ZéèêÉÈÊ]+)?$/i.test(latinProcessed)) {
-            latinProcessed = latinProcessed.replace(/^(p)[aeêEÊ](ndhawa(?:-[a-zA-ZéèêÉÈÊ]+)?)$/i, function(match, p1, p2) {
-                return p1 + 'a' + p2;
-            });
-        } else {
-            let rule2 = new RegExp(`^(${cons})?[aA](${nas})(${cons})a(${cons})a(-[a-zA-ZéèêÉÈÊ]+)?$`, 'i');
-            latinProcessed = latinProcessed.replace(rule2, (m, c1, n, c2, c3, suf) => {
-                return (c1 || '') + 'e' + n + c2 + 'a' + c3 + 'a' + (suf || '');
-            });
-        }
-
-        let rule1 = new RegExp(`^(${cons})[eêEÊ](${cons})a(${cons})a(-[a-zA-ZéèêÉÈÊ]+)?$`, 'i');
-        latinProcessed = latinProcessed.replace(rule1, (m, c1, c2, c3, suf) => {
-            return c1 + 'a' + c2 + 'a' + c3 + 'a' + (suf || '');
-        });
-    }
 
     let wordMatchForExc = latinProcessed.match(/^([a-zA-ZéèêÉÈÊ]+)/);
     let isPrefixException = false;
