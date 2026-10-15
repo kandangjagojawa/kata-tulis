@@ -2202,15 +2202,10 @@
         if (!teks) return teks;
         return teks
             .replace(/-nni\b/g, '-ni')
-            .replace(/-nnana\b/g, '-ana')
-            .replace(/-nnan\b/g, '-an')
-            .replace(/-nnanné\b/g, '-anné')
-            .replace(/-nnanne\b/g, '-anne')
-            .replace(/-kake\b/g, '-ake')
-            .replace(/-kaké\b/g, '-aké')
-            .replace(/-kaken\b/g, '-aken')
-            .replace(/-nen\b/g, '-en')
-            .replace(/-kna\b/g, '-na');
+            .replace(/-nnana\b/g, '-nana')
+            .replace(/-nnan\b/g, '-nan')
+            .replace(/-nnanné\b/g, '-nané')
+            .replace(/-nnanne\b/g, '-nane');
     }
 
     function processCardOutput(moduleId, fnKey, rawInput, isSastraLampah = false, checkRekanKhusus = false) {
