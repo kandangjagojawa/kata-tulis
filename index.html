@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="jw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membandingkan Tata Tulis Aksara Jawa</title>
+    <!-- Google Font Gentium Plus untuk JGST, IPA & PUJL -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<iframe id="enginePraktis" style="display:none;"></iframe>
+<iframe id="engineKBJ" style="display:none;"></iframe>
+<iframe id="engineSriwedari" style="display:none;"></iframe>
+<iframe id="engineSimplified" style="display:none;"></iframe>
+<iframe id="engineTradisional" style="display:none;"></iframe>
+<iframe id="engineCaraKawi" style="display:none;"></iframe>
+
+<div class="container">
+    <div class="header-bar">
+        <h1>Membandingkan Tata Tulis Aksara Jawa</h1>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button type="button" id="btnOpenDwipurwa" class="btn-petunjuk-latin" style="background-color: #0284c7; box-shadow: 0 3px 8px rgba(2, 132, 199, 0.4);">🌀 Membentuk Tembung Dwipurwa</button>
+            <button type="button" id="btnOpenImbuhan" class="btn-petunjuk-latin" style="background-color: #0d9488; box-shadow: 0 3px 8px rgba(13, 148, 136, 0.4);">🧩 Memberi Imbuhan</button>
+            <a href="#petunjukLatin" class="btn-petunjuk-latin">📖 Petunjuk Penulisan Huruf Latin</a>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <div class="input-header">
+            <span class="input-title">Huruf Latin</span>
+            <div class="toggles-wrapper">
+                <div class="card-toggles">
+                    <span class="toggle-label">Kelompok:</span>
+                    <label class="card-toggle-item"><input type="checkbox" id="toggleTataTulisBaru" checked> Tata Tulis Baru</label>
+                    <label class="card-toggle-item"><input type="checkbox" id="toggleTataTulisLama" checked> Tata Tulis Lama</label>
+                </div>
+                <div class="card-toggles">
+                    <span class="toggle-label">Tata Tulis:</span>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="KBJ" checked> 1. Paugeran KBJ</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Sriwedari" checked> 2. Paugeran Sriwedari</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Simplified" checked> 3. KAJ Simplified</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Tradisional" checked> 4. KAJ Tradisional</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="CaraKawi" checked> 5. Cara Kawi (Mardi Kawi)</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Praktis" checked> Aksara Jawa Praktis</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan"> 6. Ringkasan Transliterasi</label>
+                </div>
+                <div class="sub-toggles">
+                    <span class="toggle-label">Latin:</span>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-sub" data-sub="jgst"> JGST</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-sub" data-sub="ipa"> IPA</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-sub" data-sub="pujl"> PUJL</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="textarea-wrapper">
+            <textarea id="inputLatin" 
+                      placeholder="Ketik teks di sini..." 
+                      autocapitalize="none" 
+                      autocomplete="off" 
+                      autocorrect="off" 
+                      spellcheck="false"></textarea>
+            <button id="btnClear" class="btn-clear" title="Hapus teks">&times;</button>
+        </div>
+
+        <div class="controls-grid">
+            <div class="control-group">
+                <label for="sliderFontSize">Ukuran Aksara Jawa: <span id="valFontSize">1.8rem</span></label>
+                <input type="range" id="sliderFontSize" min="1" max="4" step="0.1" value="1.8">
+            </div>
+            <div class="control-group">
+                <label for="sliderLineHeight">Jarak Spasi Vertikal: <span id="valLineHeight">1.6</span></label>
+                <input type="range" id="sliderLineHeight" min="1" max="3" step="0.1" value="1.6">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-container">
+        <!-- 1. Paugeran KBJ -->
+        <div class="card" id="cardKBJ">
+            <div class="card-header">1. Paugeran KBJ</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outKBJ_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outKBJ_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outKBJ_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outKBJ_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 2. Paugeran Sriwedari -->
+        <div class="card" id="cardSriwedari">
+            <div class="card-header">2. Paugeran Sriwedari</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outSriwedari_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outSriwedari_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outSriwedari_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outSriwedari_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 3. KAJ Simplified -->
+        <div class="card" id="cardSimplified">
+            <div class="card-header">3. KAJ Simplified</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outSimplified_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outSimplified_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outSimplified_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outSimplified_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 4. KAJ Tradisional -->
+        <div class="card" id="cardTradisional">
+            <div class="card-header">4. KAJ Tradisional</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outTradisional_Aksara" class="box-aksara font-ngayogyan">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outTradisional_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outTradisional_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outTradisional_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 5. Cara Kawi (Mardi Kawi) -->
+        <div class="card" id="cardCaraKawi">
+            <div class="card-header">5. Cara Kawi (Mardi Kawi)</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outCaraKawi_Aksara" class="box-aksara font-ngayogyan">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outCaraKawi_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outCaraKawi_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outCaraKawi_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- Aksara Jawa Praktis -->
+        <div class="card" id="cardPraktis">
+            <div class="card-header">Aksara Jawa Praktis</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outPraktis_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outPraktis_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outPraktis_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outPraktis_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 6. Ringkasan Transliterasi (Default Hidden) -->
+        <div class="card" id="cardRingkasan" style="display: none;">
+            <div class="card-header">6. Ringkasan Transliterasi</div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outRingkasan_PUJL" class="box-pujl">-</div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Paugeran KBJ</div>
+                <div id="outRingkasan_KBJ" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_KBJ_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_KBJ_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Paugeran Sriwedari</div>
+                <div id="outRingkasan_Sriwedari" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Sriwedari_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Sriwedari_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">KAJ Simplified</div>
+                <div id="outRingkasan_Simplified" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Simplified_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Simplified_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">KAJ Tradisional</div>
+                <div id="outRingkasan_Tradisional" class="box-aksara font-ngayogyan">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Tradisional_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Tradisional_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Cara Kawi (Mardi Kawi)</div>
+                <div id="outRingkasan_CaraKawi" class="box-aksara font-ngayogyan">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_CaraKawi_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_CaraKawi_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Aksara Jawa Praktis</div>
+                <div id="outRingkasan_Praktis" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Praktis_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Praktis_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Petunjuk Khusus Override r-Mati (Pendekatan A, B, & C) -->
+    <div class="card" id="petunjukOverrideR" style="margin-top: 30px;">
+        <div class="card-header" style="background: #0f172a; color: #ffffff;">
+            <span>⚡ Petunjuk Khusus Override r-Mati (Pendekatan A, B, &amp; C)</span>
+        </div>
+        <div style="padding: 20px; overflow-x: auto;">
+            <p style="margin-bottom: 15px; color: #475569; font-size: 0.95rem; line-height: 1.5;">
+                Simbol khusus Latin untuk mengendalikan pembentukan konsonan ganda/pasangan setelah <em>r-mati</em> di tengah kata (khusus modul <strong>KAJ Tradisional</strong> &amp; <strong>Cara Kawi</strong>):
+            </p>
+            <table class="table-guide">
+                <thead>
+                    <tr>
+                        <th style="min-width: 140px;">Pendekatan / Fitur</th>
+                        <th style="min-width: 120px;">Simbol Pemicu</th>
+                        <th style="min-width: 150px;">Contoh Latin</th>
+                        <th style="min-width: 180px;">KAJ Tradisional</th>
+                        <th style="min-width: 180px;">Cara Kawi</th>
+                        <th style="min-width: 250px;">Keterangan / Efek</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Baku (Default)</strong></td>
+                        <td><em>(tanpa simbol)</em></td>
+                        <td><code>karna</code></td>
+                        <td><span class="aksara-lama-cell">ꦏꦂꦟ꧀ꦤ</span></td>
+                        <td><span class="aksara-lama-cell">ꦏꦫ꧀ꦟ꧀ꦤ</span></td>
+                        <td>Aturan baku (Layar/Ra + Konsonan Ganda Murdhanya)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pendekatan A</strong></td>
+                        <td><code>~</code> atau <code>!</code></td>
+                        <td><code>kar~na</code> / <code>kar!na</code></td>
+                        <td><span class="aksara-lama-cell">ꦏꦂꦤ</span></td>
+                        <td><span class="aksara-lama-cell">ꦏꦫ꧀ꦤ</span></td>
+                        <td>Batal double, menjadi <strong>Aksara Single Biasa (Dantya)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pendekatan B</strong></td>
+                        <td><code>[C1|C2]</code></td>
+                        <td><code>kar[n|N]a</code></td>
+                        <td><span class="aksara-lama-cell">ꦏꦂꦤ꧀ꦟ</span></td>
+                        <td><span class="aksara-lama-cell">ꦏꦫ꧀ꦤ꧀ꦟ</span></td>
+                        <td>Menentukan <strong>Pasangan Kustom Eksplisit</strong> (C1 + Pasangan C2)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pendekatan C</strong></td>
+                        <td><code>#</code> atau <code>^</code></td>
+                        <td><code>kar#na</code> / <code>kar^na</code></td>
+                        <td><span class="aksara-lama-cell">ꦏꦂꦟ</span></td>
+                        <td><span class="aksara-lama-cell">ꦏꦫ꧀ꦟ</span></td>
+                        <td>Batal double, menjadi <strong>Aksara Single Mahaprana (Murda)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Petunjuk Penulisan Huruf Latin Lengkap -->
+    <div class="card" id="petunjukLatin" style="margin-top: 20px; margin-bottom: 40px;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; background: #1e293b; color: #ffffff; flex-wrap: wrap; gap: 10px;">
+            <span>📖 Petunjuk Penulisan Huruf Latin</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="selectSortGuide" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600;">Urutkan Berdasarkan:</label>
+                <select id="selectSortGuide" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #475569; background-color: #0f172a; color: #ffffff; font-size: 0.85rem; cursor: pointer; font-weight: 600; outline: none;">
+                    <option value="alfabet" selected>1. Urutan Alfabet</option>
+                    <option value="hanacaraka">2. Urutan Hanacaraka</option>
+                    <option value="warga">3. Urutan Warga Aksara</option>
+                    <option value="unicode">4. Urutan Unicode</option>
+                    <option value="tatatulisbaru">5. Urutan Tata Tulis Baru</option>
+                </select>
+            </div>
+        </div>
+        <div style="padding: 20px; overflow-x: auto;">
+            <table class="table-guide">
+                <thead>
+                    <tr>
+                        <th style="min-width: 130px;">Huruf Latin</th>
+                        <th style="min-width: 220px;">Tata Tulis Baru</th>
+                        <th style="min-width: 220px;">Tata Tulis Lama</th>
+                        <th style="min-width: 170px;">Unicode Codepoint</th>
+                        <th style="min-width: 280px;">JGST, IPA &amp; PUJL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-alfabet="1" data-hanacaraka="21" data-warga="61" data-unicode="104" data-tatatulisbaru="401">
+                        <td>a / A</td>
+                        <td><span class="aksara-cell">ꦄ / ꦲ</span></td>
+                        <td><span class="aksara-lama-cell">ꦄ / ꦲ</span></td>
+                        <td>U+A984 / U+A9B2</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: a / ha</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [a] / [ha]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: a / ha</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="2" data-hanacaraka="22" data-warga="62" data-unicode="154" data-tatatulisbaru="402">
+                        <td>aa / AA</td>
+                        <td><span class="aksara-cell">ꦴ</span></td>
+                        <td><span class="aksara-lama-cell">ꦴ</span></td>
+                        <td>U+A9B4</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ā</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [aː]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: a</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="3" data-hanacaraka="28" data-warga="68" data-unicode="113" data-tatatulisbaru="408">
+                        <td>ai / AI</td>
+                        <td>
+                            <span class="aksara-cell">ꦍ / ꦻ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦍ / ꦻ</span></td>
+                        <td>U+A98D / U+A9BB</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ꜽ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [aɪ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ai</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="4" data-hanacaraka="30" data-warga="70" data-unicode="114" data-tatatulisbaru="410">
+                        <td>au / AU</td>
+                        <td>
+                            <span class="aksara-cell">ꦎꦴ / ꦻꦴ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦎꦴ / ꦻꦴ</span></td>
+                        <td>U+A98E U+A9B4 / U+A9BB U+A9B4</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ꜷ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [aʊ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: au</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="5" data-hanacaraka="18" data-warga="53" data-unicode="143" data-tatatulisbaru="118">
+                        <td>b / B</td>
+                        <td><span class="aksara-cell">ꦧ / ꦨ</span></td>
+                        <td><span class="aksara-lama-cell">ꦧ / ꦨ</span></td>
+                        <td>U+A9A7 / U+A9A8</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ba / ḅa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ba] / [bʱa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ba</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="6" data-hanacaraka="18.1" data-warga="54" data-unicode="144" data-tatatulisbaru="207">
+                        <td>bh / Bh</td>
+                        <td><span class="aksara-cell">ꦨ</span></td>
+                        <td><span class="aksara-lama-cell">ꦨ</span></td>
+                        <td>U+A9A8</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ḅa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [bʱa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ba</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="7" data-hanacaraka="3" data-warga="21" data-unicode="121" data-tatatulisbaru="103">
+                        <td>c / C</td>
+                        <td><span class="aksara-cell">ꦕ / ꦖ</span></td>
+                        <td><span class="aksara-lama-cell">ꦕ / ꦖ</span></td>
+                        <td>U+A995 / U+A996</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ca / c̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [tʃa] / [tʃʰa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ca</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="8" data-hanacaraka="3.1" data-warga="22" data-unicode="122" data-tatatulisbaru="208">
+                        <td>ch / Ch</td>
+                        <td><span class="aksara-cell">ꦖ</span></td>
+                        <td><span class="aksara-lama-cell">ꦖ</span></td>
+                        <td>U+A996</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: c̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [tʃʰa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ca</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="9" data-hanacaraka="6" data-warga="42" data-unicode="138" data-tatatulisbaru="106">
+                        <td>d / D</td>
+                        <td><span class="aksara-cell">ꦢ</span></td>
+                        <td><span class="aksara-lama-cell">ꦢ</span></td>
+                        <td>U+A9A2</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: da</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [da]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: da</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="10" data-hanacaraka="12" data-warga="33" data-unicode="129" data-tatatulisbaru="112">
+                        <td>dh / DH</td>
+                        <td>
+                            <span class="aksara-cell">ꦝ</span>
+                            <span class="missing-badge">ꦞ, ꦣ tidak ada di: kbj, sriwedari, simplified</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦝ / ꦞ / ꦣ</span></td>
+                        <td>U+A99D / U+A99E / U+A9A3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ḍa / ḍha / dha</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ɖa] / [ɖʱa] / [dʱa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: dha / da</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="11" data-hanacaraka="12.1" data-warga="49" data-unicode="147.3" data-tatatulisbaru="315">
+                        <td>dl</td>
+                        <td><span class="aksara-cell">ꦭ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦭ꦳</span></td>
+                        <td>U+A9AD U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ḍa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ɮa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: dl</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="12" data-hanacaraka="20.1" data-warga="48" data-unicode="138.1" data-tatatulisbaru="305">
+                        <td>dz</td>
+                        <td><span class="aksara-cell">ꦢ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦢ꦳</span></td>
+                        <td>U+A9A2 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: dza</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [dza]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: dz</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="13" data-hanacaraka="27" data-warga="67" data-unicode="112" data-tatatulisbaru="404">
+                        <td>e / é / è / E / É</td>
+                        <td><span class="aksara-cell">ꦌ / ꦺ / ꦼ</span></td>
+                        <td><span class="aksara-lama-cell">ꦌ / ꦺ / ꦼ</span></td>
+                        <td>U+A98C / U+A9BA / U+A9BC</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: é / ě</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [e] / [ə] / [ɛ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: é / e</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="14" data-hanacaraka="11.1" data-warga="56" data-unicode="141.1" data-tatatulisbaru="301">
+                        <td>f</td>
+                        <td><span class="aksara-cell">ꦥ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦥ꦳</span></td>
+                        <td>U+A9A5 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: fa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [fa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: fa</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="15" data-hanacaraka="17" data-warga="3" data-unicode="118" data-tatatulisbaru="117">
+                        <td>g / G</td>
+                        <td><span class="aksara-cell">ꦒ / ꦓ</span></td>
+                        <td><span class="aksara-lama-cell">ꦒ / ꦓ</span></td>
+                        <td>U+A992 / U+A993</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ga / g̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ɡa] / [ɡʱa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ga</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="16" data-hanacaraka="17.1" data-warga="4" data-unicode="119" data-tatatulisbaru="306">
+                        <td>gh</td>
+                        <td><span class="aksara-cell">ꦒ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦒ꦳</span></td>
+                        <td>U+A992 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: g̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ɣa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: gh</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="17" data-hanacaraka="1" data-warga="6" data-unicode="150" data-tatatulisbaru="101">
+                        <td>h</td>
+                        <td><span class="aksara-cell">ꦲ / ꦃ</span></td>
+                        <td><span class="aksara-lama-cell">ꦲ / ꦃ</span></td>
+                        <td>U+A9B2 / U+A983</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ha / ḥ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ha] / [h]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ha / h</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="18" data-hanacaraka="1.1" data-warga="7" data-unicode="150.1" data-tatatulisbaru="308">
+                        <td>hh</td>
+                        <td><span class="aksara-cell">ꦲ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦲ꦳</span></td>
+                        <td>U+A9B2 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ḥa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ħa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: hh</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="19" data-hanacaraka="23" data-warga="63" data-unicode="106" data-tatatulisbaru="402">
+                        <td>i / I</td>
+                        <td><span class="aksara-cell">ꦆ / ꦶ</span></td>
+                        <td><span class="aksara-lama-cell">ꦆ / ꦶ</span></td>
+                        <td>U+A986 / U+A9B6</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: i</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [i] / [ɪ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: i</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="20" data-hanacaraka="24" data-warga="64" data-unicode="107" data-tatatulisbaru="403">
+                        <td>ii / II</td>
+                        <td>
+                            <span class="aksara-cell">ꦇ / ꦷ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦇ / ꦷ</span></td>
+                        <td>U+A987 / U+A9B7</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ī</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [iː]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: i</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="21" data-hanacaraka="25" data-warga="65" data-unicode="105" data-tatatulisbaru="411">
+                        <td>Ix / ix</td>
+                        <td>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari, simplified</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦅ</span></td>
+                        <td>U+A985</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: i</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [i]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: i</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="22" data-hanacaraka="13" data-warga="23" data-unicode="123" data-tatatulisbaru="113">
+                        <td>j / J</td>
+                        <td><span class="aksara-cell">ꦗ / ꦙ</span></td>
+                        <td><span class="aksara-lama-cell">ꦗ / ꦙ</span></td>
+                        <td>U+A997 / U+A999</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ja / j̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [dʒa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ja</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="23" data-hanacaraka="13.1" data-warga="24" data-unicode="125" data-tatatulisbaru="210">
+                        <td>jh / Jh</td>
+                        <td><span class="aksara-cell">ꦙ</span></td>
+                        <td><span class="aksara-lama-cell">ꦙ</span></td>
+                        <td>U+A999</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: j̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [dʒa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ja</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="24" data-hanacaraka="5" data-warga="1" data-unicode="115" data-tatatulisbaru="105">
+                        <td>k / K</td>
+                        <td><span class="aksara-cell">ꦏ / ꦑ</span></td>
+                        <td><span class="aksara-lama-cell">ꦏ / ꦑ</span></td>
+                        <td>U+A98F / U+A991</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ka / ḳa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ka] / [kʰa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ka</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="25" data-hanacaraka="5.1" data-warga="2" data-unicode="115.1" data-tatatulisbaru="304">
+                        <td>kh</td>
+                        <td><span class="aksara-cell">ꦏ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦏ꦳</span></td>
+                        <td>U+A98F U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: xa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [xa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: kh</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="26" data-hanacaraka="10" data-warga="46" data-unicode="147" data-tatatulisbaru="110">
+                        <td>l / L</td>
+                        <td><span class="aksara-cell">ꦭ</span></td>
+                        <td><span class="aksara-lama-cell">ꦭ</span></td>
+                        <td>U+A9AD</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: la</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [la]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: la</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="27" data-hanacaraka="10.1" data-warga="47" data-unicode="110" data-tatatulisbaru="413">
+                        <td>le / lě</td>
+                        <td><span class="aksara-cell">ꦊ</span></td>
+                        <td><span class="aksara-lama-cell">ꦊ</span></td>
+                        <td>U+A98A</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ḷ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [lə]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: le</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="28" data-hanacaraka="10.2" data-warga="47.1" data-unicode="111" data-tatatulisbaru="414">
+                        <td>lee / LEE</td>
+                        <td>
+                            <span class="aksara-cell">ꦋ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦋ</span></td>
+                        <td>U+A98B</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ḹ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ləː]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: le</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="29" data-hanacaraka="16" data-warga="55" data-unicode="145" data-tatatulisbaru="116">
+                        <td>m / M</td>
+                        <td><span class="aksara-cell">ꦩ</span></td>
+                        <td><span class="aksara-lama-cell">ꦩ</span></td>
+                        <td>U+A9A9</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ma</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ma]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ma</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="30" data-hanacaraka="2" data-warga="43" data-unicode="140" data-tatatulisbaru="102">
+                        <td>n / N</td>
+                        <td><span class="aksara-cell">ꦤ / ꦟ</span></td>
+                        <td><span class="aksara-lama-cell">ꦤ / ꦟ</span></td>
+                        <td>U+A9A4 / U+A99F</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: na / ṇa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [na] / [ɳa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: na</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="31" data-hanacaraka="20" data-warga="5" data-unicode="120" data-tatatulisbaru="120">
+                        <td>ng</td>
+                        <td><span class="aksara-cell">ꦔ / ꦁ</span></td>
+                        <td><span class="aksara-lama-cell">ꦔ / ꦁ</span></td>
+                        <td>U+A994 / U+A981</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṅa / ŋ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ŋa] / [ŋ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: nga / ng</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="32" data-hanacaraka="15" data-warga="25" data-unicode="126" data-tatatulisbaru="115">
+                        <td>ny / NY</td>
+                        <td><span class="aksara-cell">ꦚ / ꦘ</span></td>
+                        <td><span class="aksara-lama-cell">ꦚ / ꦘ</span></td>
+                        <td>U+A99A / U+A998</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ña / jña</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ɲa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: nya</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="33" data-hanacaraka="29" data-warga="69" data-unicode="114" data-tatatulisbaru="405">
+                        <td>o / O</td>
+                        <td><span class="aksara-cell">ꦎ / ꦺꦴ</span></td>
+                        <td><span class="aksara-lama-cell">ꦎ / ꦺꦴ</span></td>
+                        <td>U+A98E / U+A9BA U+A9B4</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: o</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [o] / [ɔ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: o</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="34" data-hanacaraka="11" data-warga="51" data-unicode="141" data-tatatulisbaru="111">
+                        <td>p / P</td>
+                        <td><span class="aksara-cell">ꦥ / ꦦ</span></td>
+                        <td><span class="aksara-lama-cell">ꦥ / ꦦ</span></td>
+                        <td>U+A9A5 / U+A9A6</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: pa / p̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [pa] / [pʰa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: pa</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="35" data-hanacaraka="11.2" data-warga="52" data-unicode="142" data-tatatulisbaru="205">
+                        <td>ph / Ph</td>
+                        <td><span class="aksara-cell">ꦦ</span></td>
+                        <td><span class="aksara-lama-cell">ꦦ</span></td>
+                        <td>U+A9A6</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: p̣a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [pʰa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: pa</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="36" data-hanacaraka="5.2" data-warga="8" data-unicode="116" data-tatatulisbaru="307">
+                        <td>q</td>
+                        <td>
+                            <span class="aksara-cell">ꦐ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦐ</span></td>
+                        <td>U+A990</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: qa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [qa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ka</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="37" data-hanacaraka="4" data-warga="36" data-unicode="146" data-tatatulisbaru="104">
+                        <td>r / R</td>
+                        <td>
+                            <span class="aksara-cell">ꦫ / ꦂ</span>
+                            <span class="missing-badge">ꦬ tidak ada di: kbj, sriwedari, simplified</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦫ / ꦬ / ꦂ</span></td>
+                        <td>U+A9AB / U+A9AC / U+A982</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ra / ṟa / ṙ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ra] / [r]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ra / r</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="38" data-hanacaraka="4.1" data-warga="37" data-unicode="109" data-tatatulisbaru="412">
+                        <td>re / rě</td>
+                        <td><span class="aksara-cell">ꦉ / ꦽ</span></td>
+                        <td><span class="aksara-lama-cell">ꦉ / ꦽ</span></td>
+                        <td>U+A989 / U+A9BD</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṛ / ŕě</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [rə]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: re</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="39" data-hanacaraka="4.2" data-warga="38" data-unicode="109.1" data-tatatulisbaru="415">
+                        <td>ree / REE</td>
+                        <td>
+                            <span class="aksara-cell">ꦉꦴ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦉꦴ</span></td>
+                        <td>U+A989 U+A9B4</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṝ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [rəː]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: re</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="40" data-hanacaraka="8" data-warga="44" data-unicode="149" data-tatatulisbaru="108">
+                        <td>s / S</td>
+                        <td>
+                            <span class="aksara-cell">ꦱ / ꦯ</span>
+                            <span class="missing-badge">ꦰ tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦱ / ꦯ / ꦰ</span></td>
+                        <td>U+A9B1 / U+A9AF / U+A9B0</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: sa / śa / ṣa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [sa] / [ʃa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: sa</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="41" data-hanacaraka="8.2" data-warga="34" data-unicode="148" data-tatatulisbaru="318">
+                        <td>sh / SH</td>
+                        <td>
+                            <span class="aksara-cell">ꦰ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦰ</span></td>
+                        <td>U+A9B0</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṣa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ʂa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: sa</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="42" data-hanacaraka="8.3" data-warga="35" data-unicode="148.1" data-tatatulisbaru="310">
+                        <td>shh</td>
+                        <td><span class="aksara-cell">ꦰ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦰ꦳</span></td>
+                        <td>U+A9B0 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṣa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ʂa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: shh</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="43" data-hanacaraka="8.1" data-warga="26" data-unicode="147.1" data-tatatulisbaru="204">
+                        <td>sy / SY</td>
+                        <td><span class="aksara-cell">ꦯ</span></td>
+                        <td><span class="aksara-lama-cell">ꦯ</span></td>
+                        <td>U+A9AF</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: śa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ʃa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: sa</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="44" data-hanacaraka="7" data-warga="41" data-unicode="136" data-tatatulisbaru="107">
+                        <td>t / T</td>
+                        <td><span class="aksara-cell">ꦠ / ꦡ</span></td>
+                        <td><span class="aksara-lama-cell">ꦠ / ꦡ</span></td>
+                        <td>U+A9A0 / U+A9A1</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ta / tha</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ta] / [tʰa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ta</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="45" data-hanacaraka="19" data-warga="31" data-unicode="127" data-tatatulisbaru="119">
+                        <td>th / TH</td>
+                        <td>
+                            <span class="aksara-cell">ꦛ</span>
+                            <span class="missing-badge">ꦜ tidak ada di: kbj, sriwedari, simplified</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦛ / ꦜ</span></td>
+                        <td>U+A99B / U+A99C</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṭa / ṭha</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ʈa] / [ʈʰa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: tha</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="46" data-hanacaraka="8.4" data-warga="45" data-unicode="149.2" data-tatatulisbaru="309">
+                        <td>ts</td>
+                        <td><span class="aksara-cell">ꦱ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦱ꦳</span></td>
+                        <td>U+A9B1 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṡa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [θa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ts</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="47" data-hanacaraka="19.1" data-warga="32" data-unicode="137.1" data-tatatulisbaru="316">
+                        <td>tth</td>
+                        <td><span class="aksara-cell">ꦡ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦡ꦳</span></td>
+                        <td>U+A9A1 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṭa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ʈa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: tth</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="48" data-hanacaraka="26" data-warga="66" data-unicode="108" data-tatatulisbaru="403">
+                        <td>u / U</td>
+                        <td><span class="aksara-cell">ꦈ / ꦸ</span></td>
+                        <td><span class="aksara-lama-cell">ꦈ / ꦸ</span></td>
+                        <td>U+A988 / U+A9B8</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: u</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [u] / [ʊ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: u</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="49" data-hanacaraka="26.1" data-warga="66.1" data-unicode="108.1" data-tatatulisbaru="407">
+                        <td>uu / UU</td>
+                        <td>
+                            <span class="aksara-cell">ꦈꦴ / ꦹ</span>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦈꦴ / ꦹ</span></td>
+                        <td>U+A988 U+A9B4 / U+A9B9</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ū</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [uː]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: u</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="50" data-hanacaraka="18.2" data-warga="58" data-unicode="147.2" data-tatatulisbaru="302">
+                        <td>v</td>
+                        <td><span class="aksara-cell">ꦮ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦮ꦳</span></td>
+                        <td>U+A9AE U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: va</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [va]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: va</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="51" data-hanacaraka="9" data-warga="57" data-unicode="147.1" data-tatatulisbaru="109">
+                        <td>w / W</td>
+                        <td><span class="aksara-cell">ꦮ</span></td>
+                        <td><span class="aksara-lama-cell">ꦮ</span></td>
+                        <td>U+A9AE</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: wa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [wa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: wa</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="52" data-hanacaraka="5.3" data-warga="9" data-unicode="115.2" data-tatatulisbaru="317">
+                        <td>x</td>
+                        <td><span class="aksara-cell">ꦏ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦏ꦳</span></td>
+                        <td>U+A98F U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: xa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [xa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: kh</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="53" data-hanacaraka="20.2" data-warga="10" data-unicode="120.1" data-tatatulisbaru="311">
+                        <td>xng</td>
+                        <td><span class="aksara-cell">ꦔ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦔ꦳</span></td>
+                        <td>U+A994 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ‘a</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ʕa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: xng</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="54" data-hanacaraka="8.5" data-warga="27" data-unicode="147.2" data-tatatulisbaru="314">
+                        <td>xsy</td>
+                        <td><span class="aksara-cell">ꦯ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦯ꦳</span></td>
+                        <td>U+A9AF U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: śa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ʃa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: xsy</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="55" data-hanacaraka="14" data-warga="28" data-unicode="145.1" data-tatatulisbaru="114">
+                        <td>y / Y</td>
+                        <td><span class="aksara-cell">ꦪ / ꦾ</span></td>
+                        <td><span class="aksara-lama-cell">ꦪ / ꦾ</span></td>
+                        <td>U+A9AA / U+A9BE</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ya / ỿa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ja]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ya</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="56" data-hanacaraka="13.2" data-warga="29" data-unicode="123.1" data-tatatulisbaru="303">
+                        <td>z</td>
+                        <td><span class="aksara-cell">ꦗ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦗ꦳</span></td>
+                        <td>U+A997 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: za</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [za]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: za</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="57" data-hanacaraka="12.2" data-warga="50" data-unicode="139.1" data-tatatulisbaru="317">
+                        <td>zh</td>
+                        <td><span class="aksara-cell">ꦣ꦳</span></td>
+                        <td><span class="aksara-lama-cell">ꦣ꦳</span></td>
+                        <td>U+A9A3 U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ẓa</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ðˤa]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: zh</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="58" data-hanacaraka="31" data-warga="81" data-unicode="160" data-tatatulisbaru="501">
+                        <td><em>(Pangkon)</em></td>
+                        <td><span class="aksara-cell">꧀</span></td>
+                        <td><span class="aksara-lama-cell">꧀</span></td>
+                        <td>U+A9C0</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: /</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="59" data-hanacaraka="32" data-warga="82" data-unicode="155" data-tatatulisbaru="502">
+                        <td><em>(Tolong)</em></td>
+                        <td>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari, simplified</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦵ</span></td>
+                        <td>U+A9B5</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: o</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [o]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: o</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="60" data-hanacaraka="33" data-warga="83" data-unicode="101" data-tatatulisbaru="503">
+                        <td><em>(Panyangga)</em></td>
+                        <td>
+                            <span class="missing-badge">tidak ada di: kbj, sriwedari, simplified</span>
+                        </td>
+                        <td><span class="aksara-lama-cell">ꦀ</span></td>
+                        <td>U+A980</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ṃ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [m]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: m</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="61" data-hanacaraka="40" data-warga="91" data-unicode="200" data-tatatulisbaru="601">
+                        <td>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</td>
+                        <td><span class="aksara-cell">꧐, ꧑, ꧒, ꧓, ꧔, ꧕, ꧖, ꧗, ꧘, ꧙</span></td>
+                        <td><span class="aksara-lama-cell">꧐, ꧑, ꧒, ꧓, ꧔, ꧕, ꧖, ꧗, ꧘, ꧙</span></td>
+                        <td>U+A9D0 – U+A9D9</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: 0–9</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [0–9]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: 0–9</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="62" data-hanacaraka="50" data-warga="99" data-unicode="300" data-tatatulisbaru="701">
+                        <td>, . :</td>
+                        <td><span class="aksara-cell">꧈ ꧉ ꧇</span></td>
+                        <td><span class="aksara-lama-cell">꧈ ꧉ ꧇ ꧋ ꧌ ꧍ ꧏ ꧅ ꧄ ꧃</span></td>
+                        <td>U+A9C8, U+A9C9, U+A9C7, U+A9CB, U+A9CC, U+A9CD, U+A9CF, U+A9C3–U+A9C6, U+A9DE–U+A9DF</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: , . :</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: , . :</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: , . :</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="63" data-hanacaraka="51" data-warga="100" data-unicode="101.1" data-tatatulisbaru="702">
+                        <td>^3</td>
+                        <td><span class="aksara-cell">ꦀ</span></td>
+                        <td><span class="aksara-lama-cell">ꦀ</span></td>
+                        <td>U+A980</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ŋ</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: [ŋ]</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: ng</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="64" data-hanacaraka="52" data-warga="101" data-unicode="153.1" data-tatatulisbaru="703">
+                        <td>+3</td>
+                        <td><span class="aksara-cell">꦳</span></td>
+                        <td><span class="aksara-lama-cell">꦳</span></td>
+                        <td>U+A9B3</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: +3</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="65" data-hanacaraka="53" data-warga="102" data-unicode="301" data-tatatulisbaru="704">
+                        <td>(( / ))</td>
+                        <td><span class="aksara-cell">꧁ / ꧂</span></td>
+                        <td><span class="aksara-lama-cell">꧁ / ꧂</span></td>
+                        <td>U+A9C1 / U+A9C2</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: (( / ))</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="66" data-hanacaraka="54" data-warga="103" data-unicode="302" data-tatatulisbaru="705">
+                        <td>&lt;_ / &lt;&gt; / &gt;^</td>
+                        <td><span class="aksara-cell">꧃ / ꧄ / ꧅</span></td>
+                        <td><span class="aksara-lama-cell">꧃ / ꧄ / ꧅</span></td>
+                        <td>U+A9C3 / U+A9C4 / U+A9C5</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: &lt;_ / &lt;&gt; / &gt;^</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="67" data-hanacaraka="55" data-warga="104" data-unicode="303" data-tatatulisbaru="706">
+                        <td>(o) / :</td>
+                        <td><span class="aksara-cell">꧆ / ꧇</span></td>
+                        <td><span class="aksara-lama-cell">꧆ / ꧇</span></td>
+                        <td>U+A9C6 / U+A9C7</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: (o) / :</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="68" data-hanacaraka="56" data-warga="105" data-unicode="304" data-tatatulisbaru="708">
+                        <td>| / ||</td>
+                        <td><span class="aksara-cell">꧊ / ꧋</span></td>
+                        <td><span class="aksara-lama-cell">꧊ / ꧋</span></td>
+                        <td>U+A9CA / U+A9CB</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: | / ||</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="69" data-hanacaraka="57" data-warga="106" data-unicode="305" data-tatatulisbaru="708">
+                        <td>[\ / \]</td>
+                        <td><span class="aksara-cell">꧌ / ꧍</span></td>
+                        <td><span class="aksara-lama-cell">꧌ / ꧍</span></td>
+                        <td>U+A9CC / U+A9CD</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: [\ / \]</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="70" data-hanacaraka="58" data-warga="107" data-unicode="306" data-tatatulisbaru="709">
+                        <td>^2 / _2</td>
+                        <td><span class="aksara-cell">꧎ / ꧏ</span></td>
+                        <td><span class="aksara-lama-cell">꧎ / ꧏ</span></td>
+                        <td>U+A9CE / U+A9CF</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ^2 / _2</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-alfabet="71" data-hanacaraka="59" data-warga="108" data-unicode="307" data-tatatulisbaru="710">
+                        <td>~~ / ##</td>
+                        <td><span class="aksara-cell">꧞ / ꧟</span></td>
+                        <td><span class="aksara-lama-cell">꧞ / ꧟</span></td>
+                        <td>U+A9DE / U+A9DF</td>
+                        <td>
+                            <div class="combined-notation">
+                                <span class="tag-jgst">JGST: ~~ / ##</span>
+                                <span>|</span>
+                                <span class="tag-ipa">IPA: -</span>
+                                <span>|</span>
+                                <span class="tag-pujl">PUJL: -</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TEMBUNG DWIPURWA -->
+<div class="modal-overlay" id="modalDwipurwa">
+    <div class="modal-box">
+        <div class="modal-header">
+            <span>🌀 Membentuk Tembung Dwipurwa</span>
+            <button class="modal-close" id="btnCloseDwipurwa">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group-custom">
+                <label for="dwipDasar">Tembung Lingga (Kata Dasar):</label>
+                <input type="text" id="dwipDasar" placeholder="Contoh: tuku, sawang, pangan..." autocomplete="off" spellcheck="false">
+            </div>
+
+            <div class="modal-preview-card">
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Hasil Huruf Latin:</span>
+                    <div class="modal-latin-out" id="dwipOutLatin">-</div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Pratinjau Aksara Jawa (Sriwedari):</span>
+                    <div class="modal-aksara-out font-ngayogyann" id="dwipOutAksara">-</div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-action btn-modal-copy" id="btnCopyDwip">📋 Salin Latin</button>
+                <button type="button" class="btn-modal-action btn-modal-use" id="btnUseDwip">🚀 Gunakan di Input Utama</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MEMBERI IMBUHAN (PARAMASASTRA) -->
+<div class="modal-overlay" id="modalImbuhan">
+    <div class="modal-box">
+        <div class="modal-header">
+            <span>🧩 Memberi Imbuhan (Paramasastra)</span>
+            <button class="modal-close" id="btnCloseImbuhan">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group-custom">
+                    <label for="imbAter">Ater-ater (Awalan):</label>
+                    <select id="imbAter">
+                        <option value="" selected>(Tanpa Ater-ater)</option>
+                        <option value="N">N- (Anuswara otomatis: m, n, ny, ng)</option>
+                        <option value="m">m-</option>
+                        <option value="n">n-</option>
+                        <option value="ny">ny-</option>
+                        <option value="ng">ng-</option>
+                        <option value="pa">pa-</option>
+                        <option value="pating_paN">pating paN-</option>
+                        <option value="kuma">kuma-</option>
+                        <option value="kami">kami-</option>
+                        <option value="kapi">kapi-</option>
+                        <option value="pi">pi-</option>
+                        <option value="ma">ma-</option>
+                        <option value="sa">sa-</option>
+                        <option value="in">in-</option>
+                        <option value="dak">dak-</option>
+                        <option value="tak">tak-</option>
+                        <option value="kok">kok-</option>
+                        <option value="ko">ko-</option>
+                        <option value="di">di-</option>
+                        <option value="ka">ka-</option>
+                        <option value="ke">ke-</option>
+                    </select>
+                </div>
+                <div class="form-group-custom">
+                    <label for="imbDasar">Tembung Lingga (Kata Dasar):</label>
+                    <input type="text" id="imbDasar" placeholder="Contoh: pangan, tuku, jupuk..." autocomplete="off" spellcheck="false">
+                </div>
+                <div class="form-group-custom" style="grid-column: 1 / -1;">
+                    <label for="imbPanam">Panambang (Akhiran):</label>
+                    <select id="imbPanam">
+                        <option value="" selected>(Tanpa Panambang)</option>
+                        <option value="i">-i / -ni / -nni</option>
+                        <option value="ake">-ake / -aké</option>
+                        <option value="aken">-aken</option>
+                        <option value="en">-en / -nen</option>
+                        <option value="ana">-ana / -nnana</option>
+                        <option value="ne">-ne / -é</option>
+                        <option value="ku">-ku</option>
+                        <option value="mu">-mu</option>
+                        <option value="an">-an / -nan</option>
+                        <option value="e">-e / -é</option>
+                        <option value="a">-a / -ya / -wa</option>
+                        <option value="na">-na / -kna</option>
+                        <option value="ipun">-ipun / -nipun</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-preview-card">
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Hasil Huruf Latin:</span>
+                    <div class="modal-latin-out" id="imbOutLatin">-</div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="modal-preview-label">Pratinjau Aksara Jawa (Sriwedari):</span>
+                    <div class="modal-aksara-out font-ngayogyann" id="imbOutAksara">-</div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-action btn-modal-copy" id="btnCopyImb">📋 Salin Latin</button>
+                <button type="button" class="btn-modal-action btn-modal-use" id="btnUseImb">🚀 Gunakan di Input Utama</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="morfologi.js"></script>
+<script src="jgst.js"></script>
+<script src="ipa.js"></script>
+<script src="pujl.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
