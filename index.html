@@ -307,7 +307,7 @@
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Simplified" checked> 3. KAJ Simplified</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Tradisional" checked> 4. KAJ Tradisional</label>
                     <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="CaraKawi" checked> 5. Cara Kawi (Mardi Kawi)</label>
-                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan" checked> 6. Ringkasan Transliterasi</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan"> 6. Ringkasan Transliterasi</label>
                 </div>
                 <div class="sub-toggles">
                     <span class="toggle-label">Latin:</span>
@@ -467,8 +467,8 @@
             </div>
         </div>
 
-        <!-- 6. Ringkasan Transliterasi -->
-        <div class="card" id="cardRingkasan">
+        <!-- 6. Ringkasan Transliterasi (Default Hidden) -->
+        <div class="card" id="cardRingkasan" style="display: none;">
             <div class="card-header">6. Ringkasan Transliterasi</div>
             <div class="output-group group-pujl">
                 <div class="output-label">PUJL</div>
@@ -478,48 +478,48 @@
                 <div class="output-label">Aksara Jawa Praktis</div>
                 <div id="outRingkasan_Praktis" class="box-aksara font-ngayogyann">-</div>
                 <div class="ringkasan-sub-row">
-                    <div id="outRingkasan_Praktis_JGST" class="box-jgst">-</div>
-                    <div id="outRingkasan_Praktis_IPA" class="box-ipa">-</div>
+                    <div id="outRingkasan_Praktis_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Praktis_IPA" class="box-ipa group-ipa">-</div>
                 </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Paugeran KBJ</div>
                 <div id="outRingkasan_KBJ" class="box-aksara font-ngayogyann">-</div>
                 <div class="ringkasan-sub-row">
-                    <div id="outRingkasan_KBJ_JGST" class="box-jgst">-</div>
-                    <div id="outRingkasan_KBJ_IPA" class="box-ipa">-</div>
+                    <div id="outRingkasan_KBJ_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_KBJ_IPA" class="box-ipa group-ipa">-</div>
                 </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Paugeran Sriwedari</div>
                 <div id="outRingkasan_Sriwedari" class="box-aksara font-ngayogyann">-</div>
                 <div class="ringkasan-sub-row">
-                    <div id="outRingkasan_Sriwedari_JGST" class="box-jgst">-</div>
-                    <div id="outRingkasan_Sriwedari_IPA" class="box-ipa">-</div>
+                    <div id="outRingkasan_Sriwedari_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Sriwedari_IPA" class="box-ipa group-ipa">-</div>
                 </div>
             </div>
             <div class="output-group">
                 <div class="output-label">KAJ Simplified</div>
                 <div id="outRingkasan_Simplified" class="box-aksara font-ngayogyann">-</div>
                 <div class="ringkasan-sub-row">
-                    <div id="outRingkasan_Simplified_JGST" class="box-jgst">-</div>
-                    <div id="outRingkasan_Simplified_IPA" class="box-ipa">-</div>
+                    <div id="outRingkasan_Simplified_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Simplified_IPA" class="box-ipa group-ipa">-</div>
                 </div>
             </div>
             <div class="output-group">
                 <div class="output-label">KAJ Tradisional</div>
                 <div id="outRingkasan_Tradisional" class="box-aksara font-ngayogyan">-</div>
                 <div class="ringkasan-sub-row">
-                    <div id="outRingkasan_Tradisional_JGST" class="box-jgst">-</div>
-                    <div id="outRingkasan_Tradisional_IPA" class="box-ipa">-</div>
+                    <div id="outRingkasan_Tradisional_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Tradisional_IPA" class="box-ipa group-ipa">-</div>
                 </div>
             </div>
             <div class="output-group">
                 <div class="output-label">Cara Kawi (Mardi Kawi)</div>
                 <div id="outRingkasan_CaraKawi" class="box-aksara font-ngayogyan">-</div>
                 <div class="ringkasan-sub-row">
-                    <div id="outRingkasan_CaraKawi_JGST" class="box-jgst">-</div>
-                    <div id="outRingkasan_CaraKawi_IPA" class="box-ipa">-</div>
+                    <div id="outRingkasan_CaraKawi_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_CaraKawi_IPA" class="box-ipa group-ipa">-</div>
                 </div>
             </div>
         </div>
