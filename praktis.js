@@ -13,7 +13,7 @@
  * 4. Tembung Dwilingga Mandiri -> Kata ulang ber-tanda hubung diproses terpisah (alun-alun -> ꦄꦭꦸꦤ꧀ꦄꦭꦸꦤ꧀).
  * 5. Ater-ater Anuswara Literal -> Ditulis murni sesuai ketikan tanpa penyisipan Aksara Ha di depan (ngombe -> ꦔꦺꦴꦩ꧀ꦧꦺ).
  * 6. Vokal Panjang & Aksara Rekan/Murda -> Dipertahankan penuh dari simplified.js.
- * 7. Aksara Ganti (ꦊ/ꦉ) & Panjingan (la/wa) -> Dipertahankan mandiri antar-kata tanpa paksaan ZWNJ atau penggantian aksara.
+ * 7. Aksara Swara & Aksara Ganti (ꦄ-ꦎ) Sebagai Pasangan -> Menempel langsung tanpa dipisah ZWNJ.
  */
 
 const KAMUS_AKSARA = {
@@ -208,9 +208,9 @@ function transliterasiKalimat(teks) {
 
                 // Jika kata sebelumnya diakhiri Pangkon (꧀), periksa kata berikutnya.
                 // Jika kata berikutnya diawali panjingan (la/wa), sandhangan wyanjana (pengkal/cakra/cakra-keret),
-                // atau Aksara Ganti (ꦊ/ꦉ), IZINKAN menempel langsung (TANPA ZWNJ \u200C).
+                // atau seluruh Aksara Swara / Aksara Ganti (ꦄ-ꦎ), IZINKAN menempel langsung (TANPA ZWNJ \u200C).
                 if (/꧀[\u200C\uE000]*$/.test(prev)) {
-                    let hasPanjinganOrMedial = /^.꧀[ꦭꦮ]|^.[ꦾꦿꦽ]|^[ꦊꦉ]/.test(curr);
+                    let hasPanjinganOrMedial = /^.꧀[ꦭꦮ]|^.[ꦾꦿꦽ]|^[ꦄ-ꦎ]/.test(curr);
                     if (!hasPanjinganOrMedial) {
                         lineJoined += '\u200C';
                     }
