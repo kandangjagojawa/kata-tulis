@@ -14,7 +14,6 @@
  *    Kata dasar tanpa tanda hubung seperti piano (ꦥꦶꦪꦤꦺꦴ) & piagam (ꦥꦶꦪꦒꦩ꧀) tetap alami.
  * 2. Aksara na (ꦤ) dan sa (ꦱ) tetap menggunakan ꦤ/ꦱ setelah ra (dengan/tanpa sandhangan),
  *    cakra, atau keret. (Mati r di tengah kata/Layar tetap ꦂꦟ / ꦂꦰ).
- * 3. Pemetaaan Dha Mahaprana (ꦣ) menggunakan 'ddh' dan 'dH' agar bebas dari konflik modul lain.
  */
 
 const textInput = document.getElementById('textInput');
@@ -36,7 +35,7 @@ const CONS_MAP = {
     'zh': 'ꦣ꦳', 'x': 'ꦑ꦳',
     'th': 'ꦛ', 'dh': 'ꦝ', 'ny': 'ꦚ', 'ng': 'ꦔ',
     'TH': 'ꦜ', 'DH': 'ꦞ', 'NY': 'ꦘ', 'Ny': 'ꦘ', 'NG': 'ꦔ',
-    'tH': 'ꦡ', 'dH': 'ꦣ', 'ddh': 'ꦣ', 'Th': 'ꦜ', 'Dh': 'ꦞ', 
+    'tH': 'ꦡ', 'dH': 'ꦣ', 'Th': 'ꦜ', 'Dh': 'ꦞ', 
     'ch': 'ꦖ', 'jh': 'ꦙ', 'ph': 'ꦦ', 'bh': 'ꦨ',
     'sh': 'ꦰ', 'sy': 'ꦯ', 'SH': 'ꦰ', 'SY': 'ꦯ',
     'h':'ꦲ', 'n':'ꦤ', 'c':'ꦕ', 'r':'ꦫ', 'k':'ꦏ',
@@ -534,11 +533,11 @@ function transliterateKawi(rawText) {
                             let doubleIt = true;
                             
                             if (overrideType === 'A') {
-                                doubleIt = false; 
+                                doubleIt = false; // Batal double, paksa Dantya/Single Biasa
                                 const dantyaMap = {'ꦟ':'ꦤ', 'ꦡ':'ꦠ', 'ꦣ':'ꦢ', 'ꦦ':'ꦥ', 'ꦨ':'ꦧ', 'ꦑ':'ꦏ', 'ꦓ':'ꦒ', 'ꦯ':'ꦱ', 'ꦰ':'ꦱ', 'ꦖ':'ꦕ', 'ꦙ':'ꦗ', 'ꦜ':'ꦛ', 'ꦞ':'ꦝ'};
                                 consChar2_1 = dantyaMap[consChar2_1] || consChar2_1;
                             } else if (overrideType === 'C') {
-                                doubleIt = false; 
+                                doubleIt = false; // Batal double, paksa Mahaprana/Murda Single
                                 const murdaMap = {'ꦤ':'ꦟ', 'ꦠ':'ꦡ', 'ꦢ':'ꦣ', 'ꦥ':'ꦦ', 'ꦧ':'ꦨ', 'ꦏ':'ꦑ', 'ꦒ':'ꦓ', 'ꦱ':'ꦯ', 'ꦕ':'ꦖ', 'ꦗ':'ꦙ', 'ꦛ':'ꦜ', 'ꦝ':'ꦞ'};
                                 consChar2_1 = murdaMap[consChar2_1] || consChar2_1;
                             } else {
@@ -766,8 +765,8 @@ function prosesParamasastra() {
     // Validasi Kelayakan Ater-Ater Anuswara
     if (ater === 'm' && !['b','p','w','m','f','v'].includes(f)) {
         errorMsg = `Ater-ater "m-" (am-) khusus untuk kata dasar berawalan p, b, w, m, f, v.`;
-    } else if (ater === 'n' && !['d','t','j','n'].includes(f) && !dasar.startsWith('dh') && !dasar.startsWith('ddh') && !dasar.startsWith('th')) {
-        errorMsg = `Ater-ater "n-" (an-) khusus untuk kata dasar berawalan d, dh, ddh, t, th, j, n.`;
+    } else if (ater === 'n' && !['d','t','j','n'].includes(f) && !dasar.startsWith('dh') && !dasar.startsWith('th')) {
+        errorMsg = `Ater-ater "n-" (an-) khusus untuk kata dasar berawalan d, dh, t, th, j, n.`;
     } else if (ater === 'ny' && !['c','s'].includes(f) && !dasar.startsWith('ny')) {
         errorMsg = `Ater-ater "ny-" (any-) khusus untuk kata dasar berawalan c, s, ny.`;
     } else if (ater === 'ng' && !['g','k','l','r','y','w'].includes(f) && !isVowelStart && !dasar.startsWith('ng')) {
@@ -795,7 +794,7 @@ function prosesParamasastra() {
             stem = dasar; prefixAppended = ''; altPrefixAppended = 'a';
         } else if (f === 'm') {
             stem = dasar; prefixAppended = ''; altPrefixAppended = 'a';
-        } else if (['d','j'].includes(f) || dasar.startsWith('dh') || dasar.startsWith('ddh')) {
+        } else if (['d','j'].includes(f) || dasar.startsWith('dh')) {
             if (f === 'j') {
                 prefixAppended = 'any'; altPrefixAppended = 'ny'; stem = dasar;
             } else {
@@ -829,7 +828,7 @@ function prosesParamasastra() {
     } else if (ater === 'pating_paN') {
         let nasal = '';
         if (['p','b','w','m','f','v'].includes(f)) nasal = 'm';
-        else if (['t','d','j','n'].includes(f) || dasar.startsWith('dh') || dasar.startsWith('ddh') || dasar.startsWith('th')) nasal = 'n';
+        else if (['t','d','j','n'].includes(f) || dasar.startsWith('dh') || dasar.startsWith('th')) nasal = 'n';
         else if (['c','s'].includes(f) || dasar.startsWith('ny')) nasal = 'ny';
         else nasal = 'ng';
         

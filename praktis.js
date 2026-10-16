@@ -4,16 +4,15 @@
  * Diperuntukkan bagi generasi modern untuk kemudahan penulisan dan pembelajaran.
  * 
  * KETENTUAN LOGIKA:
- * 1. Scripto Continua Murni -> Penulisan menyambung alami antar-kata menggunakan pasangan/tumpuk.
- * 2. Vokal Awal Kata & Hiatus -> Otomatis menggunakan Aksara Swara (ꦄ, ꦆ, ꦈ, ꦌ, ꦎ).
- * 3. Diftong ai & au -> 
+ * 1. Vokal Awal Kata & Hiatus -> Otomatis menggunakan Aksara Swara (ꦄ, ꦆ, ꦈ, ꦌ, ꦎ).
+ * 2. Diftong ai & au -> 
  *    - Setelah konsonan: Sandhangan Dirga Mure (ꦻ) & Sandhangan Au (ꦻꦴ).
  *    - Awal kata / tanpa konsonan: Aksara Swara AI (ꦍ) & AU (ꦎꦴ).
- * 4. Panambang Natural -> Meleburkan konsonan akhir kata dasar ke vokal panambang secara alami 
- *    tanpa dobel konsonan dan tanpa Pangkon (mangan-e -> ꦩꦔꦤ꺺).
- * 5. Tembung Dwilingga Mandiri -> Kata ulang ber-tanda hubung diproses terpisah (alun-alun -> ꦄꦭꦸꦤ꧀ꦄꦭꦸꦤ꧀).
- * 6. Ater-ater Anuswara Literal -> Ditulis murni sesuai ketikan tanpa penyisipan Aksara Ha di depan (ngombe -> ꦔꦺꦴꦩ꧀ꦧꦺ).
- * 7. Vokal Panjang & Aksara Rekan/Murda -> Dipertahankan penuh dari simplified.js.
+ * 3. Panambang Natural -> Meleburkan konsonan akhir kata dasar ke vokal panambang secara alami 
+ *    tanpa dobel konsonan dan tanpa Pangkon (mangan-e -> ꦩꦔꦤꦺ).
+ * 4. Tembung Dwilingga Mandiri -> Kata ulang ber-tanda hubung diproses terpisah (alun-alun -> ꦄꦭꦸꦤ꧀ꦄꦭꦸꦤ꧀).
+ * 5. Ater-ater Anuswara Literal -> Ditulis murni sesuai ketikan tanpa penyisipan Aksara Ha di depan (ngombe -> ꦔꦺꦴꦩ꧀ꦧꦺ).
+ * 6. Vokal Panjang & Aksara Rekan/Murda -> Dipertahankan penuh dari simplified.js.
  */
 
 const KAMUS_AKSARA = {
@@ -31,7 +30,7 @@ const KAMUS_AKSARA = {
 
 const AKSARA_MURDA = {
     'n':'ꦟ', 'k':'ꦑ', 't':'ꦡ', 's':'ꦯ', 'p':'ꦦ',
-    'g':'ꦓ', 'b':'ꦨ', 'c':'ꦖ', 'ny':'ꦘ', 'j':'ꦙ',
+    'g':'ꦓ', 'b':'ꦨ', 'c':'ꦖ', 'ny':'ꦘ', 'j':'ꦙ', 'dh':'ꦝ',
     'r':'ꦬ'
 };
 
@@ -200,9 +199,9 @@ function transliterasiKalimat(teks) {
         let kataKata = line.split(/\s+/);
         let kataJawa = kataKata.map(kata => transliterasiKata(kata));
         
-        // Scripto Continua Murni: kata disambung langsung tanpa penyisipan ZWNJ
-        let lineJoined = kataJawa.join('');
+        let lineJoined = kataJawa.join(''); 
         
+        lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦊ/g, '꧀$1ꦭꦼ');
         lineJoined = lineJoined.replace(/꧀([\u200C\uE000]*)ꦣ/g, '꧀$1ꦝ');
 
         return lineJoined;
@@ -355,7 +354,7 @@ function transliterasiSingleKata(rawLatin) {
                 else if (['E', 'Ê'].includes(vUpper)) { c = 'E'; isSwara = true; jump = 1; }
                 else { c = 'A'; isSwara = true; jump = 1; }
             }
-            i += jump;
+            i += jump; // PERBAIKAN: Menjamin indeks bertambah saat pemrosesan vokal mandiri/hiatus
         } else if (c !== "") {
             i += jump;
         } else {
@@ -414,7 +413,7 @@ function transliterasiSingleKata(rawLatin) {
             else if (c === 'r' && !isFirstAksara && canTakeSandhangan) res += 'ꦂ'; 
             else if (c === 'h' && !isFirstAksara && canTakeSandhangan) res += 'ꦃ'; 
             else if (c !== "") {
-                let base = (c === 'dh' && res.endsWith('꧀')) ? 'ꦝ' : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
+                let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
                 res += base + '꧀'; 
             }
             
@@ -424,19 +423,11 @@ function transliterasiSingleKata(rawLatin) {
         }
 
         if (c === 'l' && (v === 'e' || v === 'ê') && medial === "") {
-            if (res.endsWith('꧀')) {
-                res += 'ꦭꦼ';
-            } else {
-                res += 'ꦊ';
-            }
+            res += 'ꦊ'; 
         } else if (c === 'r' && (v === 'e' || v === 'ê') && medial === "") {
-            if (res.endsWith('꧀')) {
-                res += 'ꦿꦼ';
-            } else {
-                res += 'ꦉ';
-            }
+            res += 'ꦉ'; 
         } else {
-            let base = (c === 'dh' && res.endsWith('꧀')) ? 'ꦝ' : (isSwara ? SWARA_MAP[c] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]));
+            let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (isSwara ? SWARA_MAP[c] : (isMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]));
             res += base;
 
             if (medial === 'y') res += 'ꦾ';

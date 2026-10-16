@@ -19,7 +19,7 @@ const clearBtn = document.getElementById('clearBtn');
 const CONS_MAP = {
     'th': 'ꦛ', 'dh': 'ꦝ', 'ny': 'ꦚ', 'ng': 'ꦔ',
     'TH': 'ꦜ', 'DH': 'ꦞ', 'NY': 'ꦘ', 'Ny': 'ꦘ', 'NG': 'ꦔ',
-    'tH': 'ꦡ', 'dH': 'ꦣ', 'ddh': 'ꦣ', 'Th': 'ꦜ', 'Dh': 'ꦞ', 
+    'tH': 'ꦡ', 'dH': 'ꦣ', 'Th': 'ꦜ', 'Dh': 'ꦞ', 
     'kh': 'ꦑ', 'gh': 'ꦓ', 'ch': 'ꦖ', 'jh': 'ꦙ', 'ph': 'ꦦ', 'bh': 'ꦨ',
     'sh': 'ꦰ', 'sy': 'ꦯ', 'SH': 'ꦰ', 'SY': 'ꦯ',
     'h':'ꦲ', 'n':'ꦤ', 'c':'ꦕ', 'r':'ꦫ', 'k':'ꦏ',
@@ -513,7 +513,7 @@ function transliterateKawi(rawText) {
                                 consChar2_1 = dantyaMap[consChar2_1] || consChar2_1;
                             } else if (overrideType === 'C') {
                                 doubleIt = false; // Batal double, paksa Mahaprana/Murda Single
-                                const murdaMap = {'ꦤ':'ꦟ', 'ꦠ':'ꦡ', 'ꦢ':'ꦣ', 'ꦥ':'ꦦ', 'ꦧ':'ꦨ', 'ꦏ':'ꦑ', 'ꦒ':'ꦓ', 'ꦱ':'ꦯ', 'ꦕ':'ꦖ', 'ꦗ':'ꦙ', 'ꦛ':'ꦜ', 'ꦞ':'ꦝ'};
+                                const murdaMap = {'ꦤ':'ꦟ', 'ꦠ':'ꦡ', 'ꦢ':'ꦣ', 'ꦥ':'ꦦ', 'ꦧ':'ꦨ', 'ꦏ':'ꦑ', 'ꦒ':'ꦓ', 'ꦱ':'ꦯ', 'ꦕ':'ꦖ', 'ꦗ':'ꦙ', 'ꦛ':'ꦜ', 'ꦝ':'ꦞ'};
                                 consChar2_1 = murdaMap[consChar2_1] || consChar2_1;
                             } else {
                                 // Pengecualian: TIDAK dirangkap jika disusul ha, nga, nya
