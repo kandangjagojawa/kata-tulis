@@ -11,13 +11,13 @@ const KAMUS_AKSARA = {
     'm':'ꦩ', 'g':'ꦒ', 'b':'ꦧ', 'th':'ꦛ', 'ng':'ꦔ', 'nx':'ꦔ',
     'f':'ꦥ꦳', 'v':'ꦮ꦳', 'z':'ꦗ꦳',
     'kh':'ꦏ꦳', 'dz':'ꦢ꦳', 'gh':'ꦒ꦳',
-    'sy':'ꦯ', 'sh':'ꦰ',
+    'sy':'ꦯ',
     'kx':'ꦏ', 'rx':'ꦫ', 'hx':'ꦲ', 'ngx':'ꦔ'
 };
 
 const AKSARA_MURDA = {
     'n':'ꦟ', 'k':'ꦑ', 't':'ꦡ', 's':'ꦯ', 'p':'ꦦ',
-    'g':'ꦓ', 'b':'ꦨ', 'c':'ꦖ', 'ny':'ꦘ', 'j':'ꦙ', 'dh':'ꦝ'
+    'g':'ꦓ', 'b':'ꦨ', 'ny':'ꦘ', 'j':'ꦙ'
 };
 
 const SWARA_MAP = {
@@ -627,7 +627,7 @@ function transliterasiSingleKata(rawLatin) {
             c = 'j'; jump = 1; isMurda = true;
         } else if (['ngx'].includes(c3)) {
             c = c3; jump = 3;
-        } else if (['ng','ny','dh','th','nx','kh','dz','gh','kx','rx','hx','sy','sh'].includes(c2)) {
+        } else if (['ng','ny','dh','th','nx','kh','dz','gh','kx','rx','hx','sy'].includes(c2)) {
             c = c2; jump = 2;
         } else if (KAMUS_AKSARA[c1]) {
             c = c1; jump = 1;
@@ -684,7 +684,7 @@ function transliterasiSingleKata(rawLatin) {
             else if (c === 'h' && !isFirstAksara && canTakeSandhangan) res += 'ꦃ'; 
             else if (c !== "") {
                 let useMurda = isMurda && false;
-                let base = (c === 'dh' && res.endsWith('꧀')) ? AKSARA_MURDA['dh'] : (useMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
+                let base = (c === 'dh' && res.endsWith('꧀')) ? 'ꦝ' : (useMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]);
                 res += base + '꧀'; 
             }
             
@@ -704,7 +704,7 @@ function transliterasiSingleKata(rawLatin) {
             let isAttachedAsPasangan = res.endsWith('꧀');
             let useMurda = isMurda && !isAttachedAsPasangan;
 
-            let base = isSwara ? SWARA_MAP[c] : ((c === 'dh' && isAttachedAsPasangan) ? AKSARA_MURDA['dh'] : (useMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]));
+            let base = isSwara ? SWARA_MAP[c] : ((c === 'dh' && isAttachedAsPasangan) ? 'ꦝ' : (useMurda ? AKSARA_MURDA[c] : KAMUS_AKSARA[c]));
             res += base;
 
             if (medial === 'y') res += 'ꦾ';
