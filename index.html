@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="jw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membandingkan Tata Tulis Aksara Jawa</title>
+    <!-- Google Font Gentium Plus -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <!-- Style CSS Eksternal -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<iframe id="enginePraktis" style="display:none;"></iframe>
+<iframe id="engineKBJ" style="display:none;"></iframe>
+<iframe id="engineSriwedari" style="display:none;"></iframe>
+<iframe id="engineSimplified" style="display:none;"></iframe>
+<iframe id="engineTradisional" style="display:none;"></iframe>
+<iframe id="engineCaraKawi" style="display:none;"></iframe>
+
+<div class="container">
+    <div class="header-bar">
+        <h1>Membandingkan Tata Tulis Aksara Jawa</h1>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button type="button" id="btnOpenDwipurwa" class="btn-petunjuk-latin" style="background-color: #0284c7; box-shadow: 0 3px 8px rgba(2, 132, 199, 0.4);">🌀 Membentuk Tembung Dwipurwa</button>
+            <button type="button" id="btnOpenImbuhan" class="btn-petunjuk-latin" style="background-color: #0d9488; box-shadow: 0 3px 8px rgba(13, 148, 136, 0.4);">🧩 Memberi Imbuhan</button>
+            <a href="#petunjukLatin" class="btn-petunjuk-latin">📖 Petunjuk Penulisan Huruf Latin</a>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <div class="input-header">
+            <span class="input-title">Huruf Latin</span>
+            <div class="toggles-wrapper">
+                <div class="card-toggles">
+                    <span class="toggle-label">Kelompok:</span>
+                    <label class="card-toggle-item"><input type="checkbox" id="toggleTataTulisBaru" checked> Tata Tulis Baru</label>
+                    <label class="card-toggle-item"><input type="checkbox" id="toggleTataTulisLama" checked> Tata Tulis Lama</label>
+                </div>
+                <div class="card-toggles">
+                    <span class="toggle-label">Tata Tulis:</span>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="KBJ" checked> 1. Paugeran KBJ</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Sriwedari" checked> 2. Paugeran Sriwedari</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Simplified" checked> 3. KAJ Simplified</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Tradisional" checked> 4. KAJ Tradisional</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="CaraKawi" checked> 5. Cara Kawi (Mardi Kawi)</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Praktis" checked> Aksara Jawa Praktis</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-card" data-card="Ringkasan"> 6. Ringkasan Transliterasi</label>
+                </div>
+                <div class="sub-toggles">
+                    <span class="toggle-label">Latin:</span>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-sub" data-sub="jgst"> JGST</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-sub" data-sub="ipa"> IPA</label>
+                    <label class="card-toggle-item"><input type="checkbox" class="toggle-sub" data-sub="pujl"> PUJL</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="textarea-wrapper">
+            <textarea id="inputLatin" placeholder="Ketik teks di sini..." autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+            <button id="btnClear" class="btn-clear" title="Hapus teks">&times;</button>
+        </div>
+
+        <div class="controls-grid">
+            <div class="control-group">
+                <label for="sliderFontSize">Ukuran Aksara Jawa: <span id="valFontSize">1.8rem</span></label>
+                <input type="range" id="sliderFontSize" min="1" max="4" step="0.1" value="1.8">
+            </div>
+            <div class="control-group">
+                <label for="sliderLineHeight">Jarak Spasi Vertikal: <span id="valLineHeight">1.6</span></label>
+                <input type="range" id="sliderLineHeight" min="1" max="3" step="0.1" value="1.6">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-container">
+        <!-- 1. Paugeran KBJ -->
+        <div class="card" id="cardKBJ">
+            <div class="card-header">1. Paugeran KBJ</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outKBJ_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outKBJ_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outKBJ_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outKBJ_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 2. Paugeran Sriwedari -->
+        <div class="card" id="cardSriwedari">
+            <div class="card-header">2. Paugeran Sriwedari</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outSriwedari_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outSriwedari_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outSriwedari_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outSriwedari_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 3. KAJ Simplified -->
+        <div class="card" id="cardSimplified">
+            <div class="card-header">3. KAJ Simplified</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outSimplified_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outSimplified_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outSimplified_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outSimplified_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 4. KAJ Tradisional -->
+        <div class="card" id="cardTradisional">
+            <div class="card-header">4. KAJ Tradisional</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outTradisional_Aksara" class="box-aksara font-ngayogyan">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outTradisional_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outTradisional_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outTradisional_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 5. Cara Kawi (Mardi Kawi) -->
+        <div class="card" id="cardCaraKawi">
+            <div class="card-header">5. Cara Kawi (Mardi Kawi)</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outCaraKawi_Aksara" class="box-aksara font-ngayogyan">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outCaraKawi_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outCaraKawi_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outCaraKawi_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- Aksara Jawa Praktis -->
+        <div class="card" id="cardPraktis">
+            <div class="card-header">Aksara Jawa Praktis</div>
+            <div class="output-group group-aksara">
+                <div class="output-label">Aksara Jawa</div>
+                <div id="outPraktis_Aksara" class="box-aksara font-ngayogyann">-</div>
+            </div>
+            <div class="output-group group-jgst">
+                <div class="output-label">JGST</div>
+                <div id="outPraktis_JGST" class="box-jgst">-</div>
+            </div>
+            <div class="output-group group-ipa">
+                <div class="output-label">IPA</div>
+                <div id="outPraktis_IPA" class="box-ipa">-</div>
+            </div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outPraktis_PUJL" class="box-pujl">-</div>
+            </div>
+        </div>
+
+        <!-- 6. Ringkasan Transliterasi -->
+        <div class="card" id="cardRingkasan" style="display: none;">
+            <div class="card-header">6. Ringkasan Transliterasi</div>
+            <div class="output-group group-pujl">
+                <div class="output-label">PUJL</div>
+                <div id="outRingkasan_PUJL" class="box-pujl">-</div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Paugeran KBJ</div>
+                <div id="outRingkasan_KBJ" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_KBJ_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_KBJ_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Paugeran Sriwedari</div>
+                <div id="outRingkasan_Sriwedari" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Sriwedari_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Sriwedari_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">KAJ Simplified</div>
+                <div id="outRingkasan_Simplified" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Simplified_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Simplified_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">KAJ Tradisional</div>
+                <div id="outRingkasan_Tradisional" class="box-aksara font-ngayogyan">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Tradisional_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Tradisional_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Cara Kawi (Mardi Kawi)</div>
+                <div id="outRingkasan_CaraKawi" class="box-aksara font-ngayogyan">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_CaraKawi_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_CaraKawi_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+            <div class="output-group">
+                <div class="output-label">Aksara Jawa Praktis</div>
+                <div id="outRingkasan_Praktis" class="box-aksara font-ngayogyann">-</div>
+                <div class="ringkasan-sub-row">
+                    <div id="outRingkasan_Praktis_JGST" class="box-jgst group-jgst">-</div>
+                    <div id="outRingkasan_Praktis_IPA" class="box-ipa group-ipa">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container Penampung HTML Dinamis -->
+    <div id="wrapperPetunjuk"></div>
+</div>
+
+<div id="wrapperModals"></div>
+
+<!-- Script Eksternal -->
+<script src="morfologi.js"></script>
+<script src="jgst.js"></script>
+<script src="ipa.js"></script>
+<script src="pujl.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
